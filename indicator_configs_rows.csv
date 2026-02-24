@@ -1,0 +1,193 @@
+config_id,indicator_name,category,timeframe,params,output_columns,description
+adl_50_15m,adl,volume,15m,"{""lookback"": 50}","{""v1"": ""value""}",Accumulation/Distribution Line (50) on 15-minute
+adl_50_1h,adl,volume,1h,"{""lookback"": 50}","{""v1"": ""value""}",Accumulation/Distribution Line (50) on 1-hour
+adx_14_15m,adx,trend,15m,"{""period"": 14}","{""v1"": ""adx"", ""v2"": ""plus_di"", ""v3"": ""minus_di""}",ADX (14) with +DI/-DI on 15-minute candles
+adx_14_1h,adx,trend,1h,"{""period"": 14}","{""v1"": ""adx"", ""v2"": ""plus_di"", ""v3"": ""minus_di""}",ADX (14) with +DI/-DI on 1-hour candles
+adx_14_5m,adx,trend,5m,"{""period"": 14}","{""v1"": ""adx"", ""v2"": ""plus_di"", ""v3"": ""minus_di""}",ADX (14) with +DI/-DI on 5-minute candles
+adx_20_15m,adx,trend,15m,"{""period"": 20}","{""v1"": ""adx"", ""v2"": ""plus_di"", ""v3"": ""minus_di""}",ADX (20) smoother on 15-minute candles
+aroon_14_15m,aroon,trend,15m,"{""period"": 14}","{""v1"": ""aroon_up"", ""v2"": ""aroon_down"", ""v3"": ""oscillator""}",Aroon (14) faster on 15-minute candles
+aroon_25_15m,aroon,trend,15m,"{""period"": 25}","{""v1"": ""aroon_up"", ""v2"": ""aroon_down"", ""v3"": ""oscillator""}",Aroon (25) standard on 15-minute candles
+aroon_25_1h,aroon,trend,1h,"{""period"": 25}","{""v1"": ""aroon_up"", ""v2"": ""aroon_down"", ""v3"": ""oscillator""}",Aroon (25) standard on 1-hour candles
+ask_depth_10bps,ask_depth_10bps,order_book,snapshot,"{""source_table"": ""order_book_indicators"", ""source_column"": ""ask_depth_10bps""}","{""v1"": ""ask_depth_10bps""}",Order book indicator from indicators.order_book_indicators: ask_depth_10bps
+ask_depth_25bps,ask_depth_25bps,order_book,snapshot,"{""source_table"": ""order_book_indicators"", ""source_column"": ""ask_depth_25bps""}","{""v1"": ""ask_depth_25bps""}",Order book indicator from indicators.order_book_indicators: ask_depth_25bps
+ask_depth_50bps,ask_depth_50bps,order_book,snapshot,"{""source_table"": ""order_book_indicators"", ""source_column"": ""ask_depth_50bps""}","{""v1"": ""ask_depth_50bps""}",Order book indicator from indicators.order_book_indicators: ask_depth_50bps
+ask_slope,ask_slope,order_book,snapshot,"{""source_table"": ""order_book_indicators"", ""source_column"": ""ask_slope""}","{""v1"": ""ask_slope""}",Order book indicator from indicators.order_book_indicators: ask_slope
+atr_14_15m,atr,volatility,15m,"{""period"": 14}","{""v1"": ""value""}",Average True Range (14) on 15-minute candles
+atr_14_1h,atr,volatility,1h,"{""period"": 14}","{""v1"": ""value""}",Average True Range (14) on 1-hour candles
+atr_14_1m,atr,volatility,1m,"{""period"": 14}","{""v1"": ""value""}",Average True Range (14) on 1-minute candles
+atr_14_5m,atr,volatility,5m,"{""period"": 14}","{""v1"": ""value""}",Average True Range (14) on 5-minute candles
+atr_21_15m,atr,volatility,15m,"{""period"": 21}","{""v1"": ""value""}",Average True Range (21) smoother on 15-minute
+atr_7_5m,atr,volatility,5m,"{""period"": 7}","{""v1"": ""value""}",Average True Range (7) fast on 5-minute
+awesome_5_34_15m,awesome_oscillator,complex,15m,"{""fast_period"": 5, ""slow_period"": 34}","{""v1"": ""value""}","Awesome Oscillator (5,34) on 15-minute candles"
+awesome_5_34_1h,awesome_oscillator,complex,1h,"{""fast_period"": 5, ""slow_period"": 34}","{""v1"": ""value""}","Awesome Oscillator (5,34) on 1-hour candles"
+awesome_5_34_5m,awesome_oscillator,complex,5m,"{""fast_period"": 5, ""slow_period"": 34}","{""v1"": ""value""}","Awesome Oscillator (5,34) on 5-minute candles"
+basis_pct,basis_pct,oi_features,15m,"{""source_table"": ""oi_features"", ""source_column"": ""basis_pct""}","{""v1"": ""basis_pct""}",OI feature from indicators.oi_features: basis_pct
+bid_depth_10bps,bid_depth_10bps,order_book,snapshot,"{""source_table"": ""order_book_indicators"", ""source_column"": ""bid_depth_10bps""}","{""v1"": ""bid_depth_10bps""}",Order book indicator from indicators.order_book_indicators: bid_depth_10bps
+bid_depth_25bps,bid_depth_25bps,order_book,snapshot,"{""source_table"": ""order_book_indicators"", ""source_column"": ""bid_depth_25bps""}","{""v1"": ""bid_depth_25bps""}",Order book indicator from indicators.order_book_indicators: bid_depth_25bps
+bid_depth_50bps,bid_depth_50bps,order_book,snapshot,"{""source_table"": ""order_book_indicators"", ""source_column"": ""bid_depth_50bps""}","{""v1"": ""bid_depth_50bps""}",Order book indicator from indicators.order_book_indicators: bid_depth_50bps
+bid_slope,bid_slope,order_book,snapshot,"{""source_table"": ""order_book_indicators"", ""source_column"": ""bid_slope""}","{""v1"": ""bid_slope""}",Order book indicator from indicators.order_book_indicators: bid_slope
+bollinger_10_1.5_5m,bollinger,volatility,5m,"{""period"": 10, ""std_dev"": 1.5}","{""v1"": ""upper"", ""v2"": ""middle"", ""v3"": ""lower"", ""v4"": ""bandwidth""}","Bollinger Bands (10,1.5) tight/fast on 5-minute"
+bollinger_20_2.5_15m,bollinger,volatility,15m,"{""period"": 20, ""std_dev"": 2.5}","{""v1"": ""upper"", ""v2"": ""middle"", ""v3"": ""lower"", ""v4"": ""bandwidth""}","Bollinger Bands (20,2.5) wider on 15-minute"
+bollinger_20_2_15m,bollinger,volatility,15m,"{""period"": 20, ""std_dev"": 2}","{""v1"": ""upper"", ""v2"": ""middle"", ""v3"": ""lower"", ""v4"": ""bandwidth""}","Bollinger Bands (20,2) standard on 15-minute"
+bollinger_20_2_1h,bollinger,volatility,1h,"{""period"": 20, ""std_dev"": 2}","{""v1"": ""upper"", ""v2"": ""middle"", ""v3"": ""lower"", ""v4"": ""bandwidth""}","Bollinger Bands (20,2) standard on 1-hour"
+bollinger_20_2_5m,bollinger,volatility,5m,"{""period"": 20, ""std_dev"": 2}","{""v1"": ""upper"", ""v2"": ""middle"", ""v3"": ""lower"", ""v4"": ""bandwidth""}","Bollinger Bands (20,2) standard on 5-minute"
+bop_14_15m,bop,volume,15m,"{""period"": 14}","{""v1"": ""value""}",Balance of Power (14) on 15-minute candles
+bop_14_1h,bop,volume,1h,"{""period"": 14}","{""v1"": ""value""}",Balance of Power (14) on 1-hour candles
+bop_14_5m,bop,volume,5m,"{""period"": 14}","{""v1"": ""value""}",Balance of Power (14) on 5-minute candles
+cci_20_15m,cci,oscillator,15m,"{""period"": 20}","{""v1"": ""value""}",Commodity Channel Index (20) on 15-minute candles
+cci_20_1h,cci,oscillator,1h,"{""period"": 20}","{""v1"": ""value""}",Commodity Channel Index (20) on 1-hour candles
+cci_20_5m,cci,oscillator,5m,"{""period"": 20}","{""v1"": ""value""}",Commodity Channel Index (20) on 5-minute candles
+cmf_10_5m,cmf,volume,5m,"{""period"": 10}","{""v1"": ""value""}",Chaikin Money Flow (10) fast on 5-minute
+cmf_20_15m,cmf,volume,15m,"{""period"": 20}","{""v1"": ""value""}",Chaikin Money Flow (20) on 15-minute candles
+cmf_20_1h,cmf,volume,1h,"{""period"": 20}","{""v1"": ""value""}",Chaikin Money Flow (20) on 1-hour candles
+cmf_20_5m,cmf,volume,5m,"{""period"": 20}","{""v1"": ""value""}",Chaikin Money Flow (20) on 5-minute candles
+cvd_100_15m,cvd,volume,15m,"{""lookback"": 100}","{""v1"": ""value""}",Cumulative Volume Delta (100) extended on 15-minute
+cvd_20_1m,cvd,volume,1m,"{""lookback"": 20}","{""v1"": ""value""}",Cumulative Volume Delta (20) on 1-minute candles
+cvd_50_15m,cvd,volume,15m,"{""lookback"": 50}","{""v1"": ""value""}",Cumulative Volume Delta (50) on 15-minute candles
+cvd_50_1h,cvd,volume,1h,"{""lookback"": 50}","{""v1"": ""value""}",Cumulative Volume Delta (50) on 1-hour candles
+cvd_50_5m,cvd,volume,5m,"{""lookback"": 50}","{""v1"": ""value""}",Cumulative Volume Delta (50) on 5-minute candles
+depth_ratio,depth_ratio,order_book,snapshot,"{""source_table"": ""order_book_indicators"", ""source_column"": ""depth_ratio""}","{""v1"": ""depth_ratio""}",Order book indicator from indicators.order_book_indicators: depth_ratio
+divergence_1h,divergence_1h,oi_features,15m,"{""source_table"": ""oi_features"", ""source_column"": ""divergence_1h""}","{""v1"": ""divergence_1h""}",OI feature from indicators.oi_features: divergence_1h
+divergence_4h,divergence_4h,oi_features,15m,"{""source_table"": ""oi_features"", ""source_column"": ""divergence_4h""}","{""v1"": ""divergence_4h""}",OI feature from indicators.oi_features: divergence_4h
+donchian_20_15m,donchian,volatility,15m,"{""period"": 20}","{""v1"": ""upper"", ""v2"": ""lower"", ""v3"": ""middle""}",Donchian Channels (20) on 15-minute candles
+donchian_20_1h,donchian,volatility,1h,"{""period"": 20}","{""v1"": ""upper"", ""v2"": ""lower"", ""v3"": ""middle""}",Donchian Channels (20) on 1-hour candles
+donchian_20_5m,donchian,volatility,5m,"{""period"": 20}","{""v1"": ""upper"", ""v2"": ""lower"", ""v3"": ""middle""}",Donchian Channels (20) on 5-minute candles
+donchian_55_1h,donchian,volatility,1h,"{""period"": 55}","{""v1"": ""upper"", ""v2"": ""lower"", ""v3"": ""middle""}",Donchian Channels (55) turtle trading on 1-hour
+ema_12_15m,ema,moving_average,15m,"{""period"": 12}","{""v1"": ""value""}",Exponential Moving Average (12) - MACD fast component
+ema_12_1m,ema,moving_average,1m,"{""period"": 12}","{""v1"": ""value""}",Exponential Moving Average (12) - MACD fast component
+ema_12_5m,ema,moving_average,5m,"{""period"": 12}","{""v1"": ""value""}",Exponential Moving Average (12) - MACD fast component
+ema_200_1h,ema,moving_average,1h,"{""period"": 200}","{""v1"": ""value""}",Exponential Moving Average (200) on 1-hour candles
+ema_21_15m,ema,moving_average,15m,"{""period"": 21}","{""v1"": ""value""}",Exponential Moving Average (21) on 15-minute candles
+ema_21_1h,ema,moving_average,1h,"{""period"": 21}","{""v1"": ""value""}",Exponential Moving Average (21) on 1-hour candles
+ema_21_1m,ema,moving_average,1m,"{""period"": 21}","{""v1"": ""value""}",Exponential Moving Average (21) on 1-minute candles
+ema_21_5m,ema,moving_average,5m,"{""period"": 21}","{""v1"": ""value""}",Exponential Moving Average (21) on 5-minute candles
+ema_26_15m,ema,moving_average,15m,"{""period"": 26}","{""v1"": ""value""}",Exponential Moving Average (26) - MACD slow component
+ema_26_1m,ema,moving_average,1m,"{""period"": 26}","{""v1"": ""value""}",Exponential Moving Average (26) - MACD slow component
+ema_26_5m,ema,moving_average,5m,"{""period"": 26}","{""v1"": ""value""}",Exponential Moving Average (26) - MACD slow component
+ema_50_15m,ema,moving_average,15m,"{""period"": 50}","{""v1"": ""value""}",Exponential Moving Average (50) on 15-minute candles
+ema_50_1h,ema,moving_average,1h,"{""period"": 50}","{""v1"": ""value""}",Exponential Moving Average (50) on 1-hour candles
+ema_9_15m,ema,moving_average,15m,"{""period"": 9}","{""v1"": ""value""}",Exponential Moving Average (9) on 15-minute candles
+ema_9_1h,ema,moving_average,1h,"{""period"": 9}","{""v1"": ""value""}",Exponential Moving Average (9) on 1-hour candles
+ema_9_1m,ema,moving_average,1m,"{""period"": 9}","{""v1"": ""value""}",Exponential Moving Average (9) on 1-minute candles
+ema_9_5m,ema,moving_average,5m,"{""period"": 9}","{""v1"": ""value""}",Exponential Moving Average (9) on 5-minute candles
+eom_14_15m,eom,volume,15m,"{""period"": 14}","{""v1"": ""value""}",Ease of Movement (14) on 15-minute candles
+eom_14_1h,eom,volume,1h,"{""period"": 14}","{""v1"": ""value""}",Ease of Movement (14) on 1-hour candles
+force_13_15m,force_index,volume,15m,"{""period"": 13}","{""v1"": ""value""}",Force Index (13) on 15-minute candles
+force_13_5m,force_index,volume,5m,"{""period"": 13}","{""v1"": ""value""}",Force Index (13) on 5-minute candles
+force_2_5m,force_index,volume,5m,"{""period"": 2}","{""v1"": ""value""}",Force Index (2) fast/sensitive on 5-minute
+funding_oi_pressure,funding_oi_pressure,oi_features,15m,"{""source_table"": ""oi_features"", ""source_column"": ""funding_oi_pressure""}","{""v1"": ""funding_oi_pressure""}",OI feature from indicators.oi_features: funding_oi_pressure
+funding_oi_pressure_1h,funding_oi_pressure_1h,oi_features,15m,"{""source_table"": ""oi_features"", ""source_column"": ""funding_oi_pressure_1h""}","{""v1"": ""funding_oi_pressure_1h""}",OI feature from indicators.oi_features: funding_oi_pressure_1h
+hma_21_15m,hma,moving_average,15m,"{""period"": 21}","{""v1"": ""value""}",Hull Moving Average (21) - reduced lag
+hma_9_15m,hma,moving_average,15m,"{""period"": 9}","{""v1"": ""value""}",Hull Moving Average (9) - reduced lag
+hma_9_1h,hma,moving_average,1h,"{""period"": 9}","{""v1"": ""value""}",Hull Moving Average (9) on 1-hour candles
+ichimoku_7_22_44_15m,ichimoku,complex,15m,"{""kijun"": 22, ""tenkan"": 7, ""senkou_b"": 44}","{""v1"": ""tenkan"", ""v2"": ""kijun"", ""v3"": ""senkou_a"", ""v4"": ""senkou_b"", ""v5"": ""chikou""}","Ichimoku Cloud (7,22,44) crypto-optimized on 15-minute"
+ichimoku_9_26_52_15m,ichimoku,complex,15m,"{""kijun"": 26, ""tenkan"": 9, ""senkou_b"": 52}","{""v1"": ""tenkan"", ""v2"": ""kijun"", ""v3"": ""senkou_a"", ""v4"": ""senkou_b"", ""v5"": ""chikou""}","Ichimoku Cloud (9,26,52) standard on 15-minute"
+ichimoku_9_26_52_1h,ichimoku,complex,1h,"{""kijun"": 26, ""tenkan"": 9, ""senkou_b"": 52}","{""v1"": ""tenkan"", ""v2"": ""kijun"", ""v3"": ""senkou_a"", ""v4"": ""senkou_b"", ""v5"": ""chikou""}","Ichimoku Cloud (9,26,52) standard on 1-hour"
+imbalance,imbalance,order_book,snapshot,"{""source_table"": ""order_book_indicators"", ""source_column"": ""imbalance""}","{""v1"": ""imbalance""}",Order book indicator from indicators.order_book_indicators: imbalance
+keltner_20_10_2_15m,keltner,volatility,15m,"{""atr_period"": 10, ""ema_period"": 20, ""multiplier"": 2}","{""v1"": ""upper"", ""v2"": ""middle"", ""v3"": ""lower""}","Keltner Channels (20,10,2) on 15-minute"
+keltner_20_10_2_1h,keltner,volatility,1h,"{""atr_period"": 10, ""ema_period"": 20, ""multiplier"": 2}","{""v1"": ""upper"", ""v2"": ""middle"", ""v3"": ""lower""}","Keltner Channels (20,10,2) on 1-hour"
+linreg_14_15m,linear_regression,complex,15m,"{""period"": 14}","{""v1"": ""slope"", ""v2"": ""intercept"", ""v3"": ""r_squared"", ""v4"": ""forecast""}",Linear Regression (14) on 15-minute candles
+linreg_14_1h,linear_regression,complex,1h,"{""period"": 14}","{""v1"": ""slope"", ""v2"": ""intercept"", ""v3"": ""r_squared"", ""v4"": ""forecast""}",Linear Regression (14) on 1-hour candles
+linreg_14_5m,linear_regression,complex,5m,"{""period"": 14}","{""v1"": ""slope"", ""v2"": ""intercept"", ""v3"": ""r_squared"", ""v4"": ""forecast""}",Linear Regression (14) on 5-minute candles
+linreg_20_15m,linear_regression,complex,15m,"{""period"": 20}","{""v1"": ""slope"", ""v2"": ""intercept"", ""v3"": ""r_squared"", ""v4"": ""forecast""}",Linear Regression (20) on 15-minute candles
+macd_12_26_9_15m,macd,trend,15m,"{""fast"": 12, ""slow"": 26, ""signal"": 9}","{""v1"": ""macd_line"", ""v2"": ""signal_line"", ""v3"": ""histogram""}","MACD (12,26,9) standard on 15-minute candles"
+macd_12_26_9_1h,macd,trend,1h,"{""fast"": 12, ""slow"": 26, ""signal"": 9}","{""v1"": ""macd_line"", ""v2"": ""signal_line"", ""v3"": ""histogram""}","MACD (12,26,9) standard on 1-hour candles"
+macd_12_26_9_1m,macd,trend,1m,"{""fast"": 12, ""slow"": 26, ""signal"": 9}","{""v1"": ""macd_line"", ""v2"": ""signal_line"", ""v3"": ""histogram""}","MACD (12,26,9) standard on 1-minute candles"
+macd_12_26_9_30m,macd,trend,30m,"{""fast"": 12, ""slow"": 26, ""signal"": 9}","{""v1"": ""macd_line"", ""v2"": ""signal_line"", ""v3"": ""histogram""}","MACD (12,26,9) standard on 30-minute candles"
+macd_12_26_9_5m,macd,trend,5m,"{""fast"": 12, ""slow"": 26, ""signal"": 9}","{""v1"": ""macd_line"", ""v2"": ""signal_line"", ""v3"": ""histogram""}","MACD (12,26,9) standard on 5-minute candles"
+macd_8_17_9_15m,macd,trend,15m,"{""fast"": 8, ""slow"": 17, ""signal"": 9}","{""v1"": ""macd_line"", ""v2"": ""signal_line"", ""v3"": ""histogram""}","MACD (8,17,9) fast settings on 15-minute"
+macd_8_17_9_5m,macd,trend,5m,"{""fast"": 8, ""slow"": 17, ""signal"": 9}","{""v1"": ""macd_line"", ""v2"": ""signal_line"", ""v3"": ""histogram""}","MACD (8,17,9) fast settings on 5-minute"
+mfi_14_15m,mfi,oscillator,15m,"{""period"": 14}","{""v1"": ""value""}",Money Flow Index (14) on 15-minute candles
+mfi_14_1h,mfi,oscillator,1h,"{""period"": 14}","{""v1"": ""value""}",Money Flow Index (14) on 1-hour candles
+mfi_14_5m,mfi,oscillator,5m,"{""period"": 14}","{""v1"": ""value""}",Money Flow Index (14) on 5-minute candles
+mid_price,mid_price,order_book,snapshot,"{""source_table"": ""order_book_indicators"", ""source_column"": ""mid_price""}","{""v1"": ""mid_price""}",Order book indicator from indicators.order_book_indicators: mid_price
+momentum_10_15m,momentum,oscillator,15m,"{""period"": 10}","{""v1"": ""value""}",Momentum (10) on 15-minute candles
+momentum_10_1h,momentum,oscillator,1h,"{""period"": 10}","{""v1"": ""value""}",Momentum (10) on 1-hour candles
+momentum_10_5m,momentum,oscillator,5m,"{""period"": 10}","{""v1"": ""value""}",Momentum (10) on 5-minute candles
+obv_50_15m,obv,volume,15m,"{""lookback"": 50}","{""v1"": ""value""}",On-Balance Volume (50) on 15-minute candles
+obv_50_1h,obv,volume,1h,"{""lookback"": 50}","{""v1"": ""value""}",On-Balance Volume (50) on 1-hour candles
+obv_50_5m,obv,volume,5m,"{""lookback"": 50}","{""v1"": ""value""}",On-Balance Volume (50) on 5-minute candles
+oi_acceleration,oi_acceleration,oi_features,15m,"{""source_table"": ""oi_features"", ""source_column"": ""oi_acceleration""}","{""v1"": ""oi_acceleration""}",OI feature from indicators.oi_features: oi_acceleration
+oi_change_vol_pctile_24h,oi_change_vol_pctile_24h,oi_features,15m,"{""source_table"": ""oi_features"", ""source_column"": ""oi_change_vol_pctile_24h""}","{""v1"": ""oi_change_vol_pctile_24h""}",OI feature from indicators.oi_features: oi_change_vol_pctile_24h
+oi_ema_24,oi_ema_24,oi_features,15m,"{""source_table"": ""oi_features"", ""source_column"": ""oi_ema_24""}","{""v1"": ""oi_ema_24""}",OI feature from indicators.oi_features: oi_ema_24
+oi_ema_8,oi_ema_8,oi_features,15m,"{""source_table"": ""oi_features"", ""source_column"": ""oi_ema_8""}","{""v1"": ""oi_ema_8""}",OI feature from indicators.oi_features: oi_ema_8
+oi_ema_dev_24,oi_ema_dev_24,oi_features,15m,"{""source_table"": ""oi_features"", ""source_column"": ""oi_ema_dev_24""}","{""v1"": ""oi_ema_dev_24""}",OI feature from indicators.oi_features: oi_ema_dev_24
+oi_ema_dev_8,oi_ema_dev_8,oi_features,15m,"{""source_table"": ""oi_features"", ""source_column"": ""oi_ema_dev_8""}","{""v1"": ""oi_ema_dev_8""}",OI feature from indicators.oi_features: oi_ema_dev_8
+oi_roc_1h,oi_roc_1h,oi_features,15m,"{""source_table"": ""oi_features"", ""source_column"": ""oi_roc_1h""}","{""v1"": ""oi_roc_1h""}",OI feature from indicators.oi_features: oi_roc_1h
+oi_roc_24h,oi_roc_24h,oi_features,15m,"{""source_table"": ""oi_features"", ""source_column"": ""oi_roc_24h""}","{""v1"": ""oi_roc_24h""}",OI feature from indicators.oi_features: oi_roc_24h
+oi_roc_4h,oi_roc_4h,oi_features,15m,"{""source_table"": ""oi_features"", ""source_column"": ""oi_roc_4h""}","{""v1"": ""oi_roc_4h""}",OI feature from indicators.oi_features: oi_roc_4h
+pivot_standard_15m,pivot_points,complex,15m,{},"{""v1"": ""pivot"", ""v2"": ""r1"", ""v3"": ""s1"", ""v4"": ""r2"", ""v5"": ""s2""}",Standard Pivot Points on 15-minute
+pivot_standard_1h,pivot_points,complex,1h,{},"{""v1"": ""pivot"", ""v2"": ""r1"", ""v3"": ""s1"", ""v4"": ""r2"", ""v5"": ""s2""}",Standard Pivot Points on 1-hour
+pivot_standard_2h,pivot_points,complex,2h,{},"{""v1"": ""pivot"", ""v2"": ""r1"", ""v3"": ""s1"", ""v4"": ""r2"", ""v5"": ""s2""}",Standard Pivot Points on 2-hour
+price_oi_corr_16,price_oi_corr_16,oi_features,15m,"{""source_table"": ""oi_features"", ""source_column"": ""price_oi_corr_16""}","{""v1"": ""price_oi_corr_16""}",OI feature from indicators.oi_features: price_oi_corr_16
+price_oi_corr_24,price_oi_corr_24,oi_features,15m,"{""source_table"": ""oi_features"", ""source_column"": ""price_oi_corr_24""}","{""v1"": ""price_oi_corr_24""}",OI feature from indicators.oi_features: price_oi_corr_24
+psar_02_02_20_15m,parabolic_sar,trend,15m,"{""af_max"": 0.20, ""af_start"": 0.02, ""af_increment"": 0.02}","{""v1"": ""sar"", ""v2"": ""trend""}",Parabolic SAR standard on 15-minute
+psar_02_02_20_1h,parabolic_sar,trend,1h,"{""af_max"": 0.20, ""af_start"": 0.02, ""af_increment"": 0.02}","{""v1"": ""sar"", ""v2"": ""trend""}",Parabolic SAR standard on 1-hour
+pvt_50_15m,pvt,volume,15m,"{""lookback"": 50}","{""v1"": ""value""}",Price Volume Trend (50) on 15-minute candles
+pvt_50_1h,pvt,volume,1h,"{""lookback"": 50}","{""v1"": ""value""}",Price Volume Trend (50) on 1-hour candles
+roc_12_15m,roc,oscillator,15m,"{""period"": 12}","{""v1"": ""value""}",Rate of Change (12) on 15-minute candles
+roc_12_1h,roc,oscillator,1h,"{""period"": 12}","{""v1"": ""value""}",Rate of Change (12) on 1-hour candles
+roc_9_15m,roc,oscillator,15m,"{""period"": 9}","{""v1"": ""value""}",Rate of Change (9) on 15-minute candles
+roc_9_5m,roc,oscillator,5m,"{""period"": 9}","{""v1"": ""value""}",Rate of Change (9) on 5-minute candles
+rsi_14_15m,rsi,oscillator,15m,"{""period"": 14}","{""v1"": ""value""}",RSI (14) standard on 15-minute candles
+rsi_14_1h,rsi,oscillator,1h,"{""period"": 14}","{""v1"": ""value""}",RSI (14) standard on 1-hour candles
+rsi_14_1m,rsi,oscillator,1m,"{""period"": 14}","{""v1"": ""value""}",RSI (14) standard on 1-minute candles
+rsi_14_30m,rsi,oscillator,30m,"{""period"": 14}","{""v1"": ""value""}",RSI (14) standard on 30-minute candles
+rsi_14_5m,rsi,oscillator,5m,"{""period"": 14}","{""v1"": ""value""}",RSI (14) standard on 5-minute candles
+rsi_21_15m,rsi,oscillator,15m,"{""period"": 21}","{""v1"": ""value""}",RSI (21) slower - less noise
+rsi_21_1h,rsi,oscillator,1h,"{""period"": 21}","{""v1"": ""value""}",RSI (21) slower on 1-hour candles
+rsi_7_15m,rsi,oscillator,15m,"{""period"": 7}","{""v1"": ""value""}",RSI (7) fast on 15-minute candles
+rsi_7_1m,rsi,oscillator,1m,"{""period"": 7}","{""v1"": ""value""}",RSI (7) fast - more sensitive to price changes
+rsi_7_5m,rsi,oscillator,5m,"{""period"": 7}","{""v1"": ""value""}",RSI (7) fast on 5-minute candles
+rvi_10_15m,rvi,volatility,15m,"{""period"": 10}","{""v1"": ""value""}",Relative Volatility Index (10) on 15-minute
+rvi_10_1h,rvi,volatility,1h,"{""period"": 10}","{""v1"": ""value""}",Relative Volatility Index (10) on 1-hour
+slippage_buy_100,slippage_buy_100,order_book,snapshot,"{""source_table"": ""order_book_indicators"", ""source_column"": ""slippage_buy_100""}","{""v1"": ""slippage_buy_100""}",Order book indicator from indicators.order_book_indicators: slippage_buy_100
+slippage_buy_1000,slippage_buy_1000,order_book,snapshot,"{""source_table"": ""order_book_indicators"", ""source_column"": ""slippage_buy_1000""}","{""v1"": ""slippage_buy_1000""}",Order book indicator from indicators.order_book_indicators: slippage_buy_1000
+slippage_sell_100,slippage_sell_100,order_book,snapshot,"{""source_table"": ""order_book_indicators"", ""source_column"": ""slippage_sell_100""}","{""v1"": ""slippage_sell_100""}",Order book indicator from indicators.order_book_indicators: slippage_sell_100
+slippage_sell_1000,slippage_sell_1000,order_book,snapshot,"{""source_table"": ""order_book_indicators"", ""source_column"": ""slippage_sell_1000""}","{""v1"": ""slippage_sell_1000""}",Order book indicator from indicators.order_book_indicators: slippage_sell_1000
+sma_200_1h,sma,moving_average,1h,"{""period"": 200}","{""v1"": ""value""}",Simple Moving Average (200) on 1-hour candles
+sma_20_15m,sma,moving_average,15m,"{""period"": 20}","{""v1"": ""value""}",Simple Moving Average (20) on 15-minute candles
+sma_20_1h,sma,moving_average,1h,"{""period"": 20}","{""v1"": ""value""}",Simple Moving Average (20) on 1-hour candles
+sma_20_1m,sma,moving_average,1m,"{""period"": 20}","{""v1"": ""value""}",Simple Moving Average (20) on 1-minute candles
+sma_20_5m,sma,moving_average,5m,"{""period"": 20}","{""v1"": ""value""}",Simple Moving Average (20) on 5-minute candles
+sma_50_15m,sma,moving_average,15m,"{""period"": 50}","{""v1"": ""value""}",Simple Moving Average (50) on 15-minute candles
+sma_50_1h,sma,moving_average,1h,"{""period"": 50}","{""v1"": ""value""}",Simple Moving Average (50) on 1-hour candles
+sma_9_15m,sma,moving_average,15m,"{""period"": 9}","{""v1"": ""value""}",Simple Moving Average (9) on 15-minute candles
+sma_9_1h,sma,moving_average,1h,"{""period"": 9}","{""v1"": ""value""}",Simple Moving Average (9) on 1-hour candles
+sma_9_1m,sma,moving_average,1m,"{""period"": 9}","{""v1"": ""value""}",Simple Moving Average (9) on 1-minute candles
+sma_9_5m,sma,moving_average,5m,"{""period"": 9}","{""v1"": ""value""}",Simple Moving Average (9) on 5-minute candles
+spread_pct,spread_pct,order_book,snapshot,"{""source_table"": ""order_book_indicators"", ""source_column"": ""spread_pct""}","{""v1"": ""spread_pct""}",Order book indicator from indicators.order_book_indicators: spread_pct
+stoch_14_3_3_15m,stochastic,oscillator,15m,"{""smooth"": 3, ""d_period"": 3, ""k_period"": 14}","{""v1"": ""k"", ""v2"": ""d""}","Stochastic (14,3,3) standard on 15-minute"
+stoch_14_3_3_1h,stochastic,oscillator,1h,"{""smooth"": 3, ""d_period"": 3, ""k_period"": 14}","{""v1"": ""k"", ""v2"": ""d""}","Stochastic (14,3,3) standard on 1-hour"
+stoch_14_3_3_5m,stochastic,oscillator,5m,"{""smooth"": 3, ""d_period"": 3, ""k_period"": 14}","{""v1"": ""k"", ""v2"": ""d""}","Stochastic (14,3,3) standard on 5-minute"
+stoch_5_3_3_15m,stochastic,oscillator,15m,"{""smooth"": 3, ""d_period"": 3, ""k_period"": 5}","{""v1"": ""k"", ""v2"": ""d""}","Stochastic (5,3,3) fast on 15-minute"
+stoch_5_3_3_5m,stochastic,oscillator,5m,"{""smooth"": 3, ""d_period"": 3, ""k_period"": 5}","{""v1"": ""k"", ""v2"": ""d""}","Stochastic (5,3,3) fast on 5-minute"
+stochrsi_14_14_3_3_15m,stoch_rsi,oscillator,15m,"{""d_smooth"": 3, ""k_smooth"": 3, ""rsi_period"": 14, ""stoch_period"": 14}","{""v1"": ""k"", ""v2"": ""d""}","Stochastic RSI (14,14,3,3) on 15-minute"
+stochrsi_14_14_3_3_1h,stoch_rsi,oscillator,1h,"{""d_smooth"": 3, ""k_smooth"": 3, ""rsi_period"": 14, ""stoch_period"": 14}","{""v1"": ""k"", ""v2"": ""d""}","Stochastic RSI (14,14,3,3) on 1-hour"
+supertrend_10_3_15m,supertrend,trend,15m,"{""period"": 10, ""multiplier"": 3}","{""v1"": ""supertrend"", ""v2"": ""direction""}","SuperTrend (10,3) on 15-minute candles"
+supertrend_10_3_1h,supertrend,trend,1h,"{""period"": 10, ""multiplier"": 3}","{""v1"": ""supertrend"", ""v2"": ""direction""}","SuperTrend (10,3) on 1-hour candles"
+supertrend_10_3_5m,supertrend,trend,5m,"{""period"": 10, ""multiplier"": 3}","{""v1"": ""supertrend"", ""v2"": ""direction""}","SuperTrend (10,3) on 5-minute candles"
+supertrend_7_2_15m,supertrend,trend,15m,"{""period"": 7, ""multiplier"": 2}","{""v1"": ""supertrend"", ""v2"": ""direction""}","SuperTrend (7,2) tighter on 15-minute"
+turnover_1h,turnover_1h,oi_features,15m,"{""source_table"": ""oi_features"", ""source_column"": ""turnover_1h""}","{""v1"": ""turnover_1h""}",OI feature from indicators.oi_features: turnover_1h
+turnover_4h,turnover_4h,oi_features,15m,"{""source_table"": ""oi_features"", ""source_column"": ""turnover_4h""}","{""v1"": ""turnover_4h""}",OI feature from indicators.oi_features: turnover_4h
+ulcer_14_15m,ulcer_index,volatility,15m,"{""period"": 14}","{""v1"": ""value""}",Ulcer Index (14) downside risk on 15-minute
+ulcer_14_1h,ulcer_index,volatility,1h,"{""period"": 14}","{""v1"": ""value""}",Ulcer Index (14) downside risk on 1-hour
+ultimate_7_14_28_15m,ultimate_oscillator,complex,15m,"{""period1"": 7, ""period2"": 14, ""period3"": 28}","{""v1"": ""value""}","Ultimate Oscillator (7,14,28) on 15-minute"
+ultimate_7_14_28_1h,ultimate_oscillator,complex,1h,"{""period1"": 7, ""period2"": 14, ""period3"": 28}","{""v1"": ""value""}","Ultimate Oscillator (7,14,28) on 1-hour"
+vortex_14_15m,vortex,trend,15m,"{""period"": 14}","{""v1"": ""plus_vi"", ""v2"": ""minus_vi""}",Vortex Indicator (14) on 15-minute candles
+vortex_14_1h,vortex,trend,1h,"{""period"": 14}","{""v1"": ""plus_vi"", ""v2"": ""minus_vi""}",Vortex Indicator (14) on 1-hour candles
+vwap_20_5m,vwap,volume,5m,"{""lookback"": 20}","{""v1"": ""value""}",VWAP (20) short session on 5-minute
+vwap_24_1h,vwap,volume,1h,"{""lookback"": 24}","{""v1"": ""value""}",VWAP (24) daily session on 1-hour
+vwap_50_15m,vwap,volume,15m,"{""lookback"": 50}","{""v1"": ""value""}",VWAP (50) on 15-minute candles
+vwap_96_15m,vwap,volume,15m,"{""lookback"": 96}","{""v1"": ""value""}",VWAP (96) ~24hr session on 15-minute
+vwma_20_15m,vwma,moving_average,15m,"{""period"": 20}","{""v1"": ""value""}",Volume Weighted Moving Average (20) on 15-minute candles
+vwma_9_15m,vwma,moving_average,15m,"{""period"": 9}","{""v1"": ""value""}",Volume Weighted Moving Average (9) on 15-minute candles
+vwma_9_1h,vwma,moving_average,1h,"{""period"": 9}","{""v1"": ""value""}",Volume Weighted Moving Average (9) on 1-hour candles
+weak_rally_streak,weak_rally_streak,oi_features,15m,"{""source_table"": ""oi_features"", ""source_column"": ""weak_rally_streak""}","{""v1"": ""weak_rally_streak""}",OI feature from indicators.oi_features: weak_rally_streak
+weak_selloff_streak,weak_selloff_streak,oi_features,15m,"{""source_table"": ""oi_features"", ""source_column"": ""weak_selloff_streak""}","{""v1"": ""weak_selloff_streak""}",OI feature from indicators.oi_features: weak_selloff_streak
+williams_14_15m,williams_r,oscillator,15m,"{""period"": 14}","{""v1"": ""value""}",Williams %R (14) on 15-minute candles
+williams_14_1h,williams_r,oscillator,1h,"{""period"": 14}","{""v1"": ""value""}",Williams %R (14) on 1-hour candles
+williams_14_5m,williams_r,oscillator,5m,"{""period"": 14}","{""v1"": ""value""}",Williams %R (14) on 5-minute candles
+wma_21_15m,wma,moving_average,15m,"{""period"": 21}","{""v1"": ""value""}",Weighted Moving Average (21) on 15-minute candles
+wma_9_15m,wma,moving_average,15m,"{""period"": 9}","{""v1"": ""value""}",Weighted Moving Average (9) on 15-minute candles
+wma_9_1h,wma,moving_average,1h,"{""period"": 9}","{""v1"": ""value""}",Weighted Moving Average (9) on 1-hour candles

@@ -1,0 +1,769 @@
+openapi: 3.1.0
+info:
+  title: Indicators Data API
+  version: 0.1.0
+  description: |
+    Read-focused API spec for the `indicators` schema in Supabase Postgres.
+
+    Design goals:
+    - Present a clean, condensed surface over multiple physical tables (e.g. `ohlcv_1m`, `ohlcv_5m`, ...).
+    - Make it unambiguous what data exists, how to filter it, and how to join datasets.
+    - Be "agent-safe": clear time semantics (UTC), stable dimensions (pair, timeframe), and explicit response shapes.
+
+    Notes:
+    - This is a logical API spec. It can be implemented as:
+      - a thin wrapper service, OR
+      - direct Supabase PostgREST endpoints (with equivalent query params).
+    - All timestamps are UTC (`format: date-time`).
+
+servers:
+  - url: https://YOUR_SUPABASE_URL
+    description: Supabase project base URL (set at runtime)
+
+security:
+  # Supabase typically expects BOTH headers:
+  # - apikey: <key>
+  # - Authorization: Bearer <key>
+  - ApiKeyAuth: []
+    BearerAuth: []
+
+tags:
+  - name: ohlcv
+    description: Multi-timeframe OHLCV candles (condensed over `indicators.ohlcv_<timeframe>` tables).
+  - name: indicator-configs
+    description: Indicator config catalog (`indicators.indicator_configs`).
+  - name: indicator-values
+    description: Long-form indicator values (`indicators.indicator_values` partitions).
+  - name: open-interest
+    description: Raw open interest time series (`indicators.open_interest`).
+  - name: oi-features
+    description: Derived open-interest feature series (`indicators.oi_features`).
+  - name: order-book-indicators
+    description: Derived order book features (`indicators.order_book_indicators`).
+  - name: health
+    description: Health summaries and gap reports.
+
+paths:
+  /ohlcv:
+    get:
+      tags: [ohlcv]
+      operationId: getOhlcv
+      summary: Get OHLCV candles for a pair and timeframe over a time window.
+      description: |
+        Condensed access across the physical tables:
+        - `indicators.ohlcv_1m`, `..._5m`, `..._10m`, `..._15m`, `..._30m`, `..._45m`, `..._1h`, `..._2h`, `..._6h`, `..._12h`
+
+        The `timeframe` parameter selects which underlying table is queried.
+      parameters:
+        - $ref: "#/components/parameters/pair"
+        - $ref: "#/components/parameters/timeframe"
+        - $ref: "#/components/parameters/start_utc"
+        - $ref: "#/components/parameters/end_utc"
+        - $ref: "#/components/parameters/order"
+        - $ref: "#/components/parameters/limit"
+      responses:
+        "200":
+          description: Candle list (one row per pair per bucket_time).
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/Candle" }
+              examples:
+                sample:
+                  value:
+                    - pair: BTC-USD
+                      bucket_time: "2026-02-09T15:40:00Z"
+                      open: 43001.12
+                      high: 43010.0
+                      low: 42988.5
+                      close: 42995.2
+                      volume: 12.34
+                      buy_volume: 6.11
+                      sell_volume: 6.23
+                      trade_count: 148
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /ohlcv/latest:
+    get:
+      tags: [ohlcv]
+      operationId: getOhlcvLatest
+      summary: Get the latest N candles for a pair and timeframe.
+      parameters:
+        - $ref: "#/components/parameters/pair"
+        - $ref: "#/components/parameters/timeframe"
+        - name: n
+          in: query
+          required: false
+          description: Number of most recent candles to return.
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 10000
+            default: 200
+      responses:
+        "200":
+          description: Candle list in descending bucket_time order (latest first).
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/Candle" }
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /indicator-configs:
+    get:
+      tags: [indicator-configs]
+      operationId: listIndicatorConfigs
+      summary: List indicator configs (filterable).
+      description: |
+        Source of truth: `indicators.indicator_configs`.
+
+        `output_columns` documents the meaning of `v1..v5` for values stored in `indicator_values`.
+      parameters:
+        - $ref: "#/components/parameters/timeframe_optional"
+        - name: category
+          in: query
+          required: false
+          schema: { type: string }
+        - name: indicator_name
+          in: query
+          required: false
+          schema: { type: string }
+        - name: is_active
+          in: query
+          required: false
+          schema: { type: boolean }
+      responses:
+        "200":
+          description: Indicator configs.
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/IndicatorConfig" }
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /indicator-configs/{config_id}:
+    get:
+      tags: [indicator-configs]
+      operationId: getIndicatorConfig
+      summary: Get one indicator config by config_id.
+      parameters:
+        - name: config_id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Config record.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/IndicatorConfig" }
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /indicator-values:
+    get:
+      tags: [indicator-values]
+      operationId: getIndicatorValues
+      summary: Get indicator values for a pair over a time window (optionally restricted to config_ids).
+      description: |
+        Source of truth: `indicators.indicator_values` (weekly partitions).
+
+        The table is long-form:
+        - 1 row per (pair, bucket_time, config_id)
+        - numeric outputs stored in `v1..v5`
+      parameters:
+        - $ref: "#/components/parameters/pair"
+        - $ref: "#/components/parameters/timeframe_optional"
+        - name: config_id
+          in: query
+          required: false
+          description: Restrict to one-or-more config IDs. When omitted, returns all configs (use with care).
+          style: form
+          explode: true
+          schema:
+            type: array
+            items: { type: string }
+        - $ref: "#/components/parameters/start_utc"
+        - $ref: "#/components/parameters/end_utc"
+        - $ref: "#/components/parameters/order"
+        - $ref: "#/components/parameters/limit"
+        - name: include_config
+          in: query
+          required: false
+          description: If true, includes config metadata alongside each value.
+          schema: { type: boolean, default: false }
+      responses:
+        "200":
+          description: Indicator values.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: array
+                    items: { $ref: "#/components/schemas/IndicatorValue" }
+                  - type: array
+                    items: { $ref: "#/components/schemas/IndicatorValueWithConfig" }
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /indicator-values/latest:
+    get:
+      tags: [indicator-values]
+      operationId: getLatestIndicatorValues
+      summary: Get latest indicator snapshot for a pair (optionally restricted to timeframe/config_ids).
+      parameters:
+        - $ref: "#/components/parameters/pair"
+        - $ref: "#/components/parameters/timeframe_optional"
+        - name: config_id
+          in: query
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: array
+            items: { type: string }
+      responses:
+        "200":
+          description: Latest values for the selected pair (and optional timeframe/config filters).
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/IndicatorValue" }
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /open-interest:
+    get:
+      tags: [open-interest]
+      operationId: getOpenInterest
+      summary: Get raw open interest rows.
+      description: |
+        Source of truth: `indicators.open_interest` (raw time series).
+      parameters:
+        - $ref: "#/components/parameters/pair"
+        - $ref: "#/components/parameters/start_utc"
+        - $ref: "#/components/parameters/end_utc"
+        - $ref: "#/components/parameters/order"
+        - $ref: "#/components/parameters/limit"
+      responses:
+        "200":
+          description: Open interest rows.
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/OpenInterestRow" }
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /oi-features:
+    get:
+      tags: [oi-features]
+      operationId: getOiFeatures
+      summary: Get derived open-interest feature rows.
+      description: |
+        Source of truth: `indicators.oi_features` (derived features).
+
+        Provenance:
+        - derived from `open_interest` and price/candle context according to in-db functions
+      parameters:
+        - $ref: "#/components/parameters/pair"
+        - $ref: "#/components/parameters/start_utc"
+        - $ref: "#/components/parameters/end_utc"
+        - $ref: "#/components/parameters/order"
+        - $ref: "#/components/parameters/limit"
+      responses:
+        "200":
+          description: OI feature rows.
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/OiFeatureRow" }
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /order-book/indicators:
+    get:
+      tags: [order-book-indicators]
+      operationId: getOrderBookIndicators
+      summary: Get derived order book indicator rows.
+      description: |
+        Source of truth: `indicators.order_book_indicators` (derived from `public.order_book_snapshots`).
+      parameters:
+        - $ref: "#/components/parameters/pair"
+        - $ref: "#/components/parameters/start_utc"
+        - $ref: "#/components/parameters/end_utc"
+        - $ref: "#/components/parameters/order"
+        - $ref: "#/components/parameters/limit"
+      responses:
+        "200":
+          description: Order book indicator rows.
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/OrderBookIndicatorRow" }
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /health/summary:
+    get:
+      tags: [health]
+      operationId: getIndicatorsHealthSummary
+      summary: Get health summary metrics (DB-level smoke test).
+      description: |
+        Wraps: `indicators.fn_health_check()`.
+      responses:
+        "200":
+          description: Health metrics.
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/HealthMetric" }
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /health/gaps/ohlcv:
+    get:
+      tags: [health]
+      operationId: getOhlcvGapReport
+      summary: Report missing candles per day for a pair/timeframe over a lookback window.
+      description: |
+        Intended for monitoring / quick verification.
+        Returns per-day missing counts (not the full missing timestamp list).
+      parameters:
+        - $ref: "#/components/parameters/pair"
+        - $ref: "#/components/parameters/timeframe"
+        - name: lookback_days
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 60
+            default: 7
+          description: Number of full UTC days to look back (excludes the current partial day).
+      responses:
+        "200":
+          description: Gap report rows (per day).
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/GapReportRow" }
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: apikey
+      description: Supabase publishable/service key.
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: "Send the same key as `Authorization: Bearer <key>`."
+
+  parameters:
+    pair:
+      name: pair
+      in: query
+      required: true
+      schema: { $ref: "#/components/schemas/Pair" }
+    timeframe:
+      name: timeframe
+      in: query
+      required: true
+      schema: { $ref: "#/components/schemas/Timeframe" }
+    timeframe_optional:
+      name: timeframe
+      in: query
+      required: false
+      schema: { $ref: "#/components/schemas/Timeframe" }
+    start_utc:
+      name: start_utc
+      in: query
+      required: true
+      schema: { $ref: "#/components/schemas/UtcTimestamp" }
+      description: Inclusive start timestamp (UTC).
+    end_utc:
+      name: end_utc
+      in: query
+      required: true
+      schema: { $ref: "#/components/schemas/UtcTimestamp" }
+      description: Exclusive end timestamp (UTC).
+    order:
+      name: order
+      in: query
+      required: false
+      schema:
+        type: string
+        enum: [asc, desc]
+        default: asc
+      description: Sort order by time column.
+    limit:
+      name: limit
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100000
+        default: 10000
+      description: Maximum rows to return.
+
+  responses:
+    BadRequest:
+      description: Invalid input.
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/ErrorResponse" }
+    Unauthorized:
+      description: Missing/invalid auth.
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/ErrorResponse" }
+    NotFound:
+      description: Resource not found.
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/ErrorResponse" }
+
+  schemas:
+    Pair:
+      type: string
+      enum: [BTC-USD, ETH-USD, SOL-USD]
+    Timeframe:
+      type: string
+      enum: [1m, 5m, 10m, 15m, 30m, 45m, 1h, 2h, 6h, 12h]
+    UtcTimestamp:
+      type: string
+      format: date-time
+
+    Candle:
+      type: object
+      additionalProperties: false
+      required:
+        - pair
+        - bucket_time
+        - open
+        - high
+        - low
+        - close
+        - volume
+        - buy_volume
+        - sell_volume
+        - trade_count
+      properties:
+        pair: { $ref: "#/components/schemas/Pair" }
+        bucket_time: { $ref: "#/components/schemas/UtcTimestamp" }
+        open: { type: number }
+        high: { type: number }
+        low: { type: number }
+        close: { type: number }
+        volume: { type: number }
+        buy_volume: { type: number }
+        sell_volume: { type: number }
+        trade_count: { type: integer }
+      x-storage:
+        schema: indicators
+        tables_by_timeframe:
+          1m: indicators.ohlcv_1m
+          5m: indicators.ohlcv_5m
+          10m: indicators.ohlcv_10m
+          15m: indicators.ohlcv_15m
+          30m: indicators.ohlcv_30m
+          45m: indicators.ohlcv_45m
+          1h: indicators.ohlcv_1h
+          2h: indicators.ohlcv_2h
+          6h: indicators.ohlcv_6h
+          12h: indicators.ohlcv_12h
+
+    IndicatorConfig:
+      type: object
+      additionalProperties: false
+      required:
+        - config_id
+        - indicator_name
+        - category
+        - timeframe
+        - params
+        - output_columns
+        - is_active
+        - created_at
+      properties:
+        config_id: { type: string }
+        indicator_name: { type: string }
+        category: { type: string }
+        timeframe: { $ref: "#/components/schemas/Timeframe" }
+        params:
+          type: object
+          description: Indicator parameters (JSONB).
+        output_columns:
+          type: object
+          description: Maps v1..v5 meaning (JSONB).
+        description: { type: [string, "null"] }
+        is_active: { type: boolean }
+        created_at: { $ref: "#/components/schemas/UtcTimestamp" }
+      x-storage:
+        table: indicators.indicator_configs
+
+    IndicatorValue:
+      type: object
+      additionalProperties: false
+      required: [pair, bucket_time, config_id, created_at]
+      properties:
+        pair: { $ref: "#/components/schemas/Pair" }
+        bucket_time: { $ref: "#/components/schemas/UtcTimestamp" }
+        config_id: { type: string }
+        v1: { type: [number, "null"] }
+        v2: { type: [number, "null"] }
+        v3: { type: [number, "null"] }
+        v4: { type: [number, "null"] }
+        v5: { type: [number, "null"] }
+        created_at: { $ref: "#/components/schemas/UtcTimestamp" }
+      x-storage:
+        partitioned_table: indicators.indicator_values
+        partitioning: weekly
+        partitions_pattern: indicators.indicator_values_wYYYY_WW
+
+    IndicatorValueWithConfig:
+      allOf:
+        - $ref: "#/components/schemas/IndicatorValue"
+        - type: object
+          additionalProperties: false
+          required: [config]
+          properties:
+            config: { $ref: "#/components/schemas/IndicatorConfig" }
+
+    OpenInterestRow:
+      type: object
+      additionalProperties: false
+      required:
+        - symbol
+        - pair
+        - binance_symbol
+        - bucket_time
+        - open_interest
+        - oi_change
+        - oi_change_pct
+        - close_price
+        - volume
+        - price_change_pct
+        - oi_volume_ratio
+        - oi_divergence
+        - weak_rally
+        - weak_selloff
+        - source_time
+        - ingested_at
+      properties:
+        symbol: { type: string, description: "Asset symbol (e.g. BTC, ETH, SOL)" }
+        pair: { $ref: "#/components/schemas/Pair" }
+        binance_symbol: { type: string }
+        bucket_time: { $ref: "#/components/schemas/UtcTimestamp" }
+        open_interest: { type: number }
+        oi_change: { type: number }
+        oi_change_pct: { type: number }
+        close_price: { type: number }
+        volume: { type: number }
+        price_change_pct: { type: number }
+        oi_volume_ratio: { type: number }
+        oi_divergence: { type: integer }
+        weak_rally: { type: integer }
+        weak_selloff: { type: integer }
+        source_time: { $ref: "#/components/schemas/UtcTimestamp" }
+        ingested_at: { $ref: "#/components/schemas/UtcTimestamp" }
+        mark_price: { type: [number, "null"] }
+        open_interest_notional: { type: [number, "null"] }
+        funding_rate: { type: [number, "null"] }
+        funding_rate_8h_avg: { type: [number, "null"] }
+        funding_next_time: { type: [string, "null"], format: date-time }
+        funding_source_time: { type: [string, "null"], format: date-time }
+      x-storage:
+        table: indicators.open_interest
+
+    OiFeatureRow:
+      type: object
+      additionalProperties: false
+      required:
+        - symbol
+        - pair
+        - bucket_time
+        - weak_rally_streak
+        - weak_selloff_streak
+        - computed_at
+      properties:
+        symbol: { type: string }
+        pair: { $ref: "#/components/schemas/Pair" }
+        bucket_time: { $ref: "#/components/schemas/UtcTimestamp" }
+        divergence_1h: { type: [number, "null"] }
+        divergence_4h: { type: [number, "null"] }
+        funding_oi_pressure: { type: [number, "null"] }
+        funding_oi_pressure_1h: { type: [number, "null"] }
+        basis_pct: { type: [number, "null"] }
+        oi_roc_1h: { type: [number, "null"] }
+        oi_roc_4h: { type: [number, "null"] }
+        oi_roc_24h: { type: [number, "null"] }
+        oi_acceleration: { type: [number, "null"] }
+        weak_rally_streak: { type: integer, default: 0 }
+        weak_selloff_streak: { type: integer, default: 0 }
+        oi_ema_8: { type: [number, "null"] }
+        oi_ema_24: { type: [number, "null"] }
+        oi_ema_dev_8: { type: [number, "null"] }
+        oi_ema_dev_24: { type: [number, "null"] }
+        price_oi_corr_16: { type: [number, "null"] }
+        price_oi_corr_24: { type: [number, "null"] }
+        oi_change_vol_pctile_24h: { type: [number, "null"] }
+        turnover_1h: { type: [number, "null"] }
+        turnover_4h: { type: [number, "null"] }
+        source_time: { type: [string, "null"], format: date-time }
+        computed_at: { $ref: "#/components/schemas/UtcTimestamp" }
+      x-storage:
+        table: indicators.oi_features
+
+    OrderBookIndicatorRow:
+      type: object
+      additionalProperties: false
+      required: [pair, captured_at, created_at]
+      properties:
+        pair: { $ref: "#/components/schemas/Pair" }
+        captured_at: { $ref: "#/components/schemas/UtcTimestamp" }
+        depth_ratio: { type: [number, "null"] }
+        imbalance: { type: [number, "null"] }
+        spread_pct: { type: [number, "null"] }
+        mid_price: { type: [number, "null"] }
+        bid_depth_10bps: { type: [number, "null"] }
+        ask_depth_10bps: { type: [number, "null"] }
+        bid_depth_25bps: { type: [number, "null"] }
+        ask_depth_25bps: { type: [number, "null"] }
+        bid_depth_50bps: { type: [number, "null"] }
+        ask_depth_50bps: { type: [number, "null"] }
+        bid_slope: { type: [number, "null"] }
+        ask_slope: { type: [number, "null"] }
+        slippage_buy_100: { type: [number, "null"] }
+        slippage_sell_100: { type: [number, "null"] }
+        slippage_buy_1000: { type: [number, "null"] }
+        slippage_sell_1000: { type: [number, "null"] }
+        created_at: { $ref: "#/components/schemas/UtcTimestamp" }
+      x-storage:
+        table: indicators.order_book_indicators
+
+    HealthMetric:
+      type: object
+      additionalProperties: false
+      required: [metric, current_value, health]
+      properties:
+        metric: { type: string }
+        current_value: { type: string }
+        health: { type: string, description: "Typically '✅' for ok, otherwise a warning marker." }
+      x-storage:
+        function: indicators.fn_health_check
+
+    GapReportRow:
+      type: object
+      additionalProperties: false
+      required: [day_utc, missing_candles]
+      properties:
+        day_utc:
+          type: string
+          format: date
+          description: Full UTC day (YYYY-MM-DD).
+        missing_candles:
+          type: integer
+          minimum: 0
+
+    ErrorResponse:
+      type: object
+      additionalProperties: false
+      required: [error]
+      properties:
+        error:
+          type: object
+          additionalProperties: false
+          required: [code, message]
+          properties:
+            code: { type: string }
+            message: { type: string }
+            details: { type: [object, "null"] }
+
+
+    SyntheticIndicatorConfig:
+      type: object
+      additionalProperties: false
+      required: [config_id, indicator_name, category, timeframe, decision_phase, params, output_columns, is_active, created_at]
+      properties:
+        config_id: { type: string }
+        indicator_name: { type: string }
+        category: { type: string }
+        timeframe: { type: string }
+        decision_phase: { type: string, enum: [t_plus_1m, t_plus_2m] }
+        params: { type: object }
+        output_columns: { type: object }
+        description: { type: [string, "null"] }
+        is_active: { type: boolean }
+        created_at: { $ref: "#/components/schemas/UtcTimestamp" }
+      x-storage:
+        table: indicators.synthetic_indicator_configs
+
+    SyntheticIndicatorValue:
+      type: object
+      additionalProperties: false
+      required: [pair, bucket_time, config_id, computed_at]
+      properties:
+        pair: { $ref: "#/components/schemas/Pair" }
+        bucket_time: { $ref: "#/components/schemas/UtcTimestamp" }
+        config_id: { type: string }
+        v1: { type: [number, "null"] }
+        v2: { type: [number, "null"] }
+        v3: { type: [number, "null"] }
+        v4: { type: [number, "null"] }
+        v5: { type: [number, "null"] }
+        source_time: { type: [string, "null"], format: date-time }
+        computed_at: { $ref: "#/components/schemas/UtcTimestamp" }
+        quality_flags: { type: [object, "null"] }
+      x-storage:
+        table: indicators.synthetic_indicator_values
+
+    SyntheticSignalInputRow:
+      type: object
+      additionalProperties: true
+      properties:
+        pair: { $ref: "#/components/schemas/Pair" }
+        bucket_time: { $ref: "#/components/schemas/UtcTimestamp" }
+        syn_mtf_signed_efficiency_ratio: { type: [number, "null"] }
+        syn_rsi_velocity_5m: { type: [number, "null"] }
+        syn_early_impulse_liq_align_2m: { type: [number, "null"] }
+        syn_oi_funding_impulse_2m: { type: [number, "null"] }
+        syn_early_momentum_divergence: { type: [number, "null"] }
+        syn_order_flow_accel_regime: { type: [number, "null"] }
+      x-storage:
+        view: indicators.v_synthetic_signal_inputs

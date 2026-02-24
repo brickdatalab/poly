@@ -1,0 +1,5 @@
+project_id = "cxvntzszdkyggjjenefn"
+
+[functions.indicator-worker]
+verify_jwt = false
+

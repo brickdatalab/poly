@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  repo-sanity:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Validate required repo structure
+        run: |
+          test -d supabase
+          test -d supabase/migrations
+          test -d scripts
+          test -f docs/plans/2026-02-24-gitops-pipeline-hardening-and-recovery.md
+
+      - name: Compile Python
+        run: |
+          python -m compileall scripts syn syn-final tests
+
+      - name: Check for obviously committed secrets
+        run: |
+          ! rg -n --hidden --glob='!*.md' --glob='!.git/*' \
+            '(SUPABASE_SERVICE_ROLE_KEY|SUPABASE_DB_PASSWORD|BEGIN PRIVATE KEY|gcp_credentials\.json)' .
+

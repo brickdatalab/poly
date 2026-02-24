@@ -1,0 +1,22 @@
+version: '3.8'
+services:
+  market-context-streamer-shadow:
+    build: .
+    container_name: market-context-streamer-shadow
+    restart: always
+    ports:
+      - "8092:8080"
+    env_file:
+      - .env
+    environment:
+      - PORT=8080
+      - BACKUP_DIR=/data/backup
+      - HEARTBEAT_ID=12
+      - HEARTBEAT_SERVICE_NAME=market-context-streamer-shadow
+    volumes:
+      - ./backup:/data/backup
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"

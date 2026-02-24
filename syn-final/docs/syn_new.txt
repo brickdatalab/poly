@@ -1,0 +1,103 @@
+rsi_volatility_normalized_velocity
+  lookback: 20
+  current_indicator_values: |
+    rsi_14_15m[t0], rsi_14_15m[t0-3], atr_14_15m[t0], close[t0], close[t0+1m]
+  signal_ladder_sigma: 1.0
+  formula: |
+    rsi_vel = (rsi_14_15m[t0] - rsi_14_15m[t0-3]) / 3.0
+    vol_norm = atr_14_15m[t0] / (close[t0] + 1e-9)
+    early_confirm = sign(close[t0+1m] - close[t0])
+    value = (rsi_vel / (vol_norm + 1e-9)) * early_confirm
+  decision_logic:
+    down_trigger: value < -1.0 * sigma and rsi_14_15m[t0] > 35
+    up_trigger: value > 1.0 * sigma and rsi_14_15m[t0] < 65
+  economic_mechanism: >
+    Captures RSI velocity (rate-of-change) normalized by realized volatility (ATR) to filter 
+    whipsaws; low volatility environments produce muted signals. The early 1m close acts as 
+    a directional confirmation filter, ensuring alignment with immediate microstructure flow.
+
+cvd_price_divergence_velocity
+  lookback: 20
+  current_indicator_values: |
+    cvd_50_15m[t0], cvd_50_15m[t0-5], close[t0], close[t0-5], atr_14_15m[t0]
+  signal_ladder_sigma: 1.2
+  formula: |
+    # Normalize CVD and Price velocities by their respective volatilities
+    cvd_vel = cvd_50_15m[t0] - cvd_50_15m[t0-5]
+    price_vel = close[t0] - close[t0-5]
+    
+    cvd_norm = cvd_vel / (std(cvd_50_15m, 20) + 1e-9)
+    price_norm = price_vel / (atr_14_15m[t0] * sqrt(5) + 1e-9)  # sqrt(n) for time scaling
+    
+    # Divergence: positive when CVD leads price (accumulation), negative when lagging (distribution)
+    value = cvd_norm - price_norm
+  decision_logic:
+    down_trigger: value < -1.2 * sigma and close[t0] > close[t0-5]  # bearish divergence
+    up_trigger: value > 1.2 * sigma and close[t0] < close[t0-5]    # bullish divergence
+  economic_mechanism: >
+    Measures the divergence between order flow velocity (Cumulative Volume Delta) and price 
+    appreciation velocity. In crypto, smart money footprint often leads price; this signal 
+    detects when volume delta accumulation/depletion decouples from price direction, 
+    predicting imminent reversal or continuation failure.
+
+
+atr_normalized_reversal_pressure:
+  synthetic_indicator_name: anrp
+  synthetic_indicator_name_lookback: 14
+  current_indicator_values:
+    - atr_14_5m (period=14)
+    - macd_12_26_9_5m (fast=12, slow=26, signal=9)
+    - close_5m
+    - close_1m
+  signal_ladder_sigma: [1.2, 2.0, 3.0]
+  formula: |
+    # Detect exhaustion moves using volatility-normalized price extension + momentum deceleration
+    # Peak detection uses 3-period window (t0-10m, t0-5m, t0) - NEVER includes current candle
+    price_extension = (close[t0] - close[t0-15m]) / atr[t0]  # Sigma move over 3 candles
+    
+    # Momentum deceleration: MACD histogram peak detection with 3-period rolling window
+    macd_hist_t0 = macd_line[t0] - signal_line[t0]
+    macd_hist_t1 = macd_line[t0-5m] - signal_line[t0-5m]
+    macd_hist_t2 = macd_line[t0-10m] - signal_line[t0-10m]
+    is_hist_peak = (macd_hist_t1 > macd_hist_t2) and (macd_hist_t1 > macd_hist_t0)  # Peak at t0-5m
+    
+    # Immediate confirmation: 1m candle closes against the extension direction
+    immediate_reversal = (price_extension > 0 and close[t0+1m] < open[t0]) or \
+                         (price_extension < 0 and close[t0+1m] > open[t0])
+    
+    reversal_pressure = abs(price_extension) * (1.0 if is_hist_peak else 0.4) * (1.5 if immediate_reversal else 0.7)
+  decision_logic:
+    down_trigger: price_extension > 1.8 and is_hist_peak and close[t0+1m] < (open[t0] - 0.3 * atr[t0])
+    up_trigger: price_extension < -1.8 and is_hist_peak and close[t0+1m] > (open[t0] + 0.3 * atr[t0])
+
+multitimeframe_trend_confluence:
+  synthetic_indicator_name: mtc_score
+  synthetic_indicator_name_lookback: 50
+  current_indicator_values:
+    - supertrend_10_3_5m (period=10, multiplier=3)
+    - supertrend_10_3_15m (period=10, multiplier=3)
+    - ema_9_15m (period=9)
+    - ema_21_15m (period=21)
+    - close_5m
+  signal_ladder_sigma: [0.0, 1.0, 2.0]  # Score-based rather than sigma
+  formula: |
+    # Compute directional alignment score across timeframes (suppresses whipsaw)
+    # 5m trend: SuperTrend direction at t0
+    st_5m_dir = 1.0 if supertrend[t0] < close[t0] else -1.0
+    
+    # 15m trend: SuperTrend + EMA slope confirmation
+    st_15m_dir = 1.0 if supertrend_15m[t0] < close[t0] else -1.0
+    ema_slope = (ema_9[t0] - ema_9[t0-15m]) - (ema_21[t0] - ema_21[t0-15m])
+    ema_dir = 1.0 if ema_slope > 0 else -1.0
+    
+    # Confluence score: -3 to +3 scale
+    score = st_5m_dir + st_15m_dir + ema_dir
+    
+    # Volatility filter: only trust signals when ATR > threshold (avoid chop)
+    atr_5m = (high[t0] - low[t0])  # Simplified for 5m candle
+    vol_filter = 1.0 if atr_5m > 0.0012 * close[t0] else 0.2
+    
+    confluence_score = score * vol_filter
+  decision_logic:
+    down_trigger: confluence_score <= -2.0 and close[t0+1m] < ema_9[t0]
+    up_trigger: confluence_score >= 2.0 and close[t0+1m] > ema_9[t0]

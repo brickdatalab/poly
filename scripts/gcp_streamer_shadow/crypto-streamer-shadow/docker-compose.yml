@@ -1,0 +1,22 @@
+version: '3.8'
+services:
+  crypto-streamer-shadow:
+    build: .
+    container_name: crypto-streamer-shadow
+    restart: always
+    ports:
+      - "8091:8080"
+    env_file:
+      - .env
+    environment:
+      - PORT=8080
+      - BACKUP_DIR=/data/backup
+      - HEARTBEAT_ID=11
+      - HEARTBEAT_SERVICE_NAME=crypto-streamer-shadow
+    volumes:
+      - ./backup:/data/backup
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"

@@ -1,0 +1,122 @@
+experiments:
+  - experiment_name: 1m_5m_boundary_return
+    event_clock: quarter_hour            # t0 in {:00,:15,:30,:45}
+    symbol: BTC
+    feature:
+      timeframe: 1m
+      start_offset_min: -4
+      end_offset_min: +1
+      start_field: open
+      end_field: close
+      formula: (close_1m[t0+1m] - open_1m[t0-4m]) / open_1m[t0-4m]
+    target:
+      horizon: 15m
+      formula: sign(close_1m[t0+14m] - open_1m[t0])
+    normalization:
+      mode: global
+      stats: [min, max, mean, std]
+    signal_ladder_sigma: [0.25, 0.5, 0.75, 1.0, 1.5, 2.0, 3.0, 4.0]
+    decision_rules:
+      down_trigger_k: feature <= mean - k*std
+      up_trigger_k: feature >= mean + k*std
+    evaluation:
+      metrics: [n_pred, coverage_pct, up_hit_rate, down_hit_rate, accuracy_pct]
+      validation_window: last_48h
+
+  - experiment_name: 5m_10m_boundary_return
+    event_clock: quarter_hour            # t0 in {:00,:15,:30,:45}
+    symbol: BTC
+    feature:
+      timeframe: 5m
+      start_offset_min: -10
+      end_offset_min: 0
+      start_field: open
+      end_field: close_of_prev_candle
+      formula: (close_5m[t0-5m] - open_5m[t0-10m]) / open_5m[t0-10m]
+    target:
+      horizon: 15m
+      formula: sign(close_1m[t0+14m] - open_1m[t0])
+    normalization:
+      mode: global
+      stats: [min, max, mean, std]
+    signal_ladder_sigma: [0.25, 0.5, 0.75, 1.0, 1.5, 2.0, 3.0, 4.0]
+    decision_rules:
+      down_trigger_k: feature <= mean - k*std
+      up_trigger_k: feature >= mean + k*std
+    evaluation:
+      metrics: [n_pred, coverage_pct, up_hit_rate, down_hit_rate, accuracy_pct]
+      validation_window: last_48h
+
+  - experiment_name: 5m_15m_boundary_return
+    event_clock: quarter_hour            # t0 in {:00,:15,:30,:45}
+    symbol: BTC
+    feature:
+      timeframe: 5m
+      start_offset_min: -15
+      end_offset_min: 0
+      start_field: open
+      end_field: close_of_prev_candle
+      formula: (close_5m[t0-5m] - open_5m[t0-15m]) / open_5m[t0-15m]
+    target:
+      horizon: 15m
+      formula: sign(close_1m[t0+14m] - open_1m[t0])
+    normalization:
+      mode: global
+      stats: [min, max, mean, std]
+    signal_ladder_sigma: [0.25, 0.5, 0.75, 1.0, 1.5, 2.0, 3.0, 4.0]
+    decision_rules:
+      down_trigger_k: feature <= mean - k*std
+      up_trigger_k: feature >= mean + k*std
+    evaluation:
+      metrics: [n_pred, coverage_pct, up_hit_rate, down_hit_rate, accuracy_pct]
+      validation_window: last_48h
+
+  - experiment_name: 10m_20m_boundary_return
+    event_clock: quarter_hour            # t0 in {:00,:15,:30,:45}
+    symbol: BTC
+    feature:
+      timeframe: 10m_anchored_to_t0      # synthetic 10m bars built from 1m and anchored on event boundary
+      source_timeframe: 1m
+      start_offset_min: -20
+      end_offset_min: 0
+      start_field: open
+      end_field: close_of_prev_window
+      formula: (close_10m_anchor[t0-10m] - open_10m_anchor[t0-20m]) / open_10m_anchor[t0-20m]
+    target:
+      horizon: 15m
+      formula: sign(close_1m[t0+14m] - open_1m[t0])
+    normalization:
+      mode: global
+      stats: [min, max, mean, std]
+    signal_ladder_sigma: [0.25, 0.5, 0.75, 1.0, 1.5, 2.0, 3.0, 4.0]
+    decision_rules:
+      down_trigger_k: feature <= mean - k*std
+      up_trigger_k: feature >= mean + k*std
+    evaluation:
+      metrics: [n_pred, coverage_pct, up_hit_rate, down_hit_rate, accuracy_pct]
+      validation_window: last_48h
+
+  - experiment_name: 10m_30m_boundary_return
+    event_clock: quarter_hour            # t0 in {:00,:15,:30,:45}
+    symbol: BTC
+    feature:
+      timeframe: 10m_anchored_to_t0      # synthetic 10m bars built from 1m and anchored on event boundary
+      source_timeframe: 1m
+      start_offset_min: -30
+      end_offset_min: 0
+      start_field: open
+      end_field: close_of_prev_window
+      formula: (close_10m_anchor[t0-10m] - open_10m_anchor[t0-30m]) / open_10m_anchor[t0-30m]
+    target:
+      horizon: 15m
+      formula: sign(close_1m[t0+14m] - open_1m[t0])
+    normalization:
+      mode: global
+      stats: [min, max, mean, std]
+    signal_ladder_sigma: [0.25, 0.5, 0.75, 1.0, 1.5, 2.0, 3.0, 4.0]
+    decision_rules:
+      down_trigger_k: feature <= mean - k*std
+      up_trigger_k: feature >= mean + k*std
+    evaluation:
+      metrics: [n_pred, coverage_pct, up_hit_rate, down_hit_rate, accuracy_pct]
+      validation_window: last_48h

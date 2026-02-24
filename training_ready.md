@@ -1,0 +1,539 @@
+# Training Data (Ready)
+
+Source run: `/Users/vitolo/Desktop/projects/poly/scripts/training_schema_review/runs/20260210T160002Z`
+
+All timestamps are UTC (`timestamptz`).
+
+## Primary Training Datasets (Views)
+
+### `training.v_rt_dataset_from_indicators_15m_scoreable_current`
+- time_column: `bucket_time`
+- key_columns: `pair`, `bucket_time`
+- label_columns: `end_price`, `event_end`, `label_version`, `outcome`, `price_change`, `price_change_pct`, `start_price`
+- feature_columns (safe): 108
+
+- `adl_50`
+- `adx_14`
+- `adx_14_minus_di`
+- `adx_14_plus_di`
+- `adx_20`
+- `adx_20_minus_di`
+- `adx_20_plus_di`
+- `aroon_14_down`
+- `aroon_14_osc`
+- `aroon_14_up`
+- `aroon_25_down`
+- `aroon_25_osc`
+- `aroon_25_up`
+- `atr_14`
+- `atr_21`
+- `awesome`
+- `bb_20_bandwidth`
+- `bb_20_lower`
+- `bb_20_middle`
+- `bb_20_upper`
+- `bb_25_bandwidth`
+- `bb_25_lower`
+- `bb_25_middle`
+- `bb_25_upper`
+- `bop_14`
+- `buy_volume`
+- `cci_20`
+- `close`
+- `cvd_100`
+- `cvd_50`
+- `donchian_lower`
+- `donchian_middle`
+- `donchian_upper`
+- `ema_12`
+- `ema_21`
+- `ema_26`
+- `ema_50`
+- `ema_9`
+- `force_13`
+- `high`
+- `hma_21`
+- `hma_9`
+- `ichi_chikou`
+- `ichi_fast_kijun`
+- `ichi_fast_tenkan`
+- `ichi_kijun`
+- `ichi_senkou_a`
+- `ichi_senkou_b`
+- `ichi_tenkan`
+- `keltner_lower`
+- `keltner_middle`
+- `keltner_upper`
+- `linreg_14_forecast`
+- `linreg_14_intercept`
+- `linreg_14_r2`
+- `linreg_14_slope`
+- `linreg_20_r2`
+- `linreg_20_slope`
+- `low`
+- `macd_fast_histogram`
+- `macd_fast_line`
+- `macd_fast_signal`
+- `macd_histogram`
+- `macd_line`
+- `macd_signal`
+- `mfi_14`
+- `momentum_10`
+- `obv_50`
+- `open`
+- `pivot`
+- `pivot_r1`
+- `pivot_r2`
+- `pivot_s1`
+- `pivot_s2`
+- `psar_trend`
+- `psar_value`
+- `pvt_50`
+- `roc_12`
+- `roc_9`
+- `rsi_14`
+- `rsi_21`
+- `rsi_7`
+- `rvi_10`
+- `sell_volume`
+- `sma_20`
+- `sma_50`
+- `sma_9`
+- `stoch_fast_d`
+- `stoch_fast_k`
+- `stochrsi_d`
+- `stochrsi_k`
+- `supertrend_direction`
+- `supertrend_fast_direction`
+- `supertrend_fast_value`
+- `supertrend_value`
+- `trade_count`
+- `ulcer_14`
+- `ultimate_osc`
+- `volume`
+- `vortex_minus`
+- `vortex_plus`
+- `vwap_50`
+- `vwap_96`
+- `vwma_20`
+- `vwma_9`
+- `williams_14`
+- `wma_21`
+- `wma_9`
+
+### `training.v_rt_dataset_15m_from_unified_scoreable_current`
+- time_column: `bucket_time`
+- key_columns: `pair`, `bucket_time`
+- label_columns: `end_price`, `event_end`, `label_version`, `outcome`, `price_change`, `price_change_pct`, `start_price`
+- feature_columns (safe): 32
+
+- `adx_14`
+- `atr_14`
+- `atr_21`
+- `cci_20`
+- `close`
+- `cvd_100`
+- `cvd_50`
+- `ema_21`
+- `ema_50`
+- `ema_9`
+- `high`
+- `keltner_lower`
+- `keltner_middle`
+- `keltner_upper`
+- `low`
+- `macd_line`
+- `macd_signal`
+- `mfi_14`
+- `momentum_10`
+- `open`
+- `pivot`
+- `pivot_r1`
+- `pivot_s1`
+- `roc_12`
+- `rsi_14`
+- `rsi_21`
+- `rsi_7`
+- `sma_20`
+- `sma_50`
+- `volume`
+- `vwap_50`
+- `vwap_96`
+
+## Candle Tables
+
+### `training.spot_15m` (15m)
+- time_column: `open_time`
+- rows: 633984
+- range_utc: 2019-09-23T08:30:00+00:00 -> 2026-02-01T16:15:00+00:00
+- ohlcv_columns: `open`, `high`, `low`, `close`, `volume`
+- label_columns: `label`, `pct_change`
+- extra_columns: `high_low_range`, `lower_wick_pct`, `num_trades`, `pct_change_zscore`, `quote_volume`, `taker_buy_base_vol`, `taker_buy_quote_vol`, `upper_wick_pct`
+
+### `training.spot_1h` (1h)
+- time_column: `open_time`
+- rows: 158506
+- range_utc: 2019-09-23T08:00:00+00:00 -> 2026-02-01T16:00:00+00:00
+- ohlcv_columns: `open`, `high`, `low`, `close`, `volume`
+- label_columns: `label`, `pct_change`
+- extra_columns: `high_low_range`, `lower_wick_pct`, `num_trades`, `pct_change_zscore`, `quote_volume`, `taker_buy_base_vol`, `taker_buy_quote_vol`, `upper_wick_pct`
+
+## Indicator-Enriched Tables (Safe Columns Only)
+
+### `training.spot_15m_indicators` (15m)
+- rows: 633984
+- range_utc: 2019-09-23T08:30:00+00:00 -> 2026-02-01T16:15:00+00:00
+- safe_numeric_feature_columns: 91
+
+- `adl`
+- `adx_14`
+- `adx_20`
+- `ao`
+- `aroon_down_14`
+- `aroon_down_25`
+- `aroon_up_14`
+- `aroon_up_25`
+- `atr_14`
+- `atr_21`
+- `atr_7`
+- `avg_trade_size`
+- `bb_lower_20`
+- `bb_lower_20_wide`
+- `bb_middle_20`
+- `bb_upper_20`
+- `bb_upper_20_wide`
+- `bb_width_20`
+- `bop_14`
+- `buy_pressure_ratio`
+- `cci_20`
+- `cvd_100`
+- `cvd_50`
+- `donchian_lower_20`
+- `donchian_mid_20`
+- `donchian_upper_20`
+- `ema_12`
+- `ema_200`
+- `ema_21`
+- `ema_26`
+- `ema_50`
+- `ema_9`
+- `force_index_13`
+- `hma_21`
+- `hma_9`
+- `ichimoku_chikou`
+- `ichimoku_kijun`
+- `ichimoku_senkou_a`
+- `ichimoku_senkou_b`
+- `ichimoku_tenkan`
+- `keltner_lower`
+- `keltner_middle`
+- `keltner_upper`
+- `linreg_14`
+- `linreg_20`
+- `linreg_slope_14`
+- `linreg_slope_20`
+- `macd_fast_hist`
+- `macd_fast_line`
+- `macd_fast_signal`
+- `macd_hist`
+- `macd_line`
+- `macd_signal`
+- `mfi_14`
+- `minus_di_14`
+- `minus_di_20`
+- `momentum_10`
+- `pivot`
+- `pivot_r1`
+- `pivot_r2`
+- `pivot_s1`
+- `pivot_s2`
+- `plus_di_14`
+- `plus_di_20`
+- `psar`
+- `pvt`
+- `roc_12`
+- `roc_9`
+- `rsi_14`
+- `rsi_21`
+- `rsi_7`
+- `rvi_10`
+- `sma_20`
+- `sma_200`
+- `sma_50`
+- `sma_9`
+- `stoch_rsi_d`
+- `stoch_rsi_k`
+- `supertrend_10_3`
+- `supertrend_7_2`
+- `supertrend_dir_10_3`
+- `supertrend_dir_7_2`
+- `trade_intensity`
+- `ulcer_14`
+- `uo`
+- `vwap_50`
+- `vwap_96`
+- `vwma_20`
+- `vwma_9`
+- `wma_21`
+- `wma_9`
+
+### `training.spot_1h_indicators` (1h)
+- rows: 158506
+- range_utc: 2019-09-23T08:00:00+00:00 -> 2026-02-01T16:00:00+00:00
+- safe_numeric_feature_columns: 91
+
+- `adl`
+- `adx_14`
+- `adx_20`
+- `ao`
+- `aroon_down_14`
+- `aroon_down_25`
+- `aroon_up_14`
+- `aroon_up_25`
+- `atr_14`
+- `atr_21`
+- `atr_7`
+- `avg_trade_size`
+- `bb_lower_20`
+- `bb_lower_20_wide`
+- `bb_middle_20`
+- `bb_upper_20`
+- `bb_upper_20_wide`
+- `bb_width_20`
+- `bop_14`
+- `buy_pressure_ratio`
+- `cci_20`
+- `cvd_100`
+- `cvd_50`
+- `donchian_lower_20`
+- `donchian_lower_55`
+- `donchian_mid_20`
+- `donchian_mid_55`
+- `donchian_upper_20`
+- `donchian_upper_55`
+- `ema_12`
+- `ema_200`
+- `ema_21`
+- `ema_26`
+- `ema_50`
+- `ema_9`
+- `force_index_13`
+- `hma_21`
+- `hma_9`
+- `ichimoku_chikou`
+- `ichimoku_kijun`
+- `ichimoku_senkou_a`
+- `ichimoku_senkou_b`
+- `ichimoku_tenkan`
+- `keltner_lower`
+- `keltner_middle`
+- `keltner_upper`
+- `linreg_14`
+- `linreg_slope_14`
+- `macd_fast_hist`
+- `macd_fast_line`
+- `macd_fast_signal`
+- `macd_hist`
+- `macd_line`
+- `macd_signal`
+- `mfi_14`
+- `minus_di_14`
+- `minus_di_20`
+- `momentum_10`
+- `pivot`
+- `pivot_r1`
+- `pivot_r2`
+- `pivot_s1`
+- `pivot_s2`
+- `plus_di_14`
+- `plus_di_20`
+- `psar`
+- `pvt`
+- `roc_12`
+- `roc_9`
+- `rsi_14`
+- `rsi_21`
+- `rsi_7`
+- `rvi_10`
+- `sma_20`
+- `sma_200`
+- `sma_50`
+- `sma_9`
+- `stoch_rsi_d`
+- `stoch_rsi_k`
+- `supertrend_10_3`
+- `supertrend_7_2`
+- `supertrend_dir_10_3`
+- `supertrend_dir_7_2`
+- `trade_intensity`
+- `ulcer_14`
+- `uo`
+- `vwap_24`
+- `vwma_20`
+- `vwma_9`
+- `wma_21`
+- `wma_9`
+
+### `training.unified_15m` (15m)
+- rows: 633981
+- range_utc: 2019-09-23T08:30:00+00:00 -> 2026-02-01T16:00:00+00:00
+- safe_numeric_feature_columns: 61
+
+- `adx_14`
+- `atr_14`
+- `atr_21`
+- `atr_7`
+- `bb_lower_20`
+- `bb_middle_20`
+- `bb_upper_20`
+- `bb_width_20`
+- `cci_20`
+- `close`
+- `cvd_100`
+- `cvd_50`
+- `ema_200`
+- `ema_21`
+- `ema_50`
+- `ema_9`
+- `high`
+- `ichimoku_kijun`
+- `ichimoku_senkou_a`
+- `ichimoku_senkou_b`
+- `ichimoku_tenkan`
+- `keltner_lower`
+- `keltner_middle`
+- `keltner_upper`
+- `linreg_14`
+- `linreg_slope_14`
+- `low`
+- `macd_hist`
+- `macd_line`
+- `macd_signal`
+- `mfi_14`
+- `minus_di_14`
+- `momentum_10`
+- `open`
+- `pivot`
+- `pivot_r1`
+- `pivot_s1`
+- `plus_di_14`
+- `roc_12`
+- `rsi_14`
+- `rsi_21`
+- `rsi_7`
+- `sma_20`
+- `sma_200`
+- `sma_50`
+- `stoch_rsi_d`
+- `stoch_rsi_k`
+- `supertrend_10_3`
+- `supertrend_dir_10_3`
+- `syn_cmf_cvd_bear_confluence`
+- `syn_extreme_overbought`
+- `syn_extreme_oversold`
+- `syn_macd_accel_down`
+- `syn_macd_accel_up`
+- `syn_strong_breakout_down`
+- `syn_strong_breakout_up`
+- `syn_vwap_bear_reject`
+- `uo`
+- `volume`
+- `vwap_50`
+- `vwap_96`
+
+### `training.unified_1h` (1h)
+- rows: 158503
+- range_utc: 2019-09-23T08:00:00+00:00 -> 2026-02-01T15:00:00+00:00
+- safe_numeric_feature_columns: 60
+
+- `adx_14`
+- `atr_14`
+- `atr_21`
+- `atr_7`
+- `bb_lower_20`
+- `bb_middle_20`
+- `bb_upper_20`
+- `bb_width_20`
+- `cci_20`
+- `close`
+- `cvd_100`
+- `cvd_50`
+- `ema_200`
+- `ema_21`
+- `ema_50`
+- `ema_9`
+- `high`
+- `ichimoku_kijun`
+- `ichimoku_senkou_a`
+- `ichimoku_senkou_b`
+- `ichimoku_tenkan`
+- `keltner_lower`
+- `keltner_middle`
+- `keltner_upper`
+- `linreg_14`
+- `linreg_slope_14`
+- `low`
+- `macd_hist`
+- `macd_line`
+- `macd_signal`
+- `mfi_14`
+- `minus_di_14`
+- `momentum_10`
+- `open`
+- `pivot`
+- `pivot_r1`
+- `pivot_s1`
+- `plus_di_14`
+- `roc_12`
+- `rsi_14`
+- `rsi_21`
+- `rsi_7`
+- `sma_20`
+- `sma_200`
+- `sma_50`
+- `stoch_rsi_d`
+- `stoch_rsi_k`
+- `supertrend_10_3`
+- `supertrend_dir_10_3`
+- `syn_cmf_cvd_bear_confluence`
+- `syn_extreme_overbought`
+- `syn_extreme_oversold`
+- `syn_macd_accel_down`
+- `syn_macd_accel_up`
+- `syn_strong_breakout_down`
+- `syn_strong_breakout_up`
+- `syn_vwap_bear_reject`
+- `uo`
+- `volume`
+- `vwap_24`
+
+### `training.synthetic_features` (15m/1h)
+- rows: 153730
+- range_utc: 2020-01-01T00:00:00+00:00 -> 2026-02-01T16:00:00+00:00
+- safe_numeric_feature_columns: 25
+
+- `above_cloud`
+- `bb_breakout_lower`
+- `bb_breakout_upper`
+- `below_cloud`
+- `cmf_cvd_bear_confluence`
+- `cmf_cvd_bull_confluence`
+- `composite_obos`
+- `extreme_overbought`
+- `extreme_oversold`
+- `ichimoku_bear_setup`
+- `ichimoku_bull_setup`
+- `in_squeeze`
+- `macd_accel_down`
+- `macd_accel_up`
+- `macd_hist_roc`
+- `strong_breakout_down`
+- `strong_breakout_up`
+- `supertrend_bear_confirmed`
+- `supertrend_bull_confirmed`
+- `trend_regime_bear`
+- `trend_regime_bull`
+- `trend_regime_weak`
+- `trend_strength`
+- `vwap_bear_reject`
+- `vwap_bull_reject`

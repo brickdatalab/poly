@@ -1,0 +1,293 @@
+<1>
+- indicator_name: mtf_signed_efficiency_ratio
+  indicator_name_lookback:
+    fast: "12 × 5m candles (1 hour)"
+    slow: "8 × 15m candles (2 hours)"
+  indicator_value: >
+    Product of signed efficiency ratios at two timeframes.
+    Each ER = net displacement / total path length, preserving direction.
+    The PRODUCT is positive when both timeframes trend the same direction,
+    negative when they conflict, and near-zero when either is choppy.
+    Bounded approximately [-1, +1].
+
+    This is rank 1 because it answers the question your model currently
+    CANNOT answer efficiently: "Is this a trending market or chop, and
+    do the micro and macro timeframes agree?" Without this, every other
+    signal is a coin flip during ranging conditions.
+  signal_ladder_sigma:
+    conflict_zone:   "value < -0.05"           # timeframes disagree on direction — DO NOT TRADE
+    chop_zone:       "-0.05 <= value < +0.08"  # at least one timeframe is choppy — low confidence
+    aligned_weak:    "+0.08 <= value < +0.20"  # aligned but not clean — partial confidence
+    aligned_strong:  "value >= +0.20"          # both timeframes trending cleanly in same direction
+  formula: >
+    # --- 5m efficiency ratio (fast, 1-hour lookback) ---
+    num_5m   = close_5m[t-1] - close_5m[t-12]
+    denom_5m = SUM( abs(close_5m[i] - close_5m[i-1]) ) for i in {t-11 .. t-1}
+    ER_5m    = num_5m / NULLIF(denom_5m, 0)
+
+    # --- 15m efficiency ratio (slow, 2-hour lookback) ---
+    num_15m   = close_15m[t-1] - close_15m[t-8]
+    denom_15m = SUM( abs(close_15m[i] - close_15m[i-1]) ) for i in {t-7 .. t-1}
+    ER_15m    = num_15m / NULLIF(denom_15m, 0)
+
+    # --- product: positive when aligned, negative when conflicting ---
+    mtf_signed_efficiency_ratio = ER_5m * ER_15m
+  decision_logic:
+    down_trigger: >
+      value <= -0.20
+      Both timeframes are trending efficiently BUT IN OPPOSITE DIRECTIONS
+      (5m down + 15m up, or 5m up + 15m down). This extreme conflict
+      resolves when the faster timeframe wins — but which one?
+      When ER_5m is the negative one: the micro is selling off against
+      a macro uptrend → likely short-term continuation down.
+      CRITICAL: check sign(ER_5m) separately to determine direction.
+    up_trigger: >
+      value >= +0.20  AND  ER_5m > 0  AND  ER_15m > 0
+      Both timeframes moving up efficiently. At least 20% of the
+      product space is net-directional. This is the "all clear" for
+      long-biased predictions. The dual confirmation massively
+      reduces whipsaw — you only get here when BOTH timescales agree.
+</1>
+<2>
+- indicator_name: rsi_velocity_5m
+  indicator_name_lookback:
+    velocity_window: "3 × 5m candles (15 min — matches prediction target)"
+    rsi_base: "rsi_14_5m (14-period RSI on 5m = 70 min of underlying data)"
+    z_normalization: "20 × 5m candles (100 min rolling window)"
+    context: "rsi_14_1h (hourly RSI for regime gating)"
+  indicator_value: >
+    First derivative of RSI(14) on 5-MINUTE candles, z-scored.
+    The 15-min version I gave you before was WRONG for this use case —
+    by the time 15m RSI updates by one candle, your prediction window
+    is already closed. The 5m RSI velocity captures the same momentum
+    shift 3x faster: 3 five-minute candles = exactly 15 minutes of
+    RSI trajectory, directly aligned with your prediction horizon.
+    The 1h RSI is used in decision logic as a regime gate — velocity
+    signals are strongest when 1h RSI is in the midrange (35-65),
+    meaning the macro oscillator has room to run.
+  signal_ladder_sigma:
+    noise:    "abs(z) < 0.5σ"
+    weak:     "0.5σ <= abs(z) < 1.0σ"
+    moderate: "1.0σ <= abs(z) < 1.5σ"
+    strong:   "abs(z) >= 1.5σ"
+  formula: >
+    raw = rsi_14_5m[t-1] - rsi_14_5m[t-4]
+    μ   = rolling_mean(raw, window=20, timeframe=5m)
+    σ   = rolling_std(raw, window=20, timeframe=5m, min_periods=10)
+    rsi_velocity_5m = (raw - μ) / GREATEST(σ, 0.5)
+    # floor σ at 0.5 to prevent z-score explosion when RSI is pinned
+  decision_logic:
+    down_trigger: >
+      rsi_velocity_5m <= -1.5  AND  rsi_14_1h[t-1] BETWEEN 35 AND 65
+      5m RSI is dropping fast (1.5σ below its recent mean velocity)
+      AND the 1h RSI is in the middle zone — meaning there is structural
+      room for continued downside on the macro timeframe. If 1h RSI
+      were already at 20, this 5m drop is likely a bounce opportunity,
+      not a continuation signal. The 1h gate prevents chasing oversold.
+    up_trigger: >
+      rsi_velocity_5m >= +1.5  AND  rsi_14_1h[t-1] BETWEEN 35 AND 65
+      5m RSI is surging upward AND the 1h RSI has room to run higher.
+      Same logic inverted. The 1h gate prevents buying into overbought
+      macro conditions where the 5m surge is likely to exhaust.
+</2>
+<3>
+early_impulse_liquidity_alignment_2m:
+  early_impulse_liquidity_alignment_2m_lookback: "compute at t_eval=t0+2m using open_15m[t0] and close_1m[t0+2m]; normalize with trailing 1m ATR"
+  current_indicator_values: "imbalance[snapshot], bid_depth_25bps[snapshot], ask_depth_25bps[snapshot], slippage_buy_100[snapshot], slippage_sell_100[snapshot], spread_pct[snapshot], atr_14_1m[1m]" #     
+  signal_ladder_sigma:
+    weak: 0.75
+    medium: 1.25
+    strong: 1.75
+  formula: |-
+    # Constants
+    eps = 1e-9
+    t_eval = t0 + 2m
+
+    # Early boundary return (allowed early feature; NOT the 15m outcome)
+    r_early_2m = ln( close_1m[t_eval] / open_15m[t0] )
+
+    # Vol-normalize by 1m ATR in pct terms
+    atr_pct_1m = atr_14_1m[t_eval] / max(close_1m[t_eval], eps)
+    r_vol = r_early_2m / max(atr_pct_1m, eps)
+
+    # Z-score normalization (strictly trailing, no future)
+    z_r = zscore(r_vol, window=720, series="r_vol", end=t_eval)   # ~12h of 1m samples
+
+    # Liquidity alignment terms (snapshot at or immediately before t_eval)
+    depth_skew = ln( (bid_depth_25bps[t_eval] + eps) / (ask_depth_25bps[t_eval] + eps) )
+    slip_skew  = ln( (slippage_sell_100[t_eval] + eps) / (slippage_buy_100[t_eval] + eps) )  # >0 => downside thinner than upside
+    z_spread   = zscore(spread_pct[t_eval], window=720, series="spread_pct", end=t_eval)
+
+    liq_align =
+      0.60 * tanh(imbalance[t_eval]) +
+      0.30 * tanh(depth_skew) -
+      0.20 * tanh(slip_skew) -
+      0.30 * tanh(z_spread)
+
+    # Final: continuation score (positive => expect up over t0..t0+14m, negative => expect down)
+    signal = z_r * liq_align
+  decision_logic:
+    down_trigger: |-
+      (signal <= -1.25) AND (zscore(spread_pct[t0+2m], 720) < 2.0)
+    up_trigger: |-
+      (signal >= +1.25) AND (zscore(spread_pct[t0+2m], 720) < 2.0)
+</3>
+<4>
+oi_funding_impulse_confirmation_2m:
+  oi_funding_impulse_confirmation_2m_lookback: "compute at t_eval=t0+2m; use OI/funding state from last fully-closed 15m candle at t0 (event boundary)"
+  current_indicator_values: "oi_acceleration[15m], oi_roc_1h[15m], funding_oi_pressure[15m], basis_pct[15m], atr_14_1m[1m]" #     
+  signal_ladder_sigma:
+    weak: 0.6
+    medium: 1.0
+    strong: 1.4
+  formula: |-
+    eps = 1e-9
+    t_eval = t0 + 2m
+
+    # Same early move normalization as above
+    r_early_2m = ln( close_1m[t_eval] / open_15m[t0] )
+    atr_pct_1m = atr_14_1m[t_eval] / max(close_1m[t_eval], eps)
+    r_vol = r_early_2m / max(atr_pct_1m, eps)
+    z_r = zscore(r_vol, window=720, series="r_vol", end=t_eval)
+
+    # OI impulse / participation (computed on the last closed 15m candle at t0)
+    z_oi_acc = zscore(oi_acceleration[t0], window=96, series="oi_acceleration", end=t0)  # ~24h of 15m
+    z_oi_roc = zscore(oi_roc_1h[t0],     window=96, series="oi_roc_1h",     end=t0)
+
+    oi_support = 0.7 * z_oi_acc + 0.3 * z_oi_roc   # >0 => fresh positioning in direction of move
+
+    # Crowding / carry (penalize chase in crowded conditions => fewer whipsaws)
+    z_fund  = zscore(funding_oi_pressure[t0], window=96, series="funding_oi_pressure", end=t0)
+    z_basis = zscore(basis_pct[t0],          window=96, series="basis_pct",           end=t0)
+    crowding = 0.6 * z_fund + 0.4 * z_basis
+
+    # Directional continuation score:
+    # - boosts when early impulse aligns with OI participation
+    # - shrinks when crowding is high in the same direction as the early impulse
+    signal = z_r * tanh(oi_support) - 0.50 * abs(z_r) * tanh(max(crowding, 0.0)) * sign(z_r)
+  decision_logic:
+    down_trigger: "signal <= -1.0"
+    up_trigger: "signal >= +1.0"
+</4>
+<5>
+**synthetic_indicator_name:** `early_momentum_divergence_score`
+
+**synthetic_indicator_name_lookback:** 3 candles (t-3 to t-1) + t0→t0+1m boundary candle
+
+**current_indicator_values:**
+- `rsi_7_5m` (5-minute, period 7)
+- `macd_8_17_9_5m.v3` (histogram, 5-minute)
+- `cvd_20_1m.v1` (cumulative volume delta, 1-minute, lookback 20)
+- OHLCV: `close[t-3:t-1]`, `close[t0+1m]`
+
+**signal_ladder_sigma:** 
+- σ = 1.5 (moderate threshold to avoid noise)
+- Ladder: `[-2σ, -σ, 0, +σ, +2σ]` → `[-3, -1.5, 0, +1.5, +3]`
+
+**formula:**
+```python
+# Step 1: Compute price RoC from pre-event peak to t0+1m boundary
+price_peak_3p = max(close[t-3], close[t-2], close[t-1])  # 3-period peak excluding t0
+price_roc_boundary = (close[t0+1m] - price_peak_3p) / price_peak_3p
+
+# Step 2: Compute RSI momentum (5m)
+rsi_roc = (rsi_7_5m[t0] - rsi_7_5m[t-1]) / 100  # Normalized to [-1, 1]
+
+# Step 3: Compute MACD histogram acceleration (5m)
+macd_accel = macd_hist[t0] - macd_hist[t-1]
+
+# Step 4: Compute CVD momentum (1m aggregated to 5m equivalent)
+cvd_roc = (cvd_20_1m[t0] - cvd_20_1m[t-5]) / abs(cvd_20_1m[t-5] + 1e-9)
+
+# Step 5: Divergence score
+# If price rising but RSI/MACD/CVD falling → bearish divergence (negative score)
+# If price falling but RSI/MACD/CVD rising → bullish divergence (positive score)
+indicator_momentum = (rsi_roc + sign(macd_accel)*0.5 + cvd_roc) / 2.5  # Weighted avg
+
+divergence_raw = indicator_momentum - sign(price_roc_boundary)  # Range: [-2, +2]
+EMDS = divergence_raw * abs(price_roc_boundary) * 100  # Scale by price move magnitude
+```
+
+**decision_logic:**
+
+**down_trigger:**
+```
+IF EMDS < -1.5:  # Strong bearish divergence
+    → Predict DOWN (price rising but internals weakening)
+```
+
+**up_trigger:**
+```
+IF EMDS > +1.5:  # Strong bullish divergence
+    → Predict UP (price falling but internals strengthening)
+```
+
+**notes:**
+- **Why #1:** Combines early boundary signal (t0+1m) with multi-indicator momentum divergence. Catches reversals before they fully develop.
+- **Whipsaw protection:** Requires magnitude weighting—small price moves with divergence are ignored.
+- **Zero leakage:** Uses only t0+1m close, not the outcome candle (t0+14m).
+</5>
+---
+<6>
+### **#2: Order Flow Acceleration Regime (OFAR)**
+
+**synthetic_indicator_name:** `order_flow_acceleration_regime`
+
+**synthetic_indicator_name_lookback:** 6 candles (t-6 to t-1) + t0→t0+2m boundary
+
+**current_indicator_values:**
+- `cvd_50_5m.v1` (5-minute CVD)
+- `imbalance` (order book snapshot)
+- `depth_ratio` (order book snapshot)
+- `bid_depth_25bps`, `ask_depth_25bps` (order book)
+- OHLCV: `volume[t-6:t-1]`, `close[t0+2m]`
+
+**signal_ladder_sigma:**
+- σ = 0.8 (tighter threshold for order flow signals)
+- Ladder: `[-1.6, -0.8, 0, +0.8, +1.6]`
+
+**formula:**
+```python
+# Step 1: CVD acceleration (2nd derivative)
+cvd_velocity_now = cvd_50_5m[t0] - cvd_50_5m[t-1]
+cvd_velocity_prev = cvd_50_5m[t-1] - cvd_50_5m[t-2]
+cvd_accel = cvd_velocity_now - cvd_velocity_prev
+
+# Step 2: Order book pressure shift (snapshot at t0)
+ob_pressure_t0 = (bid_depth_25bps - ask_depth_25bps) / (bid_depth_25bps + ask_depth_25bps + 1e-9)
+ob_pressure_t1 = (bid_depth_25bps[t-1] - ask_depth_25bps[t-1]) / (bid_depth_25bps[t-1] + ask_depth_25bps[t-1] + 1e-9)
+ob_pressure_roc = ob_pressure_t0 - ob_pressure_t1
+
+# Step 3: Volume surge detection (3-period rolling avg)
+vol_avg_3p = mean(volume[t-3:t-1])
+vol_surge = (volume[t0] - vol_avg_3p) / vol_avg_3p
+
+# Step 4: Boundary price momentum
+price_roc_2m = (close[t0+2m] - close[t0]) / close[t0]
+
+# Step 5: Regime score
+flow_momentum = cvd_accel * 0.4 + ob_pressure_roc * 0.3 + vol_surge * 0.3
+OFAR = flow_momentum * sign(price_roc_2m) * 10  # Align flow with price direction
+```
+
+**decision_logic:**
+
+**down_trigger:**
+```
+IF OFAR < -0.8 AND depth_ratio < 0.9:  # Accelerating sell flow + thin bids
+    → Predict DOWN
+```
+
+**up_trigger:**
+```
+IF OFAR > +0.8 AND depth_ratio > 1.1:  # Accelerating buy flow + thick bids
+    → Predict UP
+```
+
+**notes:**
+- **Why #2:** Order flow acceleration (2nd derivative) catches institutional positioning before retail. Depth ratio confirms liquidity support.
+- **Whipsaw protection:** Requires both flow acceleration AND order book confirmation.
+- **Crypto-specific:** High-frequency order book data is more predictive in crypto than equities.
+</6>
+
+# Normalized implementation spec lives in docs/discoveries/synthetic_indicators_spec.md

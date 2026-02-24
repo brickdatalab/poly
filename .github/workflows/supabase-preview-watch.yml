@@ -1,0 +1,28 @@
+name: Supabase Preview Watch
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - "supabase/**"
+      - "scripts/**"
+      - "docs/runbooks/**"
+
+jobs:
+  wait-for-supabase-preview:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wait for Supabase Preview check
+        id: wait
+        uses: fountainhead/action-wait-for-check@v1.2.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          ref: ${{ github.event.pull_request.head.sha }}
+          checkName: Supabase Preview
+
+      - name: Fail when preview check fails
+        if: ${{ steps.wait.outputs.conclusion == 'failure' || steps.wait.outputs.conclusion == 'cancelled' || steps.wait.outputs.conclusion == 'timed_out' }}
+        run: |
+          echo "Supabase Preview check did not pass."
+          exit 1
+

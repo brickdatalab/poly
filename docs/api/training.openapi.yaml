@@ -1,0 +1,298 @@
+openapi: 3.1.0
+info:
+  title: Training Data API
+  version: 0.1.0
+  description: |
+    Read-focused API spec for the `training` schema in Supabase Postgres.
+
+    This schema is used for historical ML feature engineering and training datasets.
+    It is primarily batch-populated (not the live ingestion pipeline).
+
+servers:
+  - url: https://YOUR_SUPABASE_URL
+    description: Supabase project base URL (set at runtime)
+
+security:
+  - ApiKeyAuth: []
+    BearerAuth: []
+
+tags:
+  - name: datasets
+    description: Catalog of available training datasets.
+  - name: candles
+    description: Historical candle time series (`spot_*`).
+  - name: features
+    description: Indicator-enriched and curated feature datasets.
+
+paths:
+  /training/datasets:
+    get:
+      tags: [datasets]
+      operationId: listTrainingDatasets
+      summary: List training datasets and their intended use.
+      responses:
+        "200":
+          description: Dataset catalog.
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/TrainingDataset" }
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /training/candles:
+    get:
+      tags: [candles]
+      operationId: getTrainingCandles
+      summary: Get historical candles for a symbol and timeframe.
+      parameters:
+        - $ref: "#/components/parameters/symbol"
+        - $ref: "#/components/parameters/training_timeframe"
+        - $ref: "#/components/parameters/start_utc"
+        - $ref: "#/components/parameters/end_utc"
+        - $ref: "#/components/parameters/order"
+        - $ref: "#/components/parameters/limit"
+      responses:
+        "200":
+          description: Candle rows.
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/TrainingCandle" }
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /training/features/unified:
+    get:
+      tags: [features]
+      operationId: getUnifiedFeatures
+      summary: Get curated unified feature rows (training-ready).
+      parameters:
+        - $ref: "#/components/parameters/symbol"
+        - $ref: "#/components/parameters/unified_timeframe"
+        - $ref: "#/components/parameters/start_utc"
+        - $ref: "#/components/parameters/end_utc"
+        - $ref: "#/components/parameters/order"
+        - $ref: "#/components/parameters/limit"
+      responses:
+        "200":
+          description: Unified feature rows.
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/JsonObjectRow" }
+              examples:
+                note:
+                  summary: |
+                    The unified tables are wide (many columns) and evolve.
+                    This endpoint returns rows as JSON objects.
+                  value:
+                    - symbol: BTC
+                      open_time: "2025-01-01T00:00:00Z"
+                      close: 42000.0
+                      rsi_14: 52.1
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /training/features/indicators:
+    get:
+      tags: [features]
+      operationId: getIndicatorEnrichedFeatures
+      summary: Get wide indicator-enriched rows (spot_*_indicators).
+      parameters:
+        - $ref: "#/components/parameters/symbol"
+        - name: timeframe
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [15m, 1h]
+        - $ref: "#/components/parameters/start_utc"
+        - $ref: "#/components/parameters/end_utc"
+        - $ref: "#/components/parameters/order"
+        - $ref: "#/components/parameters/limit"
+      responses:
+        "200":
+          description: Wide indicator rows (returned as JSON objects to avoid freezing a massive schema in OpenAPI).
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/JsonObjectRow" }
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /training/features/synthetic:
+    get:
+      tags: [features]
+      operationId: getSyntheticFeatures
+      summary: Get synthetic/pattern features (signals/labels).
+      parameters:
+        - $ref: "#/components/parameters/symbol"
+        - $ref: "#/components/parameters/start_utc"
+        - $ref: "#/components/parameters/end_utc"
+        - $ref: "#/components/parameters/order"
+        - $ref: "#/components/parameters/limit"
+      responses:
+        "200":
+          description: Synthetic feature rows (wide; returned as JSON objects).
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/JsonObjectRow" }
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: apikey
+    BearerAuth:
+      type: http
+      scheme: bearer
+
+  parameters:
+    symbol:
+      name: symbol
+      in: query
+      required: true
+      schema: { $ref: "#/components/schemas/Symbol" }
+    training_timeframe:
+      name: timeframe
+      in: query
+      required: true
+      schema:
+        type: string
+        enum: [1m, 15m, 1h]
+    unified_timeframe:
+      name: timeframe
+      in: query
+      required: true
+      schema:
+        type: string
+        enum: [15m, 1h]
+    start_utc:
+      name: start_utc
+      in: query
+      required: true
+      schema: { $ref: "#/components/schemas/UtcTimestamp" }
+    end_utc:
+      name: end_utc
+      in: query
+      required: true
+      schema: { $ref: "#/components/schemas/UtcTimestamp" }
+    order:
+      name: order
+      in: query
+      required: false
+      schema:
+        type: string
+        enum: [asc, desc]
+        default: asc
+    limit:
+      name: limit
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100000
+        default: 10000
+
+  responses:
+    BadRequest:
+      description: Invalid input.
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/ErrorResponse" }
+    Unauthorized:
+      description: Missing/invalid auth.
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/ErrorResponse" }
+
+  schemas:
+    Symbol:
+      type: string
+      description: Asset symbol used in training tables.
+      enum: [BTC, ETH, SOL]
+    UtcTimestamp:
+      type: string
+      format: date-time
+
+    TrainingDataset:
+      type: object
+      additionalProperties: false
+      required: [dataset_id, table, grain, time_column]
+      properties:
+        dataset_id:
+          type: string
+          description: Stable slug for the dataset.
+        table:
+          type: string
+          description: Fully qualified table name.
+        grain:
+          type: string
+          description: Row meaning (natural key / grain).
+        time_column:
+          type: string
+        notes:
+          type: [string, "null"]
+
+    TrainingCandle:
+      type: object
+      description: |
+        Condensed candle schema used for `spot_*` tables.
+        Note: storage uses `ts` for 1m and `open_time` for 15m/1h.
+      additionalProperties: true
+      properties:
+        symbol: { $ref: "#/components/schemas/Symbol" }
+        ts:
+          type: [string, "null"]
+          format: date-time
+          description: For 1m data (`spot_1m`).
+        open_time:
+          type: [string, "null"]
+          format: date-time
+          description: For 15m/1h data (`spot_15m`, `spot_1h`).
+        open: { type: [number, "null"] }
+        high: { type: [number, "null"] }
+        low: { type: [number, "null"] }
+        close: { type: [number, "null"] }
+        volume: { type: [number, "null"] }
+
+    JsonObjectRow:
+      type: object
+      description: |
+        Generic JSON object row.
+        Used for wide/evolving feature tables so the OpenAPI schema does not need constant updates.
+      additionalProperties: true
+
+    ErrorResponse:
+      type: object
+      additionalProperties: false
+      required: [error]
+      properties:
+        error:
+          type: object
+          additionalProperties: false
+          required: [code, message]
+          properties:
+            code: { type: string }
+            message: { type: string }
+            details: { type: [object, "null"] }
+

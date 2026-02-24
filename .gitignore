@@ -1,0 +1,32 @@
+# Secrets
+.env
+.env.*
+!.env.example
+gcp_credentials.json
+*.pem
+*.key
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+
+# macOS
+.DS_Store
+
+# Local output artifacts
+scripts/output/
+syn/output/
+syn-final/output/
+.benchmarks/
+supabase/.temp/
+
+# Node
+node_modules/
+
+# Logs
+*.log

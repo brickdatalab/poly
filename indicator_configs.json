@@ -1,0 +1,2694 @@
+[
+  {
+    "config_id": "adl_50_15m",
+    "indicator_name": "adl",
+    "category": "volume",
+    "timeframe": "15m",
+    "params": {
+      "lookback": 50
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Accumulation/Distribution Line (50) on 15-minute"
+  },
+  {
+    "config_id": "adl_50_1h",
+    "indicator_name": "adl",
+    "category": "volume",
+    "timeframe": "1h",
+    "params": {
+      "lookback": 50
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Accumulation/Distribution Line (50) on 1-hour"
+  },
+  {
+    "config_id": "adx_14_15m",
+    "indicator_name": "adx",
+    "category": "trend",
+    "timeframe": "15m",
+    "params": {
+      "period": 14
+    },
+    "output_columns": {
+      "v1": "adx",
+      "v2": "plus_di",
+      "v3": "minus_di"
+    },
+    "description": "ADX (14) with +DI/-DI on 15-minute candles"
+  },
+  {
+    "config_id": "adx_14_1h",
+    "indicator_name": "adx",
+    "category": "trend",
+    "timeframe": "1h",
+    "params": {
+      "period": 14
+    },
+    "output_columns": {
+      "v1": "adx",
+      "v2": "plus_di",
+      "v3": "minus_di"
+    },
+    "description": "ADX (14) with +DI/-DI on 1-hour candles"
+  },
+  {
+    "config_id": "adx_14_5m",
+    "indicator_name": "adx",
+    "category": "trend",
+    "timeframe": "5m",
+    "params": {
+      "period": 14
+    },
+    "output_columns": {
+      "v1": "adx",
+      "v2": "plus_di",
+      "v3": "minus_di"
+    },
+    "description": "ADX (14) with +DI/-DI on 5-minute candles"
+  },
+  {
+    "config_id": "adx_20_15m",
+    "indicator_name": "adx",
+    "category": "trend",
+    "timeframe": "15m",
+    "params": {
+      "period": 20
+    },
+    "output_columns": {
+      "v1": "adx",
+      "v2": "plus_di",
+      "v3": "minus_di"
+    },
+    "description": "ADX (20) smoother on 15-minute candles"
+  },
+  {
+    "config_id": "aroon_14_15m",
+    "indicator_name": "aroon",
+    "category": "trend",
+    "timeframe": "15m",
+    "params": {
+      "period": 14
+    },
+    "output_columns": {
+      "v1": "aroon_up",
+      "v2": "aroon_down",
+      "v3": "oscillator"
+    },
+    "description": "Aroon (14) faster on 15-minute candles"
+  },
+  {
+    "config_id": "aroon_25_15m",
+    "indicator_name": "aroon",
+    "category": "trend",
+    "timeframe": "15m",
+    "params": {
+      "period": 25
+    },
+    "output_columns": {
+      "v1": "aroon_up",
+      "v2": "aroon_down",
+      "v3": "oscillator"
+    },
+    "description": "Aroon (25) standard on 15-minute candles"
+  },
+  {
+    "config_id": "aroon_25_1h",
+    "indicator_name": "aroon",
+    "category": "trend",
+    "timeframe": "1h",
+    "params": {
+      "period": 25
+    },
+    "output_columns": {
+      "v1": "aroon_up",
+      "v2": "aroon_down",
+      "v3": "oscillator"
+    },
+    "description": "Aroon (25) standard on 1-hour candles"
+  },
+  {
+    "config_id": "ask_depth_10bps",
+    "indicator_name": "ask_depth_10bps",
+    "category": "order_book",
+    "timeframe": "snapshot",
+    "params": {
+      "source_table": "order_book_indicators",
+      "source_column": "ask_depth_10bps"
+    },
+    "output_columns": {
+      "v1": "ask_depth_10bps"
+    },
+    "description": "Order book indicator from indicators.order_book_indicators: ask_depth_10bps"
+  },
+  {
+    "config_id": "ask_depth_25bps",
+    "indicator_name": "ask_depth_25bps",
+    "category": "order_book",
+    "timeframe": "snapshot",
+    "params": {
+      "source_table": "order_book_indicators",
+      "source_column": "ask_depth_25bps"
+    },
+    "output_columns": {
+      "v1": "ask_depth_25bps"
+    },
+    "description": "Order book indicator from indicators.order_book_indicators: ask_depth_25bps"
+  },
+  {
+    "config_id": "ask_depth_50bps",
+    "indicator_name": "ask_depth_50bps",
+    "category": "order_book",
+    "timeframe": "snapshot",
+    "params": {
+      "source_table": "order_book_indicators",
+      "source_column": "ask_depth_50bps"
+    },
+    "output_columns": {
+      "v1": "ask_depth_50bps"
+    },
+    "description": "Order book indicator from indicators.order_book_indicators: ask_depth_50bps"
+  },
+  {
+    "config_id": "ask_slope",
+    "indicator_name": "ask_slope",
+    "category": "order_book",
+    "timeframe": "snapshot",
+    "params": {
+      "source_table": "order_book_indicators",
+      "source_column": "ask_slope"
+    },
+    "output_columns": {
+      "v1": "ask_slope"
+    },
+    "description": "Order book indicator from indicators.order_book_indicators: ask_slope"
+  },
+  {
+    "config_id": "atr_14_15m",
+    "indicator_name": "atr",
+    "category": "volatility",
+    "timeframe": "15m",
+    "params": {
+      "period": 14
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Average True Range (14) on 15-minute candles"
+  },
+  {
+    "config_id": "atr_14_1h",
+    "indicator_name": "atr",
+    "category": "volatility",
+    "timeframe": "1h",
+    "params": {
+      "period": 14
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Average True Range (14) on 1-hour candles"
+  },
+  {
+    "config_id": "atr_14_1m",
+    "indicator_name": "atr",
+    "category": "volatility",
+    "timeframe": "1m",
+    "params": {
+      "period": 14
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Average True Range (14) on 1-minute candles"
+  },
+  {
+    "config_id": "atr_14_5m",
+    "indicator_name": "atr",
+    "category": "volatility",
+    "timeframe": "5m",
+    "params": {
+      "period": 14
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Average True Range (14) on 5-minute candles"
+  },
+  {
+    "config_id": "atr_21_15m",
+    "indicator_name": "atr",
+    "category": "volatility",
+    "timeframe": "15m",
+    "params": {
+      "period": 21
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Average True Range (21) smoother on 15-minute"
+  },
+  {
+    "config_id": "atr_7_5m",
+    "indicator_name": "atr",
+    "category": "volatility",
+    "timeframe": "5m",
+    "params": {
+      "period": 7
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Average True Range (7) fast on 5-minute"
+  },
+  {
+    "config_id": "awesome_5_34_15m",
+    "indicator_name": "awesome_oscillator",
+    "category": "complex",
+    "timeframe": "15m",
+    "params": {
+      "fast_period": 5,
+      "slow_period": 34
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Awesome Oscillator (5,34) on 15-minute candles"
+  },
+  {
+    "config_id": "awesome_5_34_1h",
+    "indicator_name": "awesome_oscillator",
+    "category": "complex",
+    "timeframe": "1h",
+    "params": {
+      "fast_period": 5,
+      "slow_period": 34
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Awesome Oscillator (5,34) on 1-hour candles"
+  },
+  {
+    "config_id": "awesome_5_34_5m",
+    "indicator_name": "awesome_oscillator",
+    "category": "complex",
+    "timeframe": "5m",
+    "params": {
+      "fast_period": 5,
+      "slow_period": 34
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Awesome Oscillator (5,34) on 5-minute candles"
+  },
+  {
+    "config_id": "basis_pct",
+    "indicator_name": "basis_pct",
+    "category": "oi_features",
+    "timeframe": "15m",
+    "params": {
+      "source_table": "oi_features",
+      "source_column": "basis_pct"
+    },
+    "output_columns": {
+      "v1": "basis_pct"
+    },
+    "description": "OI feature from indicators.oi_features: basis_pct"
+  },
+  {
+    "config_id": "bid_depth_10bps",
+    "indicator_name": "bid_depth_10bps",
+    "category": "order_book",
+    "timeframe": "snapshot",
+    "params": {
+      "source_table": "order_book_indicators",
+      "source_column": "bid_depth_10bps"
+    },
+    "output_columns": {
+      "v1": "bid_depth_10bps"
+    },
+    "description": "Order book indicator from indicators.order_book_indicators: bid_depth_10bps"
+  },
+  {
+    "config_id": "bid_depth_25bps",
+    "indicator_name": "bid_depth_25bps",
+    "category": "order_book",
+    "timeframe": "snapshot",
+    "params": {
+      "source_table": "order_book_indicators",
+      "source_column": "bid_depth_25bps"
+    },
+    "output_columns": {
+      "v1": "bid_depth_25bps"
+    },
+    "description": "Order book indicator from indicators.order_book_indicators: bid_depth_25bps"
+  },
+  {
+    "config_id": "bid_depth_50bps",
+    "indicator_name": "bid_depth_50bps",
+    "category": "order_book",
+    "timeframe": "snapshot",
+    "params": {
+      "source_table": "order_book_indicators",
+      "source_column": "bid_depth_50bps"
+    },
+    "output_columns": {
+      "v1": "bid_depth_50bps"
+    },
+    "description": "Order book indicator from indicators.order_book_indicators: bid_depth_50bps"
+  },
+  {
+    "config_id": "bid_slope",
+    "indicator_name": "bid_slope",
+    "category": "order_book",
+    "timeframe": "snapshot",
+    "params": {
+      "source_table": "order_book_indicators",
+      "source_column": "bid_slope"
+    },
+    "output_columns": {
+      "v1": "bid_slope"
+    },
+    "description": "Order book indicator from indicators.order_book_indicators: bid_slope"
+  },
+  {
+    "config_id": "bollinger_10_1.5_5m",
+    "indicator_name": "bollinger",
+    "category": "volatility",
+    "timeframe": "5m",
+    "params": {
+      "period": 10,
+      "std_dev": 1.5
+    },
+    "output_columns": {
+      "v1": "upper",
+      "v2": "middle",
+      "v3": "lower",
+      "v4": "bandwidth"
+    },
+    "description": "Bollinger Bands (10,1.5) tight/fast on 5-minute"
+  },
+  {
+    "config_id": "bollinger_20_2.5_15m",
+    "indicator_name": "bollinger",
+    "category": "volatility",
+    "timeframe": "15m",
+    "params": {
+      "period": 20,
+      "std_dev": 2.5
+    },
+    "output_columns": {
+      "v1": "upper",
+      "v2": "middle",
+      "v3": "lower",
+      "v4": "bandwidth"
+    },
+    "description": "Bollinger Bands (20,2.5) wider on 15-minute"
+  },
+  {
+    "config_id": "bollinger_20_2_15m",
+    "indicator_name": "bollinger",
+    "category": "volatility",
+    "timeframe": "15m",
+    "params": {
+      "period": 20,
+      "std_dev": 2
+    },
+    "output_columns": {
+      "v1": "upper",
+      "v2": "middle",
+      "v3": "lower",
+      "v4": "bandwidth"
+    },
+    "description": "Bollinger Bands (20,2) standard on 15-minute"
+  },
+  {
+    "config_id": "bollinger_20_2_1h",
+    "indicator_name": "bollinger",
+    "category": "volatility",
+    "timeframe": "1h",
+    "params": {
+      "period": 20,
+      "std_dev": 2
+    },
+    "output_columns": {
+      "v1": "upper",
+      "v2": "middle",
+      "v3": "lower",
+      "v4": "bandwidth"
+    },
+    "description": "Bollinger Bands (20,2) standard on 1-hour"
+  },
+  {
+    "config_id": "bollinger_20_2_5m",
+    "indicator_name": "bollinger",
+    "category": "volatility",
+    "timeframe": "5m",
+    "params": {
+      "period": 20,
+      "std_dev": 2
+    },
+    "output_columns": {
+      "v1": "upper",
+      "v2": "middle",
+      "v3": "lower",
+      "v4": "bandwidth"
+    },
+    "description": "Bollinger Bands (20,2) standard on 5-minute"
+  },
+  {
+    "config_id": "bop_14_15m",
+    "indicator_name": "bop",
+    "category": "volume",
+    "timeframe": "15m",
+    "params": {
+      "period": 14
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Balance of Power (14) on 15-minute candles"
+  },
+  {
+    "config_id": "bop_14_1h",
+    "indicator_name": "bop",
+    "category": "volume",
+    "timeframe": "1h",
+    "params": {
+      "period": 14
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Balance of Power (14) on 1-hour candles"
+  },
+  {
+    "config_id": "bop_14_5m",
+    "indicator_name": "bop",
+    "category": "volume",
+    "timeframe": "5m",
+    "params": {
+      "period": 14
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Balance of Power (14) on 5-minute candles"
+  },
+  {
+    "config_id": "cci_20_15m",
+    "indicator_name": "cci",
+    "category": "oscillator",
+    "timeframe": "15m",
+    "params": {
+      "period": 20
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Commodity Channel Index (20) on 15-minute candles"
+  },
+  {
+    "config_id": "cci_20_1h",
+    "indicator_name": "cci",
+    "category": "oscillator",
+    "timeframe": "1h",
+    "params": {
+      "period": 20
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Commodity Channel Index (20) on 1-hour candles"
+  },
+  {
+    "config_id": "cci_20_5m",
+    "indicator_name": "cci",
+    "category": "oscillator",
+    "timeframe": "5m",
+    "params": {
+      "period": 20
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Commodity Channel Index (20) on 5-minute candles"
+  },
+  {
+    "config_id": "cmf_10_5m",
+    "indicator_name": "cmf",
+    "category": "volume",
+    "timeframe": "5m",
+    "params": {
+      "period": 10
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Chaikin Money Flow (10) fast on 5-minute"
+  },
+  {
+    "config_id": "cmf_20_15m",
+    "indicator_name": "cmf",
+    "category": "volume",
+    "timeframe": "15m",
+    "params": {
+      "period": 20
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Chaikin Money Flow (20) on 15-minute candles"
+  },
+  {
+    "config_id": "cmf_20_1h",
+    "indicator_name": "cmf",
+    "category": "volume",
+    "timeframe": "1h",
+    "params": {
+      "period": 20
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Chaikin Money Flow (20) on 1-hour candles"
+  },
+  {
+    "config_id": "cmf_20_5m",
+    "indicator_name": "cmf",
+    "category": "volume",
+    "timeframe": "5m",
+    "params": {
+      "period": 20
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Chaikin Money Flow (20) on 5-minute candles"
+  },
+  {
+    "config_id": "cvd_100_15m",
+    "indicator_name": "cvd",
+    "category": "volume",
+    "timeframe": "15m",
+    "params": {
+      "lookback": 100
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Cumulative Volume Delta (100) extended on 15-minute"
+  },
+  {
+    "config_id": "cvd_20_1m",
+    "indicator_name": "cvd",
+    "category": "volume",
+    "timeframe": "1m",
+    "params": {
+      "lookback": 20
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Cumulative Volume Delta (20) on 1-minute candles"
+  },
+  {
+    "config_id": "cvd_50_15m",
+    "indicator_name": "cvd",
+    "category": "volume",
+    "timeframe": "15m",
+    "params": {
+      "lookback": 50
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Cumulative Volume Delta (50) on 15-minute candles"
+  },
+  {
+    "config_id": "cvd_50_1h",
+    "indicator_name": "cvd",
+    "category": "volume",
+    "timeframe": "1h",
+    "params": {
+      "lookback": 50
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Cumulative Volume Delta (50) on 1-hour candles"
+  },
+  {
+    "config_id": "cvd_50_5m",
+    "indicator_name": "cvd",
+    "category": "volume",
+    "timeframe": "5m",
+    "params": {
+      "lookback": 50
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Cumulative Volume Delta (50) on 5-minute candles"
+  },
+  {
+    "config_id": "depth_ratio",
+    "indicator_name": "depth_ratio",
+    "category": "order_book",
+    "timeframe": "snapshot",
+    "params": {
+      "source_table": "order_book_indicators",
+      "source_column": "depth_ratio"
+    },
+    "output_columns": {
+      "v1": "depth_ratio"
+    },
+    "description": "Order book indicator from indicators.order_book_indicators: depth_ratio"
+  },
+  {
+    "config_id": "divergence_1h",
+    "indicator_name": "divergence_1h",
+    "category": "oi_features",
+    "timeframe": "15m",
+    "params": {
+      "source_table": "oi_features",
+      "source_column": "divergence_1h"
+    },
+    "output_columns": {
+      "v1": "divergence_1h"
+    },
+    "description": "OI feature from indicators.oi_features: divergence_1h"
+  },
+  {
+    "config_id": "divergence_4h",
+    "indicator_name": "divergence_4h",
+    "category": "oi_features",
+    "timeframe": "15m",
+    "params": {
+      "source_table": "oi_features",
+      "source_column": "divergence_4h"
+    },
+    "output_columns": {
+      "v1": "divergence_4h"
+    },
+    "description": "OI feature from indicators.oi_features: divergence_4h"
+  },
+  {
+    "config_id": "donchian_20_15m",
+    "indicator_name": "donchian",
+    "category": "volatility",
+    "timeframe": "15m",
+    "params": {
+      "period": 20
+    },
+    "output_columns": {
+      "v1": "upper",
+      "v2": "lower",
+      "v3": "middle"
+    },
+    "description": "Donchian Channels (20) on 15-minute candles"
+  },
+  {
+    "config_id": "donchian_20_1h",
+    "indicator_name": "donchian",
+    "category": "volatility",
+    "timeframe": "1h",
+    "params": {
+      "period": 20
+    },
+    "output_columns": {
+      "v1": "upper",
+      "v2": "lower",
+      "v3": "middle"
+    },
+    "description": "Donchian Channels (20) on 1-hour candles"
+  },
+  {
+    "config_id": "donchian_20_5m",
+    "indicator_name": "donchian",
+    "category": "volatility",
+    "timeframe": "5m",
+    "params": {
+      "period": 20
+    },
+    "output_columns": {
+      "v1": "upper",
+      "v2": "lower",
+      "v3": "middle"
+    },
+    "description": "Donchian Channels (20) on 5-minute candles"
+  },
+  {
+    "config_id": "donchian_55_1h",
+    "indicator_name": "donchian",
+    "category": "volatility",
+    "timeframe": "1h",
+    "params": {
+      "period": 55
+    },
+    "output_columns": {
+      "v1": "upper",
+      "v2": "lower",
+      "v3": "middle"
+    },
+    "description": "Donchian Channels (55) turtle trading on 1-hour"
+  },
+  {
+    "config_id": "ema_12_15m",
+    "indicator_name": "ema",
+    "category": "moving_average",
+    "timeframe": "15m",
+    "params": {
+      "period": 12
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Exponential Moving Average (12) - MACD fast component"
+  },
+  {
+    "config_id": "ema_12_1m",
+    "indicator_name": "ema",
+    "category": "moving_average",
+    "timeframe": "1m",
+    "params": {
+      "period": 12
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Exponential Moving Average (12) - MACD fast component"
+  },
+  {
+    "config_id": "ema_12_5m",
+    "indicator_name": "ema",
+    "category": "moving_average",
+    "timeframe": "5m",
+    "params": {
+      "period": 12
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Exponential Moving Average (12) - MACD fast component"
+  },
+  {
+    "config_id": "ema_200_1h",
+    "indicator_name": "ema",
+    "category": "moving_average",
+    "timeframe": "1h",
+    "params": {
+      "period": 200
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Exponential Moving Average (200) on 1-hour candles"
+  },
+  {
+    "config_id": "ema_21_15m",
+    "indicator_name": "ema",
+    "category": "moving_average",
+    "timeframe": "15m",
+    "params": {
+      "period": 21
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Exponential Moving Average (21) on 15-minute candles"
+  },
+  {
+    "config_id": "ema_21_1h",
+    "indicator_name": "ema",
+    "category": "moving_average",
+    "timeframe": "1h",
+    "params": {
+      "period": 21
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Exponential Moving Average (21) on 1-hour candles"
+  },
+  {
+    "config_id": "ema_21_1m",
+    "indicator_name": "ema",
+    "category": "moving_average",
+    "timeframe": "1m",
+    "params": {
+      "period": 21
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Exponential Moving Average (21) on 1-minute candles"
+  },
+  {
+    "config_id": "ema_21_5m",
+    "indicator_name": "ema",
+    "category": "moving_average",
+    "timeframe": "5m",
+    "params": {
+      "period": 21
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Exponential Moving Average (21) on 5-minute candles"
+  },
+  {
+    "config_id": "ema_26_15m",
+    "indicator_name": "ema",
+    "category": "moving_average",
+    "timeframe": "15m",
+    "params": {
+      "period": 26
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Exponential Moving Average (26) - MACD slow component"
+  },
+  {
+    "config_id": "ema_26_1m",
+    "indicator_name": "ema",
+    "category": "moving_average",
+    "timeframe": "1m",
+    "params": {
+      "period": 26
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Exponential Moving Average (26) - MACD slow component"
+  },
+  {
+    "config_id": "ema_26_5m",
+    "indicator_name": "ema",
+    "category": "moving_average",
+    "timeframe": "5m",
+    "params": {
+      "period": 26
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Exponential Moving Average (26) - MACD slow component"
+  },
+  {
+    "config_id": "ema_50_15m",
+    "indicator_name": "ema",
+    "category": "moving_average",
+    "timeframe": "15m",
+    "params": {
+      "period": 50
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Exponential Moving Average (50) on 15-minute candles"
+  },
+  {
+    "config_id": "ema_50_1h",
+    "indicator_name": "ema",
+    "category": "moving_average",
+    "timeframe": "1h",
+    "params": {
+      "period": 50
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Exponential Moving Average (50) on 1-hour candles"
+  },
+  {
+    "config_id": "ema_9_15m",
+    "indicator_name": "ema",
+    "category": "moving_average",
+    "timeframe": "15m",
+    "params": {
+      "period": 9
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Exponential Moving Average (9) on 15-minute candles"
+  },
+  {
+    "config_id": "ema_9_1h",
+    "indicator_name": "ema",
+    "category": "moving_average",
+    "timeframe": "1h",
+    "params": {
+      "period": 9
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Exponential Moving Average (9) on 1-hour candles"
+  },
+  {
+    "config_id": "ema_9_1m",
+    "indicator_name": "ema",
+    "category": "moving_average",
+    "timeframe": "1m",
+    "params": {
+      "period": 9
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Exponential Moving Average (9) on 1-minute candles"
+  },
+  {
+    "config_id": "ema_9_5m",
+    "indicator_name": "ema",
+    "category": "moving_average",
+    "timeframe": "5m",
+    "params": {
+      "period": 9
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Exponential Moving Average (9) on 5-minute candles"
+  },
+  {
+    "config_id": "eom_14_15m",
+    "indicator_name": "eom",
+    "category": "volume",
+    "timeframe": "15m",
+    "params": {
+      "period": 14
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Ease of Movement (14) on 15-minute candles"
+  },
+  {
+    "config_id": "eom_14_1h",
+    "indicator_name": "eom",
+    "category": "volume",
+    "timeframe": "1h",
+    "params": {
+      "period": 14
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Ease of Movement (14) on 1-hour candles"
+  },
+  {
+    "config_id": "force_13_15m",
+    "indicator_name": "force_index",
+    "category": "volume",
+    "timeframe": "15m",
+    "params": {
+      "period": 13
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Force Index (13) on 15-minute candles"
+  },
+  {
+    "config_id": "force_13_5m",
+    "indicator_name": "force_index",
+    "category": "volume",
+    "timeframe": "5m",
+    "params": {
+      "period": 13
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Force Index (13) on 5-minute candles"
+  },
+  {
+    "config_id": "force_2_5m",
+    "indicator_name": "force_index",
+    "category": "volume",
+    "timeframe": "5m",
+    "params": {
+      "period": 2
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Force Index (2) fast/sensitive on 5-minute"
+  },
+  {
+    "config_id": "funding_oi_pressure",
+    "indicator_name": "funding_oi_pressure",
+    "category": "oi_features",
+    "timeframe": "15m",
+    "params": {
+      "source_table": "oi_features",
+      "source_column": "funding_oi_pressure"
+    },
+    "output_columns": {
+      "v1": "funding_oi_pressure"
+    },
+    "description": "OI feature from indicators.oi_features: funding_oi_pressure"
+  },
+  {
+    "config_id": "funding_oi_pressure_1h",
+    "indicator_name": "funding_oi_pressure_1h",
+    "category": "oi_features",
+    "timeframe": "15m",
+    "params": {
+      "source_table": "oi_features",
+      "source_column": "funding_oi_pressure_1h"
+    },
+    "output_columns": {
+      "v1": "funding_oi_pressure_1h"
+    },
+    "description": "OI feature from indicators.oi_features: funding_oi_pressure_1h"
+  },
+  {
+    "config_id": "hma_21_15m",
+    "indicator_name": "hma",
+    "category": "moving_average",
+    "timeframe": "15m",
+    "params": {
+      "period": 21
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Hull Moving Average (21) - reduced lag"
+  },
+  {
+    "config_id": "hma_9_15m",
+    "indicator_name": "hma",
+    "category": "moving_average",
+    "timeframe": "15m",
+    "params": {
+      "period": 9
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Hull Moving Average (9) - reduced lag"
+  },
+  {
+    "config_id": "hma_9_1h",
+    "indicator_name": "hma",
+    "category": "moving_average",
+    "timeframe": "1h",
+    "params": {
+      "period": 9
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Hull Moving Average (9) on 1-hour candles"
+  },
+  {
+    "config_id": "ichimoku_7_22_44_15m",
+    "indicator_name": "ichimoku",
+    "category": "complex",
+    "timeframe": "15m",
+    "params": {
+      "kijun": 22,
+      "tenkan": 7,
+      "senkou_b": 44
+    },
+    "output_columns": {
+      "v1": "tenkan",
+      "v2": "kijun",
+      "v3": "senkou_a",
+      "v4": "senkou_b",
+      "v5": "chikou"
+    },
+    "description": "Ichimoku Cloud (7,22,44) crypto-optimized on 15-minute"
+  },
+  {
+    "config_id": "ichimoku_9_26_52_15m",
+    "indicator_name": "ichimoku",
+    "category": "complex",
+    "timeframe": "15m",
+    "params": {
+      "kijun": 26,
+      "tenkan": 9,
+      "senkou_b": 52
+    },
+    "output_columns": {
+      "v1": "tenkan",
+      "v2": "kijun",
+      "v3": "senkou_a",
+      "v4": "senkou_b",
+      "v5": "chikou"
+    },
+    "description": "Ichimoku Cloud (9,26,52) standard on 15-minute"
+  },
+  {
+    "config_id": "ichimoku_9_26_52_1h",
+    "indicator_name": "ichimoku",
+    "category": "complex",
+    "timeframe": "1h",
+    "params": {
+      "kijun": 26,
+      "tenkan": 9,
+      "senkou_b": 52
+    },
+    "output_columns": {
+      "v1": "tenkan",
+      "v2": "kijun",
+      "v3": "senkou_a",
+      "v4": "senkou_b",
+      "v5": "chikou"
+    },
+    "description": "Ichimoku Cloud (9,26,52) standard on 1-hour"
+  },
+  {
+    "config_id": "imbalance",
+    "indicator_name": "imbalance",
+    "category": "order_book",
+    "timeframe": "snapshot",
+    "params": {
+      "source_table": "order_book_indicators",
+      "source_column": "imbalance"
+    },
+    "output_columns": {
+      "v1": "imbalance"
+    },
+    "description": "Order book indicator from indicators.order_book_indicators: imbalance"
+  },
+  {
+    "config_id": "keltner_20_10_2_15m",
+    "indicator_name": "keltner",
+    "category": "volatility",
+    "timeframe": "15m",
+    "params": {
+      "atr_period": 10,
+      "ema_period": 20,
+      "multiplier": 2
+    },
+    "output_columns": {
+      "v1": "upper",
+      "v2": "middle",
+      "v3": "lower"
+    },
+    "description": "Keltner Channels (20,10,2) on 15-minute"
+  },
+  {
+    "config_id": "keltner_20_10_2_1h",
+    "indicator_name": "keltner",
+    "category": "volatility",
+    "timeframe": "1h",
+    "params": {
+      "atr_period": 10,
+      "ema_period": 20,
+      "multiplier": 2
+    },
+    "output_columns": {
+      "v1": "upper",
+      "v2": "middle",
+      "v3": "lower"
+    },
+    "description": "Keltner Channels (20,10,2) on 1-hour"
+  },
+  {
+    "config_id": "linreg_14_15m",
+    "indicator_name": "linear_regression",
+    "category": "complex",
+    "timeframe": "15m",
+    "params": {
+      "period": 14
+    },
+    "output_columns": {
+      "v1": "slope",
+      "v2": "intercept",
+      "v3": "r_squared",
+      "v4": "forecast"
+    },
+    "description": "Linear Regression (14) on 15-minute candles"
+  },
+  {
+    "config_id": "linreg_14_1h",
+    "indicator_name": "linear_regression",
+    "category": "complex",
+    "timeframe": "1h",
+    "params": {
+      "period": 14
+    },
+    "output_columns": {
+      "v1": "slope",
+      "v2": "intercept",
+      "v3": "r_squared",
+      "v4": "forecast"
+    },
+    "description": "Linear Regression (14) on 1-hour candles"
+  },
+  {
+    "config_id": "linreg_14_5m",
+    "indicator_name": "linear_regression",
+    "category": "complex",
+    "timeframe": "5m",
+    "params": {
+      "period": 14
+    },
+    "output_columns": {
+      "v1": "slope",
+      "v2": "intercept",
+      "v3": "r_squared",
+      "v4": "forecast"
+    },
+    "description": "Linear Regression (14) on 5-minute candles"
+  },
+  {
+    "config_id": "linreg_20_15m",
+    "indicator_name": "linear_regression",
+    "category": "complex",
+    "timeframe": "15m",
+    "params": {
+      "period": 20
+    },
+    "output_columns": {
+      "v1": "slope",
+      "v2": "intercept",
+      "v3": "r_squared",
+      "v4": "forecast"
+    },
+    "description": "Linear Regression (20) on 15-minute candles"
+  },
+  {
+    "config_id": "macd_12_26_9_15m",
+    "indicator_name": "macd",
+    "category": "trend",
+    "timeframe": "15m",
+    "params": {
+      "fast": 12,
+      "slow": 26,
+      "signal": 9
+    },
+    "output_columns": {
+      "v1": "macd_line",
+      "v2": "signal_line",
+      "v3": "histogram"
+    },
+    "description": "MACD (12,26,9) standard on 15-minute candles"
+  },
+  {
+    "config_id": "macd_12_26_9_1h",
+    "indicator_name": "macd",
+    "category": "trend",
+    "timeframe": "1h",
+    "params": {
+      "fast": 12,
+      "slow": 26,
+      "signal": 9
+    },
+    "output_columns": {
+      "v1": "macd_line",
+      "v2": "signal_line",
+      "v3": "histogram"
+    },
+    "description": "MACD (12,26,9) standard on 1-hour candles"
+  },
+  {
+    "config_id": "macd_12_26_9_1m",
+    "indicator_name": "macd",
+    "category": "trend",
+    "timeframe": "1m",
+    "params": {
+      "fast": 12,
+      "slow": 26,
+      "signal": 9
+    },
+    "output_columns": {
+      "v1": "macd_line",
+      "v2": "signal_line",
+      "v3": "histogram"
+    },
+    "description": "MACD (12,26,9) standard on 1-minute candles"
+  },
+  {
+    "config_id": "macd_12_26_9_30m",
+    "indicator_name": "macd",
+    "category": "trend",
+    "timeframe": "30m",
+    "params": {
+      "fast": 12,
+      "slow": 26,
+      "signal": 9
+    },
+    "output_columns": {
+      "v1": "macd_line",
+      "v2": "signal_line",
+      "v3": "histogram"
+    },
+    "description": "MACD (12,26,9) standard on 30-minute candles"
+  },
+  {
+    "config_id": "macd_12_26_9_5m",
+    "indicator_name": "macd",
+    "category": "trend",
+    "timeframe": "5m",
+    "params": {
+      "fast": 12,
+      "slow": 26,
+      "signal": 9
+    },
+    "output_columns": {
+      "v1": "macd_line",
+      "v2": "signal_line",
+      "v3": "histogram"
+    },
+    "description": "MACD (12,26,9) standard on 5-minute candles"
+  },
+  {
+    "config_id": "macd_8_17_9_15m",
+    "indicator_name": "macd",
+    "category": "trend",
+    "timeframe": "15m",
+    "params": {
+      "fast": 8,
+      "slow": 17,
+      "signal": 9
+    },
+    "output_columns": {
+      "v1": "macd_line",
+      "v2": "signal_line",
+      "v3": "histogram"
+    },
+    "description": "MACD (8,17,9) fast settings on 15-minute"
+  },
+  {
+    "config_id": "macd_8_17_9_5m",
+    "indicator_name": "macd",
+    "category": "trend",
+    "timeframe": "5m",
+    "params": {
+      "fast": 8,
+      "slow": 17,
+      "signal": 9
+    },
+    "output_columns": {
+      "v1": "macd_line",
+      "v2": "signal_line",
+      "v3": "histogram"
+    },
+    "description": "MACD (8,17,9) fast settings on 5-minute"
+  },
+  {
+    "config_id": "mfi_14_15m",
+    "indicator_name": "mfi",
+    "category": "oscillator",
+    "timeframe": "15m",
+    "params": {
+      "period": 14
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Money Flow Index (14) on 15-minute candles"
+  },
+  {
+    "config_id": "mfi_14_1h",
+    "indicator_name": "mfi",
+    "category": "oscillator",
+    "timeframe": "1h",
+    "params": {
+      "period": 14
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Money Flow Index (14) on 1-hour candles"
+  },
+  {
+    "config_id": "mfi_14_5m",
+    "indicator_name": "mfi",
+    "category": "oscillator",
+    "timeframe": "5m",
+    "params": {
+      "period": 14
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Money Flow Index (14) on 5-minute candles"
+  },
+  {
+    "config_id": "mid_price",
+    "indicator_name": "mid_price",
+    "category": "order_book",
+    "timeframe": "snapshot",
+    "params": {
+      "source_table": "order_book_indicators",
+      "source_column": "mid_price"
+    },
+    "output_columns": {
+      "v1": "mid_price"
+    },
+    "description": "Order book indicator from indicators.order_book_indicators: mid_price"
+  },
+  {
+    "config_id": "momentum_10_15m",
+    "indicator_name": "momentum",
+    "category": "oscillator",
+    "timeframe": "15m",
+    "params": {
+      "period": 10
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Momentum (10) on 15-minute candles"
+  },
+  {
+    "config_id": "momentum_10_1h",
+    "indicator_name": "momentum",
+    "category": "oscillator",
+    "timeframe": "1h",
+    "params": {
+      "period": 10
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Momentum (10) on 1-hour candles"
+  },
+  {
+    "config_id": "momentum_10_5m",
+    "indicator_name": "momentum",
+    "category": "oscillator",
+    "timeframe": "5m",
+    "params": {
+      "period": 10
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Momentum (10) on 5-minute candles"
+  },
+  {
+    "config_id": "obv_50_15m",
+    "indicator_name": "obv",
+    "category": "volume",
+    "timeframe": "15m",
+    "params": {
+      "lookback": 50
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "On-Balance Volume (50) on 15-minute candles"
+  },
+  {
+    "config_id": "obv_50_1h",
+    "indicator_name": "obv",
+    "category": "volume",
+    "timeframe": "1h",
+    "params": {
+      "lookback": 50
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "On-Balance Volume (50) on 1-hour candles"
+  },
+  {
+    "config_id": "obv_50_5m",
+    "indicator_name": "obv",
+    "category": "volume",
+    "timeframe": "5m",
+    "params": {
+      "lookback": 50
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "On-Balance Volume (50) on 5-minute candles"
+  },
+  {
+    "config_id": "oi_acceleration",
+    "indicator_name": "oi_acceleration",
+    "category": "oi_features",
+    "timeframe": "15m",
+    "params": {
+      "source_table": "oi_features",
+      "source_column": "oi_acceleration"
+    },
+    "output_columns": {
+      "v1": "oi_acceleration"
+    },
+    "description": "OI feature from indicators.oi_features: oi_acceleration"
+  },
+  {
+    "config_id": "oi_change_vol_pctile_24h",
+    "indicator_name": "oi_change_vol_pctile_24h",
+    "category": "oi_features",
+    "timeframe": "15m",
+    "params": {
+      "source_table": "oi_features",
+      "source_column": "oi_change_vol_pctile_24h"
+    },
+    "output_columns": {
+      "v1": "oi_change_vol_pctile_24h"
+    },
+    "description": "OI feature from indicators.oi_features: oi_change_vol_pctile_24h"
+  },
+  {
+    "config_id": "oi_ema_24",
+    "indicator_name": "oi_ema_24",
+    "category": "oi_features",
+    "timeframe": "15m",
+    "params": {
+      "source_table": "oi_features",
+      "source_column": "oi_ema_24"
+    },
+    "output_columns": {
+      "v1": "oi_ema_24"
+    },
+    "description": "OI feature from indicators.oi_features: oi_ema_24"
+  },
+  {
+    "config_id": "oi_ema_8",
+    "indicator_name": "oi_ema_8",
+    "category": "oi_features",
+    "timeframe": "15m",
+    "params": {
+      "source_table": "oi_features",
+      "source_column": "oi_ema_8"
+    },
+    "output_columns": {
+      "v1": "oi_ema_8"
+    },
+    "description": "OI feature from indicators.oi_features: oi_ema_8"
+  },
+  {
+    "config_id": "oi_ema_dev_24",
+    "indicator_name": "oi_ema_dev_24",
+    "category": "oi_features",
+    "timeframe": "15m",
+    "params": {
+      "source_table": "oi_features",
+      "source_column": "oi_ema_dev_24"
+    },
+    "output_columns": {
+      "v1": "oi_ema_dev_24"
+    },
+    "description": "OI feature from indicators.oi_features: oi_ema_dev_24"
+  },
+  {
+    "config_id": "oi_ema_dev_8",
+    "indicator_name": "oi_ema_dev_8",
+    "category": "oi_features",
+    "timeframe": "15m",
+    "params": {
+      "source_table": "oi_features",
+      "source_column": "oi_ema_dev_8"
+    },
+    "output_columns": {
+      "v1": "oi_ema_dev_8"
+    },
+    "description": "OI feature from indicators.oi_features: oi_ema_dev_8"
+  },
+  {
+    "config_id": "oi_roc_1h",
+    "indicator_name": "oi_roc_1h",
+    "category": "oi_features",
+    "timeframe": "15m",
+    "params": {
+      "source_table": "oi_features",
+      "source_column": "oi_roc_1h"
+    },
+    "output_columns": {
+      "v1": "oi_roc_1h"
+    },
+    "description": "OI feature from indicators.oi_features: oi_roc_1h"
+  },
+  {
+    "config_id": "oi_roc_24h",
+    "indicator_name": "oi_roc_24h",
+    "category": "oi_features",
+    "timeframe": "15m",
+    "params": {
+      "source_table": "oi_features",
+      "source_column": "oi_roc_24h"
+    },
+    "output_columns": {
+      "v1": "oi_roc_24h"
+    },
+    "description": "OI feature from indicators.oi_features: oi_roc_24h"
+  },
+  {
+    "config_id": "oi_roc_4h",
+    "indicator_name": "oi_roc_4h",
+    "category": "oi_features",
+    "timeframe": "15m",
+    "params": {
+      "source_table": "oi_features",
+      "source_column": "oi_roc_4h"
+    },
+    "output_columns": {
+      "v1": "oi_roc_4h"
+    },
+    "description": "OI feature from indicators.oi_features: oi_roc_4h"
+  },
+  {
+    "config_id": "pivot_standard_15m",
+    "indicator_name": "pivot_points",
+    "category": "complex",
+    "timeframe": "15m",
+    "params": {},
+    "output_columns": {
+      "v1": "pivot",
+      "v2": "r1",
+      "v3": "s1",
+      "v4": "r2",
+      "v5": "s2"
+    },
+    "description": "Standard Pivot Points on 15-minute"
+  },
+  {
+    "config_id": "pivot_standard_1h",
+    "indicator_name": "pivot_points",
+    "category": "complex",
+    "timeframe": "1h",
+    "params": {},
+    "output_columns": {
+      "v1": "pivot",
+      "v2": "r1",
+      "v3": "s1",
+      "v4": "r2",
+      "v5": "s2"
+    },
+    "description": "Standard Pivot Points on 1-hour"
+  },
+  {
+    "config_id": "pivot_standard_2h",
+    "indicator_name": "pivot_points",
+    "category": "complex",
+    "timeframe": "2h",
+    "params": {},
+    "output_columns": {
+      "v1": "pivot",
+      "v2": "r1",
+      "v3": "s1",
+      "v4": "r2",
+      "v5": "s2"
+    },
+    "description": "Standard Pivot Points on 2-hour"
+  },
+  {
+    "config_id": "price_oi_corr_16",
+    "indicator_name": "price_oi_corr_16",
+    "category": "oi_features",
+    "timeframe": "15m",
+    "params": {
+      "source_table": "oi_features",
+      "source_column": "price_oi_corr_16"
+    },
+    "output_columns": {
+      "v1": "price_oi_corr_16"
+    },
+    "description": "OI feature from indicators.oi_features: price_oi_corr_16"
+  },
+  {
+    "config_id": "price_oi_corr_24",
+    "indicator_name": "price_oi_corr_24",
+    "category": "oi_features",
+    "timeframe": "15m",
+    "params": {
+      "source_table": "oi_features",
+      "source_column": "price_oi_corr_24"
+    },
+    "output_columns": {
+      "v1": "price_oi_corr_24"
+    },
+    "description": "OI feature from indicators.oi_features: price_oi_corr_24"
+  },
+  {
+    "config_id": "psar_02_02_20_15m",
+    "indicator_name": "parabolic_sar",
+    "category": "trend",
+    "timeframe": "15m",
+    "params": {
+      "af_max": 0.2,
+      "af_start": 0.02,
+      "af_increment": 0.02
+    },
+    "output_columns": {
+      "v1": "sar",
+      "v2": "trend"
+    },
+    "description": "Parabolic SAR standard on 15-minute"
+  },
+  {
+    "config_id": "psar_02_02_20_1h",
+    "indicator_name": "parabolic_sar",
+    "category": "trend",
+    "timeframe": "1h",
+    "params": {
+      "af_max": 0.2,
+      "af_start": 0.02,
+      "af_increment": 0.02
+    },
+    "output_columns": {
+      "v1": "sar",
+      "v2": "trend"
+    },
+    "description": "Parabolic SAR standard on 1-hour"
+  },
+  {
+    "config_id": "pvt_50_15m",
+    "indicator_name": "pvt",
+    "category": "volume",
+    "timeframe": "15m",
+    "params": {
+      "lookback": 50
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Price Volume Trend (50) on 15-minute candles"
+  },
+  {
+    "config_id": "pvt_50_1h",
+    "indicator_name": "pvt",
+    "category": "volume",
+    "timeframe": "1h",
+    "params": {
+      "lookback": 50
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Price Volume Trend (50) on 1-hour candles"
+  },
+  {
+    "config_id": "roc_12_15m",
+    "indicator_name": "roc",
+    "category": "oscillator",
+    "timeframe": "15m",
+    "params": {
+      "period": 12
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Rate of Change (12) on 15-minute candles"
+  },
+  {
+    "config_id": "roc_12_1h",
+    "indicator_name": "roc",
+    "category": "oscillator",
+    "timeframe": "1h",
+    "params": {
+      "period": 12
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Rate of Change (12) on 1-hour candles"
+  },
+  {
+    "config_id": "roc_9_15m",
+    "indicator_name": "roc",
+    "category": "oscillator",
+    "timeframe": "15m",
+    "params": {
+      "period": 9
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Rate of Change (9) on 15-minute candles"
+  },
+  {
+    "config_id": "roc_9_5m",
+    "indicator_name": "roc",
+    "category": "oscillator",
+    "timeframe": "5m",
+    "params": {
+      "period": 9
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Rate of Change (9) on 5-minute candles"
+  },
+  {
+    "config_id": "rsi_14_15m",
+    "indicator_name": "rsi",
+    "category": "oscillator",
+    "timeframe": "15m",
+    "params": {
+      "period": 14
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "RSI (14) standard on 15-minute candles"
+  },
+  {
+    "config_id": "rsi_14_1h",
+    "indicator_name": "rsi",
+    "category": "oscillator",
+    "timeframe": "1h",
+    "params": {
+      "period": 14
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "RSI (14) standard on 1-hour candles"
+  },
+  {
+    "config_id": "rsi_14_1m",
+    "indicator_name": "rsi",
+    "category": "oscillator",
+    "timeframe": "1m",
+    "params": {
+      "period": 14
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "RSI (14) standard on 1-minute candles"
+  },
+  {
+    "config_id": "rsi_14_30m",
+    "indicator_name": "rsi",
+    "category": "oscillator",
+    "timeframe": "30m",
+    "params": {
+      "period": 14
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "RSI (14) standard on 30-minute candles"
+  },
+  {
+    "config_id": "rsi_14_5m",
+    "indicator_name": "rsi",
+    "category": "oscillator",
+    "timeframe": "5m",
+    "params": {
+      "period": 14
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "RSI (14) standard on 5-minute candles"
+  },
+  {
+    "config_id": "rsi_21_15m",
+    "indicator_name": "rsi",
+    "category": "oscillator",
+    "timeframe": "15m",
+    "params": {
+      "period": 21
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "RSI (21) slower - less noise"
+  },
+  {
+    "config_id": "rsi_21_1h",
+    "indicator_name": "rsi",
+    "category": "oscillator",
+    "timeframe": "1h",
+    "params": {
+      "period": 21
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "RSI (21) slower on 1-hour candles"
+  },
+  {
+    "config_id": "rsi_7_15m",
+    "indicator_name": "rsi",
+    "category": "oscillator",
+    "timeframe": "15m",
+    "params": {
+      "period": 7
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "RSI (7) fast on 15-minute candles"
+  },
+  {
+    "config_id": "rsi_7_1m",
+    "indicator_name": "rsi",
+    "category": "oscillator",
+    "timeframe": "1m",
+    "params": {
+      "period": 7
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "RSI (7) fast - more sensitive to price changes"
+  },
+  {
+    "config_id": "rsi_7_5m",
+    "indicator_name": "rsi",
+    "category": "oscillator",
+    "timeframe": "5m",
+    "params": {
+      "period": 7
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "RSI (7) fast on 5-minute candles"
+  },
+  {
+    "config_id": "rvi_10_15m",
+    "indicator_name": "rvi",
+    "category": "volatility",
+    "timeframe": "15m",
+    "params": {
+      "period": 10
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Relative Volatility Index (10) on 15-minute"
+  },
+  {
+    "config_id": "rvi_10_1h",
+    "indicator_name": "rvi",
+    "category": "volatility",
+    "timeframe": "1h",
+    "params": {
+      "period": 10
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Relative Volatility Index (10) on 1-hour"
+  },
+  {
+    "config_id": "slippage_buy_100",
+    "indicator_name": "slippage_buy_100",
+    "category": "order_book",
+    "timeframe": "snapshot",
+    "params": {
+      "source_table": "order_book_indicators",
+      "source_column": "slippage_buy_100"
+    },
+    "output_columns": {
+      "v1": "slippage_buy_100"
+    },
+    "description": "Order book indicator from indicators.order_book_indicators: slippage_buy_100"
+  },
+  {
+    "config_id": "slippage_buy_1000",
+    "indicator_name": "slippage_buy_1000",
+    "category": "order_book",
+    "timeframe": "snapshot",
+    "params": {
+      "source_table": "order_book_indicators",
+      "source_column": "slippage_buy_1000"
+    },
+    "output_columns": {
+      "v1": "slippage_buy_1000"
+    },
+    "description": "Order book indicator from indicators.order_book_indicators: slippage_buy_1000"
+  },
+  {
+    "config_id": "slippage_sell_100",
+    "indicator_name": "slippage_sell_100",
+    "category": "order_book",
+    "timeframe": "snapshot",
+    "params": {
+      "source_table": "order_book_indicators",
+      "source_column": "slippage_sell_100"
+    },
+    "output_columns": {
+      "v1": "slippage_sell_100"
+    },
+    "description": "Order book indicator from indicators.order_book_indicators: slippage_sell_100"
+  },
+  {
+    "config_id": "slippage_sell_1000",
+    "indicator_name": "slippage_sell_1000",
+    "category": "order_book",
+    "timeframe": "snapshot",
+    "params": {
+      "source_table": "order_book_indicators",
+      "source_column": "slippage_sell_1000"
+    },
+    "output_columns": {
+      "v1": "slippage_sell_1000"
+    },
+    "description": "Order book indicator from indicators.order_book_indicators: slippage_sell_1000"
+  },
+  {
+    "config_id": "sma_200_1h",
+    "indicator_name": "sma",
+    "category": "moving_average",
+    "timeframe": "1h",
+    "params": {
+      "period": 200
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Simple Moving Average (200) on 1-hour candles"
+  },
+  {
+    "config_id": "sma_20_15m",
+    "indicator_name": "sma",
+    "category": "moving_average",
+    "timeframe": "15m",
+    "params": {
+      "period": 20
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Simple Moving Average (20) on 15-minute candles"
+  },
+  {
+    "config_id": "sma_20_1h",
+    "indicator_name": "sma",
+    "category": "moving_average",
+    "timeframe": "1h",
+    "params": {
+      "period": 20
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Simple Moving Average (20) on 1-hour candles"
+  },
+  {
+    "config_id": "sma_20_1m",
+    "indicator_name": "sma",
+    "category": "moving_average",
+    "timeframe": "1m",
+    "params": {
+      "period": 20
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Simple Moving Average (20) on 1-minute candles"
+  },
+  {
+    "config_id": "sma_20_5m",
+    "indicator_name": "sma",
+    "category": "moving_average",
+    "timeframe": "5m",
+    "params": {
+      "period": 20
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Simple Moving Average (20) on 5-minute candles"
+  },
+  {
+    "config_id": "sma_50_15m",
+    "indicator_name": "sma",
+    "category": "moving_average",
+    "timeframe": "15m",
+    "params": {
+      "period": 50
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Simple Moving Average (50) on 15-minute candles"
+  },
+  {
+    "config_id": "sma_50_1h",
+    "indicator_name": "sma",
+    "category": "moving_average",
+    "timeframe": "1h",
+    "params": {
+      "period": 50
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Simple Moving Average (50) on 1-hour candles"
+  },
+  {
+    "config_id": "sma_9_15m",
+    "indicator_name": "sma",
+    "category": "moving_average",
+    "timeframe": "15m",
+    "params": {
+      "period": 9
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Simple Moving Average (9) on 15-minute candles"
+  },
+  {
+    "config_id": "sma_9_1h",
+    "indicator_name": "sma",
+    "category": "moving_average",
+    "timeframe": "1h",
+    "params": {
+      "period": 9
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Simple Moving Average (9) on 1-hour candles"
+  },
+  {
+    "config_id": "sma_9_1m",
+    "indicator_name": "sma",
+    "category": "moving_average",
+    "timeframe": "1m",
+    "params": {
+      "period": 9
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Simple Moving Average (9) on 1-minute candles"
+  },
+  {
+    "config_id": "sma_9_5m",
+    "indicator_name": "sma",
+    "category": "moving_average",
+    "timeframe": "5m",
+    "params": {
+      "period": 9
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Simple Moving Average (9) on 5-minute candles"
+  },
+  {
+    "config_id": "spread_pct",
+    "indicator_name": "spread_pct",
+    "category": "order_book",
+    "timeframe": "snapshot",
+    "params": {
+      "source_table": "order_book_indicators",
+      "source_column": "spread_pct"
+    },
+    "output_columns": {
+      "v1": "spread_pct"
+    },
+    "description": "Order book indicator from indicators.order_book_indicators: spread_pct"
+  },
+  {
+    "config_id": "stoch_14_3_3_15m",
+    "indicator_name": "stochastic",
+    "category": "oscillator",
+    "timeframe": "15m",
+    "params": {
+      "smooth": 3,
+      "d_period": 3,
+      "k_period": 14
+    },
+    "output_columns": {
+      "v1": "k",
+      "v2": "d"
+    },
+    "description": "Stochastic (14,3,3) standard on 15-minute"
+  },
+  {
+    "config_id": "stoch_14_3_3_1h",
+    "indicator_name": "stochastic",
+    "category": "oscillator",
+    "timeframe": "1h",
+    "params": {
+      "smooth": 3,
+      "d_period": 3,
+      "k_period": 14
+    },
+    "output_columns": {
+      "v1": "k",
+      "v2": "d"
+    },
+    "description": "Stochastic (14,3,3) standard on 1-hour"
+  },
+  {
+    "config_id": "stoch_14_3_3_5m",
+    "indicator_name": "stochastic",
+    "category": "oscillator",
+    "timeframe": "5m",
+    "params": {
+      "smooth": 3,
+      "d_period": 3,
+      "k_period": 14
+    },
+    "output_columns": {
+      "v1": "k",
+      "v2": "d"
+    },
+    "description": "Stochastic (14,3,3) standard on 5-minute"
+  },
+  {
+    "config_id": "stoch_5_3_3_15m",
+    "indicator_name": "stochastic",
+    "category": "oscillator",
+    "timeframe": "15m",
+    "params": {
+      "smooth": 3,
+      "d_period": 3,
+      "k_period": 5
+    },
+    "output_columns": {
+      "v1": "k",
+      "v2": "d"
+    },
+    "description": "Stochastic (5,3,3) fast on 15-minute"
+  },
+  {
+    "config_id": "stoch_5_3_3_5m",
+    "indicator_name": "stochastic",
+    "category": "oscillator",
+    "timeframe": "5m",
+    "params": {
+      "smooth": 3,
+      "d_period": 3,
+      "k_period": 5
+    },
+    "output_columns": {
+      "v1": "k",
+      "v2": "d"
+    },
+    "description": "Stochastic (5,3,3) fast on 5-minute"
+  },
+  {
+    "config_id": "stochrsi_14_14_3_3_15m",
+    "indicator_name": "stoch_rsi",
+    "category": "oscillator",
+    "timeframe": "15m",
+    "params": {
+      "d_smooth": 3,
+      "k_smooth": 3,
+      "rsi_period": 14,
+      "stoch_period": 14
+    },
+    "output_columns": {
+      "v1": "k",
+      "v2": "d"
+    },
+    "description": "Stochastic RSI (14,14,3,3) on 15-minute"
+  },
+  {
+    "config_id": "stochrsi_14_14_3_3_1h",
+    "indicator_name": "stoch_rsi",
+    "category": "oscillator",
+    "timeframe": "1h",
+    "params": {
+      "d_smooth": 3,
+      "k_smooth": 3,
+      "rsi_period": 14,
+      "stoch_period": 14
+    },
+    "output_columns": {
+      "v1": "k",
+      "v2": "d"
+    },
+    "description": "Stochastic RSI (14,14,3,3) on 1-hour"
+  },
+  {
+    "config_id": "supertrend_10_3_15m",
+    "indicator_name": "supertrend",
+    "category": "trend",
+    "timeframe": "15m",
+    "params": {
+      "period": 10,
+      "multiplier": 3
+    },
+    "output_columns": {
+      "v1": "supertrend",
+      "v2": "direction"
+    },
+    "description": "SuperTrend (10,3) on 15-minute candles"
+  },
+  {
+    "config_id": "supertrend_10_3_1h",
+    "indicator_name": "supertrend",
+    "category": "trend",
+    "timeframe": "1h",
+    "params": {
+      "period": 10,
+      "multiplier": 3
+    },
+    "output_columns": {
+      "v1": "supertrend",
+      "v2": "direction"
+    },
+    "description": "SuperTrend (10,3) on 1-hour candles"
+  },
+  {
+    "config_id": "supertrend_10_3_5m",
+    "indicator_name": "supertrend",
+    "category": "trend",
+    "timeframe": "5m",
+    "params": {
+      "period": 10,
+      "multiplier": 3
+    },
+    "output_columns": {
+      "v1": "supertrend",
+      "v2": "direction"
+    },
+    "description": "SuperTrend (10,3) on 5-minute candles"
+  },
+  {
+    "config_id": "supertrend_7_2_15m",
+    "indicator_name": "supertrend",
+    "category": "trend",
+    "timeframe": "15m",
+    "params": {
+      "period": 7,
+      "multiplier": 2
+    },
+    "output_columns": {
+      "v1": "supertrend",
+      "v2": "direction"
+    },
+    "description": "SuperTrend (7,2) tighter on 15-minute"
+  },
+  {
+    "config_id": "turnover_1h",
+    "indicator_name": "turnover_1h",
+    "category": "oi_features",
+    "timeframe": "15m",
+    "params": {
+      "source_table": "oi_features",
+      "source_column": "turnover_1h"
+    },
+    "output_columns": {
+      "v1": "turnover_1h"
+    },
+    "description": "OI feature from indicators.oi_features: turnover_1h"
+  },
+  {
+    "config_id": "turnover_4h",
+    "indicator_name": "turnover_4h",
+    "category": "oi_features",
+    "timeframe": "15m",
+    "params": {
+      "source_table": "oi_features",
+      "source_column": "turnover_4h"
+    },
+    "output_columns": {
+      "v1": "turnover_4h"
+    },
+    "description": "OI feature from indicators.oi_features: turnover_4h"
+  },
+  {
+    "config_id": "ulcer_14_15m",
+    "indicator_name": "ulcer_index",
+    "category": "volatility",
+    "timeframe": "15m",
+    "params": {
+      "period": 14
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Ulcer Index (14) downside risk on 15-minute"
+  },
+  {
+    "config_id": "ulcer_14_1h",
+    "indicator_name": "ulcer_index",
+    "category": "volatility",
+    "timeframe": "1h",
+    "params": {
+      "period": 14
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Ulcer Index (14) downside risk on 1-hour"
+  },
+  {
+    "config_id": "ultimate_7_14_28_15m",
+    "indicator_name": "ultimate_oscillator",
+    "category": "complex",
+    "timeframe": "15m",
+    "params": {
+      "period1": 7,
+      "period2": 14,
+      "period3": 28
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Ultimate Oscillator (7,14,28) on 15-minute"
+  },
+  {
+    "config_id": "ultimate_7_14_28_1h",
+    "indicator_name": "ultimate_oscillator",
+    "category": "complex",
+    "timeframe": "1h",
+    "params": {
+      "period1": 7,
+      "period2": 14,
+      "period3": 28
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Ultimate Oscillator (7,14,28) on 1-hour"
+  },
+  {
+    "config_id": "vortex_14_15m",
+    "indicator_name": "vortex",
+    "category": "trend",
+    "timeframe": "15m",
+    "params": {
+      "period": 14
+    },
+    "output_columns": {
+      "v1": "plus_vi",
+      "v2": "minus_vi"
+    },
+    "description": "Vortex Indicator (14) on 15-minute candles"
+  },
+  {
+    "config_id": "vortex_14_1h",
+    "indicator_name": "vortex",
+    "category": "trend",
+    "timeframe": "1h",
+    "params": {
+      "period": 14
+    },
+    "output_columns": {
+      "v1": "plus_vi",
+      "v2": "minus_vi"
+    },
+    "description": "Vortex Indicator (14) on 1-hour candles"
+  },
+  {
+    "config_id": "vwap_20_5m",
+    "indicator_name": "vwap",
+    "category": "volume",
+    "timeframe": "5m",
+    "params": {
+      "lookback": 20
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "VWAP (20) short session on 5-minute"
+  },
+  {
+    "config_id": "vwap_24_1h",
+    "indicator_name": "vwap",
+    "category": "volume",
+    "timeframe": "1h",
+    "params": {
+      "lookback": 24
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "VWAP (24) daily session on 1-hour"
+  },
+  {
+    "config_id": "vwap_50_15m",
+    "indicator_name": "vwap",
+    "category": "volume",
+    "timeframe": "15m",
+    "params": {
+      "lookback": 50
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "VWAP (50) on 15-minute candles"
+  },
+  {
+    "config_id": "vwap_96_15m",
+    "indicator_name": "vwap",
+    "category": "volume",
+    "timeframe": "15m",
+    "params": {
+      "lookback": 96
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "VWAP (96) ~24hr session on 15-minute"
+  },
+  {
+    "config_id": "vwma_20_15m",
+    "indicator_name": "vwma",
+    "category": "moving_average",
+    "timeframe": "15m",
+    "params": {
+      "period": 20
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Volume Weighted Moving Average (20) on 15-minute candles"
+  },
+  {
+    "config_id": "vwma_9_15m",
+    "indicator_name": "vwma",
+    "category": "moving_average",
+    "timeframe": "15m",
+    "params": {
+      "period": 9
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Volume Weighted Moving Average (9) on 15-minute candles"
+  },
+  {
+    "config_id": "vwma_9_1h",
+    "indicator_name": "vwma",
+    "category": "moving_average",
+    "timeframe": "1h",
+    "params": {
+      "period": 9
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Volume Weighted Moving Average (9) on 1-hour candles"
+  },
+  {
+    "config_id": "weak_rally_streak",
+    "indicator_name": "weak_rally_streak",
+    "category": "oi_features",
+    "timeframe": "15m",
+    "params": {
+      "source_table": "oi_features",
+      "source_column": "weak_rally_streak"
+    },
+    "output_columns": {
+      "v1": "weak_rally_streak"
+    },
+    "description": "OI feature from indicators.oi_features: weak_rally_streak"
+  },
+  {
+    "config_id": "weak_selloff_streak",
+    "indicator_name": "weak_selloff_streak",
+    "category": "oi_features",
+    "timeframe": "15m",
+    "params": {
+      "source_table": "oi_features",
+      "source_column": "weak_selloff_streak"
+    },
+    "output_columns": {
+      "v1": "weak_selloff_streak"
+    },
+    "description": "OI feature from indicators.oi_features: weak_selloff_streak"
+  },
+  {
+    "config_id": "williams_14_15m",
+    "indicator_name": "williams_r",
+    "category": "oscillator",
+    "timeframe": "15m",
+    "params": {
+      "period": 14
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Williams %R (14) on 15-minute candles"
+  },
+  {
+    "config_id": "williams_14_1h",
+    "indicator_name": "williams_r",
+    "category": "oscillator",
+    "timeframe": "1h",
+    "params": {
+      "period": 14
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Williams %R (14) on 1-hour candles"
+  },
+  {
+    "config_id": "williams_14_5m",
+    "indicator_name": "williams_r",
+    "category": "oscillator",
+    "timeframe": "5m",
+    "params": {
+      "period": 14
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Williams %R (14) on 5-minute candles"
+  },
+  {
+    "config_id": "wma_21_15m",
+    "indicator_name": "wma",
+    "category": "moving_average",
+    "timeframe": "15m",
+    "params": {
+      "period": 21
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Weighted Moving Average (21) on 15-minute candles"
+  },
+  {
+    "config_id": "wma_9_15m",
+    "indicator_name": "wma",
+    "category": "moving_average",
+    "timeframe": "15m",
+    "params": {
+      "period": 9
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Weighted Moving Average (9) on 15-minute candles"
+  },
+  {
+    "config_id": "wma_9_1h",
+    "indicator_name": "wma",
+    "category": "moving_average",
+    "timeframe": "1h",
+    "params": {
+      "period": 9
+    },
+    "output_columns": {
+      "v1": "value"
+    },
+    "description": "Weighted Moving Average (9) on 1-hour candles"
+  }
+]
