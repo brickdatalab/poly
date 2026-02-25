@@ -45,6 +45,26 @@ def test_build_timeframe_sql_contains_required_integrity_checks() -> None:
         assert item in sql
 
 
+def test_build_timeframe_sql_excludes_partial_leading_bucket() -> None:
+    mod = _load_module()
+    sql = mod.build_timeframe_sql(
+        schema="indicators",
+        timeframe="5m",
+        step_seconds=300,
+        pairs=("BTC-USD",),
+        days=5,
+    ).lower()
+
+    required = [
+        "window_start",
+        "when start_ts = start_aligned then start_aligned",
+        "else start_aligned + interval '1 second' * 300",
+        "bucket_aligned >= window_bounds.window_start",
+    ]
+    for item in required:
+        assert item in sql
+
+
 def test_legacy_wrapper_points_to_canonical_location() -> None:
     wrapper = Path("scripts/ops/check_ohlcv_sequential_completeness.py").read_text()
     assert '"utility-scripts"' in wrapper

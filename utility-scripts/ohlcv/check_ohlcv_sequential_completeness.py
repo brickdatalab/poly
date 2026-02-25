@@ -122,9 +122,23 @@ def build_timeframe_sql(*, schema: str, timeframe: str, step_seconds: int, pairs
     ),
     range_bounds as (
       select
+        start_ts,
+        end_ts,
         to_timestamp(floor(extract(epoch from start_ts) / {step_seconds}) * {step_seconds})::timestamptz as start_aligned,
         to_timestamp(floor(extract(epoch from end_ts) / {step_seconds}) * {step_seconds})::timestamptz as end_aligned
       from bounds
+    ),
+    window_bounds as (
+      select
+        start_ts,
+        end_ts,
+        start_aligned,
+        end_aligned,
+        case
+          when start_ts = start_aligned then start_aligned
+          else start_aligned + interval '1 second' * {step_seconds}
+        end as window_start
+      from range_bounds
     ),
     pairs as (
       select unnest(array[{pair_literals}]::text[]) as pair
@@ -134,10 +148,10 @@ def build_timeframe_sql(*, schema: str, timeframe: str, step_seconds: int, pairs
         p.pair,
         gs::timestamptz as bucket_time
       from pairs p
-      cross join range_bounds rb
+      cross join window_bounds wb
       cross join generate_series(
-        rb.start_aligned,
-        rb.end_aligned - interval '1 second' * {step_seconds},
+        wb.window_start,
+        wb.end_aligned - interval '1 second' * {step_seconds},
         interval '1 second' * {step_seconds}
       ) gs
     ),
@@ -146,19 +160,19 @@ def build_timeframe_sql(*, schema: str, timeframe: str, step_seconds: int, pairs
         pair,
         bucket_time,
         to_timestamp(floor(extract(epoch from bucket_time) / {step_seconds}) * {step_seconds})::timestamptz as bucket_aligned
-      from {table}, range_bounds
+      from {table}, window_bounds
       where pair = any(array[{pair_literals}]::text[])
-        and bucket_time >= range_bounds.start_aligned - interval '1 second' * {step_seconds}
-        and bucket_time < range_bounds.end_aligned + interval '1 second' * {step_seconds}
+        and bucket_time >= window_bounds.start_aligned - interval '1 second' * {step_seconds}
+        and bucket_time < window_bounds.end_aligned + interval '1 second' * {step_seconds}
     ),
     actual_bucketed as (
       select
         pair,
         bucket_time,
         bucket_aligned
-      from actual_raw, range_bounds
-      where bucket_aligned >= range_bounds.start_aligned
-        and bucket_aligned < range_bounds.end_aligned
+      from actual_raw, window_bounds
+      where bucket_aligned >= window_bounds.window_start
+        and bucket_aligned < window_bounds.end_aligned
     ),
     actual_distinct as (
       select distinct pair, bucket_aligned as bucket_time

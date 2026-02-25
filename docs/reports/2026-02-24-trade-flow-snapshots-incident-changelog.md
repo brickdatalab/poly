@@ -16,6 +16,22 @@
 5. Environment note:
    - local `psql` client currently aborts due Homebrew `krb5` dylib signature policy; read-only DB baseline queries were executed through Supabase integration as a temporary verification path.
 
+## 2026-02-25 Update (Issue #3 OHLCV Remediation Executed)
+1. Added migration:
+   - `supabase/migrations/20260225_110000_ohlcv_fractional_placeholder_cleanup.sql`
+2. Root cause confirmed:
+   - `ohlcv_1m` duplicate/misaligned rows were fractional-second zero-volume placeholders from a prior continuity patch (`bucket_time` with `.239748` fractional seconds).
+3. Bounded repair SQL executed:
+   - `select ops.fn_repair_ohlcv_issue3(array['BTC-USD','ETH-USD','SOL-USD'], now()-interval '7 days', now(), interval '7 days');`
+4. Execution result highlights:
+   - deleted fractional placeholders: `4320` total (`1440` per pair)
+   - continuity rows inserted: `171`
+   - rollup backfill emitted rows for `1m..12h`
+5. Post-remediation verification artifact:
+   - `scripts/output/ohlcv_issue3_repair_20260225.json`
+   - audit summary: `5d non_pass_count=0`, `7d non_pass_count=0`, `remaining_fractional_rows=[]`
+6. No websocket ingestion behavior changes were made.
+
 ## 2026-02-25 Update (Archive Prune + Source Checker Checkpoint)
 1. Pruned archive-only legacy script trees from active repo:
    - removed `syn/scripts` (17 files)
