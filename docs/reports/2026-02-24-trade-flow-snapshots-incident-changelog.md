@@ -1,5 +1,17 @@
 # Incident Changelog / Ticket: `OPS-2026-02-24-TRF-001`
 
+## 2026-02-25 Update (GitHub Push + Current Checkpoint)
+1. Changelog synchronized to current UTC checkpoint:
+   - checkpoint time: `2026-02-25 06:37:56Z`
+2. Latest local commits before push:
+   - `8b7fc4e` — `chore: checkpoint phase1 reliability hardening and repo organization`
+   - `c67ce93` — `docs: add phase2 tdd implementation plan and checkpoint update`
+3. Branch for push:
+   - `codex/supabase-reliability-autofix`
+4. Remote target:
+   - `origin https://github.com/brickdatalab/poly.git`
+5. Websocket ingestion behavior remains unchanged.
+
 ## 2026-02-25 Update (Post-Phase-1 Checkpoint)
 1. Current branch state was committed as a checkpoint:
    - commit: `8b7fc4e`
