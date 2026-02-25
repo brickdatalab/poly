@@ -14,7 +14,10 @@ Supabase-backed crypto market-data and indicator runtime.
 3. `scripts/`
 - Existing ops and research script namespaces (Phase 1 retained).
 
-4. `docs/`
+4. `utility-scripts/`
+- Canonical AI-operated utilities and runbooks.
+
+5. `docs/`
 - Plans, runbooks, architecture, and incident artifacts.
 
 ## Runtime Entry Points
@@ -55,6 +58,7 @@ Source of truth:
 3. `python3 scripts/export_missing_ohlcv_1m_minutes.py`
 4. `python3 scripts/report_missing_ohlcv_lookback_7d.py`
 5. `python3 scripts/backfill_raw_trades_from_coinbase.py --help`
+6. `python3 utility-scripts/ohlcv/check_ohlcv_sequential_completeness.py --days 5 --tldr`
 
 ## Data Integrity Constraint
 

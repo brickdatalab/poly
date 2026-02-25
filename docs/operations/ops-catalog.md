@@ -43,6 +43,7 @@ Operational scripts used for monitoring, recovery, backfill, diagnostics, and in
 - Purpose: Verify OHLCV sequential/completeness integrity (`1m..12h`) for last `N` days.
 - Command: `python3 utility-scripts/ohlcv/check_ohlcv_sequential_completeness.py --days 5 --tldr`
 - Dependencies: `indicators.ohlcv_1m/5m/10m/15m/30m/45m/1h/2h/6h/12h`.
+- AI operator runbook: `/Users/vitolo/Desktop/projects/poly/utility-scripts/ohlcv/README.md`
 
 ## Synthetic Diagnostics (Ops)
 1. `scripts/synthetic_indicators/debug_snapshot_pipeline_state.py`

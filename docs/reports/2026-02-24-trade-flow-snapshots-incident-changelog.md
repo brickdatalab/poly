@@ -19,6 +19,8 @@
    - missing buckets cluster around `2026-02-23 03:00:00+00` to `2026-02-23 03:55:00+00` on lower timeframes.
 6. Open remediation ticket created:
    - `docs/issues/2026-02-25-ohlcv-missing-values-remediation-ticket.md`
+7. Added AI-agent execution runbook for this utility:
+   - `utility-scripts/ohlcv/README.md`
 
 ## 2026-02-25 Update (GitHub Push + Current Checkpoint)
 1. Changelog synchronized to current UTC checkpoint:
