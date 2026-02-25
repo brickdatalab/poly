@@ -54,7 +54,7 @@ File pattern:
 
 1. `SUPABASE_DB_URL` exists in environment or `/Users/vitolo/Desktop/projects/poly/.env`.
 2. `SUPABASE_DB_PASSWORD` exists in environment or `.env` for authenticated `psql` access.
-3. Freshness threshold comes from `ops.pipeline_slo_config` (`source='open_interest'`), with fallback default of 2700 seconds.
+3. Freshness threshold comes from `ops.pipeline_slo_config` (`source='open_interest'`), with fallback default of 900 seconds.
 4. Open interest is expected to align to a 15-minute cadence (`--step-seconds 900` by default).
 
 ## Tradeoffs
@@ -71,4 +71,3 @@ When reporting results from this utility, include:
 3. `Output files`
 4. `Assumptions/tradeoffs`
 5. `Findings` (by pair, with freshness + continuity)
-

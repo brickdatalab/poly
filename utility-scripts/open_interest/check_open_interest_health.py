@@ -64,7 +64,7 @@ def main() -> int:
         pairs=pairs,
         lookback_hours=args.lookback_hours,
         step_seconds=args.step_seconds,
-        fallback_max_lag_seconds=2700,
+        fallback_max_lag_seconds=900,
     )
     rows = psql_json(db_url, db_password, sql, timeout_s=120) or []
 
@@ -108,4 +108,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

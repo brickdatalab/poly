@@ -32,6 +32,24 @@
    - audit summary: `5d non_pass_count=0`, `7d non_pass_count=0`, `remaining_fractional_rows=[]`
 6. No websocket ingestion behavior changes were made.
 
+## 2026-02-25 Update (Issue #1 OI 5-Minute Cadence Rollout)
+1. Added migration:
+   - `supabase/migrations/20260225_120000_open_interest_5m_cadence.sql`
+2. Applied scheduler changes:
+   - `oi-ingest-main`: `*/5 * * * *`
+   - `oi-ingest-retry`: `2-59/5 * * * *`
+   - `oi-reconcile`: unchanged (`7 * * * *`)
+3. Applied SLO changes:
+   - `ops.pipeline_slo_config` max lag for `open_interest` and `oi_features` set to `900s`.
+4. Canary/checkpoint evidence:
+   - manual ingest invoke request id: `304712`
+   - `net._http_response` status: `200` (`timed_out=false`)
+   - latest ingest recency observed via `open_interest.ingested_at`: `~34-36s` lag
+   - 24h continuity check: no missing/gap/duplicate/misaligned buckets for `BTC-USD/ETH-USD/SOL-USD`
+5. Artifact:
+   - `scripts/output/open_interest_issue1_rollout_20260225.json`
+6. No websocket ingestion behavior changes were made.
+
 ## 2026-02-25 Update (Archive Prune + Source Checker Checkpoint)
 1. Pruned archive-only legacy script trees from active repo:
    - removed `syn/scripts` (17 files)

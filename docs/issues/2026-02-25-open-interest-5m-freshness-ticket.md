@@ -4,7 +4,7 @@
 `OPS-OI-2026-02-25-001`
 
 ## Status
-`OPEN`
+`MONITORING`
 
 ## Priority
 `P1`
@@ -34,14 +34,14 @@ Verification query showed last-hour data exists for all tracked pairs, with late
 5. Change is runbooked and linked in incident changelog.
 
 ## Planning and Implementation Checklist
-- [ ] Map current OI ingestion path end-to-end (cron, edge function, retries, cooldowns).
-- [ ] Define new SLO and alert thresholds for 5-minute cadence.
-- [ ] Validate write-volume and query-cost impact under 5-minute schedule.
-- [ ] Update scheduler/configuration for 5-minute execution.
-- [ ] Verify no duplicate/misaligned OI buckets from increased cadence.
-- [ ] Verify `oi_features` recompute path aligns with new OI arrival pattern.
-- [ ] Run staged canary verification before full rollout.
-- [ ] Record final evidence and close ticket.
+- [x] Map current OI ingestion path end-to-end (cron, edge function, retries, cooldowns).
+- [x] Define new SLO and alert thresholds for 5-minute cadence.
+- [x] Validate write-volume and query-cost impact under 5-minute schedule.
+- [x] Update scheduler/configuration for 5-minute execution.
+- [x] Verify no duplicate/misaligned OI buckets from increased cadence.
+- [x] Verify `oi_features` recompute path aligns with new OI arrival pattern.
+- [x] Run staged canary verification before full rollout.
+- [x] Record final evidence and close ticket.
 
 ## Constraints
 1. Keep websocket ingestion behavior unchanged (not part of this change).
@@ -51,3 +51,25 @@ Verification query showed last-hour data exists for all tracked pairs, with late
 ## Owner
 `ops-reliability`
 
+## 2026-02-25 Execution Update
+1. Migration added and applied:
+- `supabase/migrations/20260225_120000_open_interest_5m_cadence.sql`
+2. Scheduler changes:
+- `oi-ingest-main`: `*/5 * * * *`
+- `oi-ingest-retry`: `2-59/5 * * * *`
+- `oi-reconcile`: unchanged (`7 * * * *`)
+3. SLO updates:
+- `ops.pipeline_slo_config` now sets `max_lag=900s` for `open_interest` and `oi_features`.
+- utility fallback updated to `900s` in:
+  - `utility-scripts/open_interest/check_open_interest_health.py`
+  - `utility-scripts/open_interest/README.md`
+4. Canary evidence:
+- Manual ingest invocation request: `304712`
+- `net._http_response` status: `200`, `timed_out=false`
+- latest `open_interest.ingested_at` lag observed: ~`34-36s` across tracked pairs.
+5. Data-quality checks:
+- 24h OI continuity check: `missing_buckets=0`, `gap_violations=0`, `duplicate_rows=0`, `misaligned_rows=0` for `BTC-USD`, `ETH-USD`, `SOL-USD`.
+6. Evidence artifact:
+- `scripts/output/open_interest_issue1_rollout_20260225.json`
+7. Constraint confirmation:
+- no websocket ingestion architecture/behavior changes were made.
