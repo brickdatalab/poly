@@ -1,5 +1,21 @@
 # Incident Changelog / Ticket: `OPS-2026-02-24-TRF-001`
 
+## 2026-02-25 Update (Reliability Issues #1-#4 Baseline)
+1. Captured baseline evidence artifact:
+   - `scripts/output/reliability_issue_2026_02_25_baseline.json`
+2. Issue #3 OHLCV baseline (5d):
+   - `ohlcv_1m` for `BTC-USD/ETH-USD/SOL-USD`: `missing=56`, `gap_violations=2`, `duplicate_rows=1440`, `misaligned_rows=1440`
+   - `ohlcv_5m`: `missing=11`, `gap_violations=1` (all three pairs)
+   - `ohlcv_10m`: `missing=5`, `gap_violations=1` (all three pairs)
+   - `ohlcv_15m`: `missing=3`, `gap_violations=1` (all three pairs)
+3. Issue #1 OI baseline:
+   - cron schedules currently: `oi-ingest-main=1,16,31,46 * * * *`, `oi-ingest-retry=4,19,34,49 * * * *`, `oi-reconcile=7 * * * *`
+   - OI and OI-features lag observed around `~1031s` at baseline checkpoint.
+4. Issues #2/#4 baseline:
+   - missing objects confirmed (`ops.master_indicator_registry`, `ops.indicator_latency_slo_config`, `ops.indicator_latency_log`, and snapshot functions not yet present).
+5. Environment note:
+   - local `psql` client currently aborts due Homebrew `krb5` dylib signature policy; read-only DB baseline queries were executed through Supabase integration as a temporary verification path.
+
 ## 2026-02-25 Update (Archive Prune + Source Checker Checkpoint)
 1. Pruned archive-only legacy script trees from active repo:
    - removed `syn/scripts` (17 files)
