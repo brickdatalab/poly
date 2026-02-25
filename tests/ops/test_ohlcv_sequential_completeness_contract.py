@@ -7,7 +7,7 @@ from types import ModuleType
 
 
 def _load_module() -> ModuleType:
-    path = Path("scripts/ops/check_ohlcv_sequential_completeness.py").resolve()
+    path = Path("utility-scripts/ohlcv/check_ohlcv_sequential_completeness.py").resolve()
     spec = importlib.util.spec_from_file_location("check_ohlcv_sequential_completeness", path)
     if spec is None or spec.loader is None:
         raise RuntimeError("Unable to load check_ohlcv_sequential_completeness module")
@@ -43,3 +43,9 @@ def test_build_timeframe_sql_contains_required_integrity_checks() -> None:
     ]
     for item in required:
         assert item in sql
+
+
+def test_legacy_wrapper_points_to_canonical_location() -> None:
+    wrapper = Path("scripts/ops/check_ohlcv_sequential_completeness.py").read_text()
+    assert '"utility-scripts"' in wrapper
+    assert '"ohlcv"' in wrapper

@@ -2,12 +2,13 @@
 
 ## 2026-02-25 Update (OHLCV Sequential Completeness Audit, 5d)
 1. Added reusable utility:
-   - `scripts/ops/check_ohlcv_sequential_completeness.py`
+   - canonical: `utility-scripts/ohlcv/check_ohlcv_sequential_completeness.py`
+   - compatibility wrapper: `scripts/ops/check_ohlcv_sequential_completeness.py`
 2. Added contract test:
    - `tests/ops/test_ohlcv_sequential_completeness_contract.py`
 3. Executed live audit:
-   - command: `python3 scripts/ops/check_ohlcv_sequential_completeness.py --days 5 --tldr`
-   - report: `scripts/output/ohlcv_audits/ohlcv_sequential_audit_5d_20260225T064621Z.json`
+   - command: `python3 utility-scripts/ohlcv/check_ohlcv_sequential_completeness.py --days 5 --tldr`
+   - report: `utility-scripts/ohlcv/output/ohlcv_sequential_audit_5d_20260225T065000Z.json`
 4. Findings (BTC/ETH/SOL, same pattern on all three pairs):
    - `1m`: missing `56`, gap violations `2`, duplicate rows `1440`, misaligned rows `1440`
    - `5m`: missing `10`, gap violations `1`
@@ -16,6 +17,8 @@
    - `30m,45m,1h,2h,6h,12h`: no failures in this 5-day window
 5. Incident window concentration:
    - missing buckets cluster around `2026-02-23 03:00:00+00` to `2026-02-23 03:55:00+00` on lower timeframes.
+6. Open remediation ticket created:
+   - `docs/issues/2026-02-25-ohlcv-missing-values-remediation-ticket.md`
 
 ## 2026-02-25 Update (GitHub Push + Current Checkpoint)
 1. Changelog synchronized to current UTC checkpoint:

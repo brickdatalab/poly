@@ -31,6 +31,8 @@ runtime/**/output/
 runtime/**/.pytest_cache/
 runtime/**/.mypy_cache/
 runtime/**/.ruff_cache/
+utility-scripts/ohlcv/output/*
+!utility-scripts/ohlcv/output/.gitkeep
 
 # Node
 node_modules/
