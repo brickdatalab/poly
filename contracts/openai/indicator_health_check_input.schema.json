@@ -1,0 +1,16 @@
+{
+  "name": "indicator_health_check_input",
+  "strict": true,
+  "schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": ["pairs", "lookback_hours"],
+    "properties": {
+      "pairs": {
+        "type": "array",
+        "items": { "type": "string" }
+      },
+      "lookback_hours": { "type": "integer", "minimum": 1 }
+    }
+  }
+}

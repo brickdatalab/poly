@@ -1,0 +1,72 @@
+{
+  "name": "indicator_health_report",
+  "strict": true,
+  "schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": ["generated_at_utc", "summary", "rows"],
+    "properties": {
+      "generated_at_utc": { "type": "string" },
+      "summary": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["total_checks", "passed_checks", "warn_checks", "failed_checks", "overall_status", "traffic_light"],
+        "properties": {
+          "total_checks": { "type": "integer" },
+          "passed_checks": { "type": "integer" },
+          "warn_checks": { "type": "integer" },
+          "failed_checks": { "type": "integer" },
+          "overall_status": { "type": "string" },
+          "traffic_light": { "type": "string" }
+        }
+      },
+      "rows": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "indicator_key",
+            "domain",
+            "pair",
+            "status",
+            "traffic_light",
+            "reason_code",
+            "reason_detail",
+            "latest_ts",
+            "lag_seconds",
+            "slo_seconds",
+            "expected_bucket_time",
+            "observed_bucket_time",
+            "missing_count",
+            "gap_count",
+            "duplicate_count",
+            "misaligned_count",
+            "dependency_snapshot",
+            "remediation_class"
+          ],
+          "properties": {
+            "indicator_key": { "type": "string" },
+            "domain": { "type": "string" },
+            "pair": { "type": "string" },
+            "status": { "type": "string" },
+            "traffic_light": { "type": "string" },
+            "reason_code": { "type": "string" },
+            "reason_detail": { "type": "string" },
+            "latest_ts": { "type": ["string", "null"] },
+            "lag_seconds": { "type": ["integer", "null"] },
+            "slo_seconds": { "type": ["integer", "null"] },
+            "expected_bucket_time": { "type": ["string", "null"] },
+            "observed_bucket_time": { "type": ["string", "null"] },
+            "missing_count": { "type": "integer" },
+            "gap_count": { "type": "integer" },
+            "duplicate_count": { "type": "integer" },
+            "misaligned_count": { "type": "integer" },
+            "dependency_snapshot": { "type": "object", "additionalProperties": true },
+            "remediation_class": { "type": "string" }
+          }
+        }
+      }
+    }
+  }
+}

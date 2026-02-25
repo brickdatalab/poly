@@ -1,0 +1,75 @@
+{
+  "name": "indicator_compute_latency_report",
+  "strict": true,
+  "schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": ["generated_at_utc", "window", "summary", "rows"],
+    "properties": {
+      "generated_at_utc": { "type": "string" },
+      "window": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["type", "value"],
+        "properties": {
+          "type": { "type": "string" },
+          "value": { "type": "string" }
+        }
+      },
+      "summary": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["total_checks", "passed_checks", "warn_checks", "failed_checks", "overall_status", "traffic_light"],
+        "properties": {
+          "total_checks": { "type": "integer" },
+          "passed_checks": { "type": "integer" },
+          "warn_checks": { "type": "integer" },
+          "failed_checks": { "type": "integer" },
+          "overall_status": { "type": "string" },
+          "traffic_light": { "type": "string" }
+        }
+      },
+      "rows": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "pair",
+            "timeframe",
+            "config_id",
+            "samples",
+            "p50_latency_seconds",
+            "p95_latency_seconds",
+            "p99_latency_seconds",
+            "max_latency_seconds",
+            "target_p95_seconds",
+            "target_p99_seconds",
+            "hard_fail_seconds",
+            "status",
+            "reason_code",
+            "reason_detail",
+            "traffic_light"
+          ],
+          "properties": {
+            "pair": { "type": "string" },
+            "timeframe": { "type": "string" },
+            "config_id": { "type": "string" },
+            "samples": { "type": "integer" },
+            "p50_latency_seconds": { "type": "number" },
+            "p95_latency_seconds": { "type": "number" },
+            "p99_latency_seconds": { "type": "number" },
+            "max_latency_seconds": { "type": "number" },
+            "target_p95_seconds": { "type": "integer" },
+            "target_p99_seconds": { "type": "integer" },
+            "hard_fail_seconds": { "type": "integer" },
+            "status": { "type": "string" },
+            "reason_code": { "type": "string" },
+            "reason_detail": { "type": "string" },
+            "traffic_light": { "type": "string" }
+          }
+        }
+      }
+    }
+  }
+}

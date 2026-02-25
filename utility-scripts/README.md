@@ -23,3 +23,5 @@ For each utility execution, the agent must report:
 - Open interest freshness and 15m continuity utility.
 5. `source_health/`
 - Shared query/runtime helpers used by market/order-book/open-interest utilities.
+6. `indicators/`
+- Unified indicator master health + compute latency utilities.

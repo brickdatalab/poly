@@ -40,7 +40,7 @@
    - `oi-ingest-retry`: `2-59/5 * * * *`
    - `oi-reconcile`: unchanged (`7 * * * *`)
 3. Applied SLO changes:
-   - `ops.pipeline_slo_config` max lag for `open_interest` and `oi_features` set to `900s`.
+   - `ops.pipeline_slo_config` max lag for `open_interest` and `oi_features` set to `1200s`.
 4. Canary/checkpoint evidence:
    - manual ingest invoke request id: `304712`
    - `net._http_response` status: `200` (`timed_out=false`)
@@ -49,6 +49,38 @@
 5. Artifact:
    - `scripts/output/open_interest_issue1_rollout_20260225.json`
 6. No websocket ingestion behavior changes were made.
+
+## 2026-02-25 Update (Issues #2/#4 Indicator Master Health + Latency Framework)
+1. Added and executed migration:
+   - `supabase/migrations/20260225_130000_indicator_master_health_and_latency.sql`
+2. New issue #2 objects:
+   - `ops.master_indicator_registry`
+   - `ops.fn_sync_master_indicator_registry()`
+   - `ops.fn_indicator_master_health_snapshot(...)`
+   - `ops.fn_indicator_master_health_failures(...)`
+3. New issue #4 objects:
+   - `ops.indicator_latency_slo_config`
+   - `ops.indicator_latency_log`
+   - `ops.fn_indicator_compute_latency_snapshot(...)`
+   - `ops.fn_indicator_latency_watchdog(...)`
+4. Added utility scripts:
+   - `utility-scripts/indicators/check_indicator_master_health.py`
+   - `utility-scripts/indicators/check_indicator_compute_latency.py`
+   - `utility-scripts/indicators/README.md`
+5. Added OpenAI strict schemas:
+   - `contracts/openai/master_indicator_registry.schema.json`
+   - `contracts/openai/indicator_health_check_input.schema.json`
+   - `contracts/openai/indicator_health_report.schema.json`
+   - `contracts/openai/indicator_compute_latency_report.schema.json`
+6. Validation evidence snapshot:
+   - master health summary: `total=930`, `pass=777`, `warn=0`, `fail=153`, `traffic_light=RED`
+   - latency summary: `total=468`, `pass=0`, `warn=3`, `fail=465`, `traffic_light=RED`
+   - watchdog insertion: `468` rows into `ops.indicator_latency_log`
+   - artifact: `scripts/output/indicator_master_latency_issue2_4_20260225.json`
+7. Interpretation:
+   - detector/contract framework is deployed and functioning.
+   - current production data-quality and latency conditions are not green and require follow-on remediation work.
+8. No websocket ingestion behavior changes were made.
 
 ## 2026-02-25 Update (Archive Prune + Source Checker Checkpoint)
 1. Pruned archive-only legacy script trees from active repo:

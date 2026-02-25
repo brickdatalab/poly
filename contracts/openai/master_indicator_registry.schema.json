@@ -1,0 +1,45 @@
+{
+  "name": "master_indicator_registry",
+  "strict": true,
+  "schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": ["generated_at_utc", "rows"],
+    "properties": {
+      "generated_at_utc": { "type": "string" },
+      "rows": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "indicator_key",
+            "domain",
+            "storage_table",
+            "storage_column",
+            "pair_column",
+            "time_column",
+            "timeframe_seconds",
+            "freshness_slo_seconds",
+            "availability_mode",
+            "expected_granularity_seconds",
+            "reasoning_metadata"
+          ],
+          "properties": {
+            "indicator_key": { "type": "string" },
+            "domain": { "type": "string" },
+            "storage_table": { "type": "string" },
+            "storage_column": { "type": "string" },
+            "pair_column": { "type": "string" },
+            "time_column": { "type": "string" },
+            "timeframe_seconds": { "type": "integer" },
+            "freshness_slo_seconds": { "type": "integer" },
+            "availability_mode": { "type": "string" },
+            "expected_granularity_seconds": { "type": "integer" },
+            "reasoning_metadata": { "type": "object", "additionalProperties": true }
+          }
+        }
+      }
+    }
+  }
+}

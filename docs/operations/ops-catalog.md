@@ -63,6 +63,18 @@ Operational scripts used for monitoring, recovery, backfill, diagnostics, and in
 - Dependencies: `indicators.open_interest`, `ops.pipeline_slo_config`.
 - AI operator runbook: `/Users/vitolo/Desktop/projects/poly/utility-scripts/open_interest/README.md`
 
+11. `utility-scripts/indicators/check_indicator_master_health.py`
+- Purpose: Unified indicator master health traffic-light (`GREEN|YELLOW|RED`) with per-indicator diagnostics.
+- Command: `python3 utility-scripts/indicators/check_indicator_master_health.py --lookback-hours 24 --tldr`
+- Dependencies: `ops.master_indicator_registry`, `ops.fn_indicator_master_health_snapshot(...)`.
+- AI operator runbook: `/Users/vitolo/Desktop/projects/poly/utility-scripts/indicators/README.md`
+
+12. `utility-scripts/indicators/check_indicator_compute_latency.py`
+- Purpose: Close-to-populate latency SLO checker for `indicators.indicator_values`.
+- Command: `python3 utility-scripts/indicators/check_indicator_compute_latency.py --lookback-hours 24 --tldr`
+- Dependencies: `ops.indicator_latency_slo_config`, `ops.fn_indicator_compute_latency_snapshot(...)`.
+- AI operator runbook: `/Users/vitolo/Desktop/projects/poly/utility-scripts/indicators/README.md`
+
 ## Synthetic Diagnostics (Ops)
 1. `scripts/synthetic_indicators/debug_snapshot_pipeline_state.py`
 2. `scripts/synthetic_indicators/recover_realtime_gap.py`

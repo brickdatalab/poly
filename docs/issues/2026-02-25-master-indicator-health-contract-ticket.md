@@ -4,7 +4,7 @@
 `OPS-IND-2026-02-25-001`
 
 ## Status
-`OPEN`
+`IMPLEMENTED`
 
 ## Priority
 `P0`
@@ -266,3 +266,30 @@ For each non-pass row:
 2. Existing issue docs:
 - `/Users/vitolo/Desktop/projects/poly/docs/issues/2026-02-25-ohlcv-missing-values-remediation-ticket.md`
 - `/Users/vitolo/Desktop/projects/poly/docs/issues/2026-02-25-open-interest-5m-freshness-ticket.md`
+
+## 2026-02-25 Execution Update
+1. Migration added and executed:
+- `supabase/migrations/20260225_130000_indicator_master_health_and_latency.sql`
+2. Implemented control-plane objects:
+- `ops.master_indicator_registry` (no `active` column)
+- `ops.fn_sync_master_indicator_registry()`
+- `ops.fn_indicator_master_health_snapshot(p_pairs text[], p_lookback interval)`
+- `ops.fn_indicator_master_health_failures(...)`
+3. Implemented utility surface:
+- `utility-scripts/indicators/check_indicator_master_health.py`
+- `utility-scripts/indicators/README.md`
+- `utility-scripts/indicators/output/.gitkeep`
+4. Implemented OpenAI strict schemas:
+- `contracts/openai/master_indicator_registry.schema.json`
+- `contracts/openai/indicator_health_check_input.schema.json`
+- `contracts/openai/indicator_health_report.schema.json`
+5. Validation evidence:
+- object creation verified in DB (`to_regclass/to_regprocedure` checks)
+- snapshot output summary present with deterministic contract fields
+- failure drill-down helper (`ops.fn_indicator_master_health_failures`) operational
+- evidence artifact: `scripts/output/indicator_master_latency_issue2_4_20260225.json`
+6. Current state:
+- framework is deployed and operational
+- live master health currently reports `RED` (detected data/latency issues), which is expected for detector rollout and is tracked as residual remediation work.
+7. Constraint confirmation:
+- no websocket ingestion architecture/behavior changes were made.

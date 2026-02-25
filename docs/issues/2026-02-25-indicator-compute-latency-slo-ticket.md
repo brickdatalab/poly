@@ -4,7 +4,7 @@
 `OPS-IND-LAT-2026-02-25-001`
 
 ## Status
-`OPEN`
+`IMPLEMENTED`
 
 ## Priority
 `P0`
@@ -218,6 +218,29 @@ Required reason codes for this ticket:
 - `/Users/vitolo/Desktop/projects/poly/docs/issues/2026-02-25-open-interest-5m-freshness-ticket.md`
 - `/Users/vitolo/Desktop/projects/poly/docs/issues/2026-02-25-master-indicator-health-contract-ticket.md`
 - `/Users/vitolo/Desktop/projects/poly/docs/issues/2026-02-25-ohlcv-missing-values-remediation-ticket.md`
+
+## 2026-02-25 Execution Update
+1. Migration added and executed:
+- `supabase/migrations/20260225_130000_indicator_master_health_and_latency.sql`
+2. Implemented latency control-plane objects:
+- `ops.indicator_latency_slo_config`
+- `ops.indicator_latency_log`
+- `ops.fn_indicator_compute_latency_snapshot(p_pairs text[], p_lookback interval)`
+- `ops.fn_indicator_latency_watchdog(...)`
+3. Implemented utility + schema contracts:
+- `utility-scripts/indicators/check_indicator_compute_latency.py`
+- `contracts/openai/indicator_compute_latency_report.schema.json`
+4. Target reason-code taxonomy implemented in SQL contract:
+- `LATENCY_P95_BREACH`, `LATENCY_P99_BREACH`, `LATENCY_HARD_FAIL`, `INSUFFICIENT_SAMPLES`, `UPSTREAM_CLOSE_DELAY`, `QUEUE_BACKLOG_PRESSURE`, `WORKER_STALL`, `QUERY_ERROR`
+5. Validation evidence:
+- latency snapshot returns deterministic `summary + rows` payload shape
+- watchdog function inserted `468` rows into `ops.indicator_latency_log` during validation run
+- evidence artifact: `scripts/output/indicator_master_latency_issue2_4_20260225.json`
+6. Current state:
+- latency framework is deployed and reporting
+- live latency status currently reports `RED` (high-latency offenders detected), which is expected for detector rollout and now provides exact offender diagnostics.
+7. Constraint confirmation:
+- no websocket ingestion architecture/behavior changes were made.
 2. Related plan docs:
 - `/Users/vitolo/Desktop/projects/poly/docs/plans/2026-02-24-gitops-pipeline-hardening-and-recovery.md`
 - `/Users/vitolo/Desktop/projects/poly/docs/plans/2026-02-25-source-health-traffic-lights-utilities.md`
