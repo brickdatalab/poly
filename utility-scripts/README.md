@@ -15,3 +15,11 @@ For each utility execution, the agent must report:
 
 1. `ohlcv/`
 - OHLCV sequential completeness and gap integrity utilities.
+2. `market_context/`
+- Market context freshness and minute continuity utility.
+3. `order_book/`
+- Order book snapshot freshness and minute continuity utility.
+4. `open_interest/`
+- Open interest freshness and 15m continuity utility.
+5. `source_health/`
+- Shared query/runtime helpers used by market/order-book/open-interest utilities.

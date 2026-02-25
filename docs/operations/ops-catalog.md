@@ -45,6 +45,24 @@ Operational scripts used for monitoring, recovery, backfill, diagnostics, and in
 - Dependencies: `indicators.ohlcv_1m/5m/10m/15m/30m/45m/1h/2h/6h/12h`.
 - AI operator runbook: `/Users/vitolo/Desktop/projects/poly/utility-scripts/ohlcv/README.md`
 
+8. `utility-scripts/market_context/check_market_context_health.py`
+- Purpose: Verify `public.market_context` freshness + minute continuity.
+- Command: `python3 utility-scripts/market_context/check_market_context_health.py --lookback-minutes 180 --tldr`
+- Dependencies: `public.market_context`, `ops.pipeline_slo_config`.
+- AI operator runbook: `/Users/vitolo/Desktop/projects/poly/utility-scripts/market_context/README.md`
+
+9. `utility-scripts/order_book/check_order_book_snapshots_health.py`
+- Purpose: Verify `public.order_book_snapshots` freshness + minute continuity.
+- Command: `python3 utility-scripts/order_book/check_order_book_snapshots_health.py --lookback-minutes 180 --tldr`
+- Dependencies: `public.order_book_snapshots`, `ops.pipeline_slo_config`.
+- AI operator runbook: `/Users/vitolo/Desktop/projects/poly/utility-scripts/order_book/README.md`
+
+10. `utility-scripts/open_interest/check_open_interest_health.py`
+- Purpose: Verify `indicators.open_interest` freshness + 15m continuity.
+- Command: `python3 utility-scripts/open_interest/check_open_interest_health.py --lookback-hours 72 --tldr`
+- Dependencies: `indicators.open_interest`, `ops.pipeline_slo_config`.
+- AI operator runbook: `/Users/vitolo/Desktop/projects/poly/utility-scripts/open_interest/README.md`
+
 ## Synthetic Diagnostics (Ops)
 1. `scripts/synthetic_indicators/debug_snapshot_pipeline_state.py`
 2. `scripts/synthetic_indicators/recover_realtime_gap.py`

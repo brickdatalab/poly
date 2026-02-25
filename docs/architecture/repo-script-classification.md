@@ -48,7 +48,7 @@ Use exactly one class per executable script.
 - Future location target in Phase 2: `research/`.
 
 4. `archive`
-- `scripts/scripts_past/` and additional explicitly marked legacy areas.
+- Archive-only code should live outside active runtime/ops lanes; this repo currently keeps archive history in git rather than a committed `scripts/scripts_past/` tree.
 
 ## Ownership
 1. `core-runtime`

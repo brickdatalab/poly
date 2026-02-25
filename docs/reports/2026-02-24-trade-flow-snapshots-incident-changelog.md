@@ -1,5 +1,41 @@
 # Incident Changelog / Ticket: `OPS-2026-02-24-TRF-001`
 
+## 2026-02-25 Update (Archive Prune + Source Checker Checkpoint)
+1. Pruned archive-only legacy script trees from active repo:
+   - removed `syn/scripts` (17 files)
+   - removed `scripts/scripts_past` (21 files + legacy tests + legacy ops shell wrappers)
+2. Added OI cadence follow-up ticket:
+   - repo ticket: `docs/issues/2026-02-25-open-interest-5m-freshness-ticket.md`
+   - GitHub issue: [#1](https://github.com/brickdatalab/poly/issues/1)
+3. Utility checker status checkpoint (UTC):
+   - `utility-scripts/ohlcv/check_ohlcv_sequential_completeness.py --days 5 --tldr` => `FAIL` (known OHLCV gaps/misalignment window remains)
+   - `utility-scripts/market_context/check_market_context_health.py --lookback-minutes 180 --tldr` => `PASS` (`GREEN`)
+   - `utility-scripts/order_book/check_order_book_snapshots_health.py --lookback-minutes 180 --tldr` => `PASS` (`GREEN`)
+   - `utility-scripts/open_interest/check_open_interest_health.py --lookback-hours 24 --tldr` => `PASS` (`GREEN`)
+4. Clarification:
+   - OI is currently green under existing SLO.
+   - cadence/freshness tightening to 5-minute pulls is tracked separately in `OPS-OI-2026-02-25-001`.
+
+## 2026-02-25 Update (Source Health Traffic-Light Utilities)
+1. Added shared source-health utility core:
+   - `utility-scripts/source_health/common.py`
+2. Added new source utilities:
+   - `utility-scripts/market_context/check_market_context_health.py`
+   - `utility-scripts/order_book/check_order_book_snapshots_health.py`
+   - `utility-scripts/open_interest/check_open_interest_health.py`
+3. Added contract tests:
+   - `tests/ops/test_source_health_utilities_contract.py`
+4. Added AI operator runbooks:
+   - `utility-scripts/market_context/README.md`
+   - `utility-scripts/order_book/README.md`
+   - `utility-scripts/open_interest/README.md`
+5. Updated utility index/catalog:
+   - `utility-scripts/README.md`
+   - `docs/operations/ops-catalog.md`
+6. Design rule enforced:
+   - freshness thresholds are read from `ops.pipeline_slo_config` with defaults only as fallback
+   - faster ingestion rates only change observed `rows_per_minute` metrics (no code changes needed)
+
 ## 2026-02-25 Update (OHLCV Sequential Completeness Audit, 5d)
 1. Added reusable utility:
    - canonical: `utility-scripts/ohlcv/check_ohlcv_sequential_completeness.py`
