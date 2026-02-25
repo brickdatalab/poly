@@ -1,5 +1,18 @@
 # Incident Changelog / Ticket: `OPS-2026-02-24-TRF-001`
 
+## 2026-02-25 Update (Post-Phase-1 Checkpoint)
+1. Current branch state was committed as a checkpoint:
+   - commit: `8b7fc4e`
+   - message: `chore: checkpoint phase1 reliability hardening and repo organization`
+2. Phase 1 artifacts now include:
+   - canonical runtime lane under `runtime/`
+   - runtime parity tests under `tests/runtime/`
+   - ops contract tests under `tests/ops/`
+   - classification/categorization docs under `docs/architecture`, `docs/operations`, and `docs/research`
+3. Phase 2 execution plan created:
+   - `docs/plans/2026-02-25-phase2-product-structure-tdd-implementation.md`
+4. No websocket ingestion changes were made in this checkpoint.
+
 ## Summary
 - Status: `MONITORING` (recovery complete; hardening deployed; watch window active)
 - Severity: `SEV-2` (historical stale snapshot incident; mitigated and under monitoring)
