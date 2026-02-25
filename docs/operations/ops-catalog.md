@@ -39,6 +39,11 @@ Operational scripts used for monitoring, recovery, backfill, diagnostics, and in
 - Command: `python3 scripts/backfill_raw_trades_from_coinbase.py --help`
 - Dependencies: Coinbase trade history + `public.raw_trades`.
 
+7. `scripts/ops/check_ohlcv_sequential_completeness.py`
+- Purpose: Verify OHLCV sequential/completeness integrity (`1m..12h`) for last `N` days.
+- Command: `python3 scripts/ops/check_ohlcv_sequential_completeness.py --days 5 --tldr`
+- Dependencies: `indicators.ohlcv_1m/5m/10m/15m/30m/45m/1h/2h/6h/12h`.
+
 ## Synthetic Diagnostics (Ops)
 1. `scripts/synthetic_indicators/debug_snapshot_pipeline_state.py`
 2. `scripts/synthetic_indicators/recover_realtime_gap.py`
