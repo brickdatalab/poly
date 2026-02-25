@@ -2,7 +2,7 @@
 
 update ops.pipeline_slo_config
 set
-  max_lag = interval '15 minutes',
+  max_lag = interval '20 minutes',
   notes = 'open interest + oi_features freshness for 5m ingest cadence',
   updated_at = now()
 where source in ('open_interest', 'oi_features');

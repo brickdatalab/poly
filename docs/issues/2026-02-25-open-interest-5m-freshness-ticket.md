@@ -59,8 +59,8 @@ Verification query showed last-hour data exists for all tracked pairs, with late
 - `oi-ingest-retry`: `2-59/5 * * * *`
 - `oi-reconcile`: unchanged (`7 * * * *`)
 3. SLO updates:
-- `ops.pipeline_slo_config` now sets `max_lag=900s` for `open_interest` and `oi_features`.
-- utility fallback updated to `900s` in:
+- `ops.pipeline_slo_config` now sets `max_lag=1200s` for `open_interest` and `oi_features`.
+- utility fallback updated to `1200s` in:
   - `utility-scripts/open_interest/check_open_interest_health.py`
   - `utility-scripts/open_interest/README.md`
 4. Canary evidence:
