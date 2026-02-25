@@ -26,7 +26,8 @@ This runbook defines how production Supabase and pipeline changes are made and a
 3. Post-merge smoke checks:
    - `indicator-worker` invoke succeeds.
    - `indicators.job_queue` pending trend is healthy.
-   - Freshness checks for `ohlcv_1m`, `indicator_values`, `oi_features`.
+   - Freshness checks for `ohlcv_1m`, `ohlcv_5m`, `ohlcv_15m`, `indicator_values`, `open_interest`, `oi_features`.
+   - `postgrest_schema_config` check confirms `public` + `indicators` exposure.
 
 ## Incident Policy
 
@@ -35,3 +36,10 @@ This runbook defines how production Supabase and pipeline changes are made and a
 3. Validate recovery with runbook queries.
 4. Backport and merge permanent prevention change.
 
+## SLO Policy
+
+Use `docs/runbooks/incident-response-slo.md` as the source of truth for:
+
+1. freshness/continuity objectives
+2. severity mapping
+3. response and closure criteria

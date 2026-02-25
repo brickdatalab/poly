@@ -370,6 +370,125 @@ def check_ohlcv_1m_freshness(db_url: str, db_password: str) -> CheckResult:
     )
 
 
+def check_series_freshness(
+    db_url: str,
+    db_password: str,
+    *,
+    name: str,
+    table: str,
+    time_col: str,
+    pass_s: float,
+    warn_s: float,
+) -> CheckResult:
+    q = f"""
+    select to_jsonb(coalesce(jsonb_agg(t), '[]'::jsonb))
+    from (
+      select pair, max({time_col}) as max_ts
+      from {table}
+      where pair = any(array{list(PAIR_ALLOWLIST)}::text[])
+      group by pair
+      order by pair
+    ) t;
+    """
+    rows = psql_json(db_url, db_password, q)
+    now = utc_now()
+
+    worst = "PASS"
+    per_pair: dict[str, Any] = {}
+    for r in rows or []:
+        pair = r["pair"]
+        max_ts_raw = r.get("max_ts")
+        if not max_ts_raw:
+            st = "FAIL"
+            per_pair[pair] = {"age_seconds": None, "status": st}
+            worst = "FAIL"
+            continue
+        max_ts = dt.datetime.fromisoformat(str(max_ts_raw).replace("Z", "+00:00"))
+        age_s = (now - max_ts).total_seconds()
+        st = status_from_age(age_s, pass_s=pass_s, warn_s=warn_s)
+        per_pair[pair] = {"age_seconds": round(age_s, 3), "status": st}
+        if st == "FAIL":
+            worst = "FAIL"
+        elif st == "WARN" and worst != "FAIL":
+            worst = "WARN"
+
+    missing_pairs = [p for p in PAIR_ALLOWLIST if p not in per_pair]
+    if missing_pairs:
+        worst = "FAIL"
+
+    return CheckResult(
+        name=name,
+        status=worst,
+        details={"table": table, "time_col": time_col, "missing_pairs": missing_pairs, "pairs": per_pair},
+    )
+
+
+def check_trade_flow_snapshot_cron(db_url: str, db_password: str) -> CheckResult:
+    q = """
+    with runs as (
+      select
+        d.status,
+        d.start_time,
+        d.end_time
+      from cron.job_run_details d
+      join cron.job j on j.jobid = d.jobid
+      where j.jobname = 'trade_flow_snapshots_every_minute'
+        and coalesce(d.end_time, d.start_time) > now() - interval '60 minutes'
+    )
+    select to_jsonb(coalesce(jsonb_agg(t), '[]'::jsonb))
+    from (
+      select
+        count(*) filter (where status = 'succeeded')::bigint as successes_60m,
+        count(*) filter (where status in ('failed','error'))::bigint as failures_60m,
+        count(*) filter (
+          where status = 'succeeded'
+            and coalesce(end_time, start_time) > now() - interval '15 minutes'
+        )::bigint as successes_15m,
+        count(*) filter (
+          where status in ('failed','error')
+            and coalesce(end_time, start_time) > now() - interval '15 minutes'
+        )::bigint as failures_15m,
+        max(coalesce(end_time, start_time)) as last_run_at,
+        (
+          select d2.status
+          from cron.job_run_details d2
+          join cron.job j2 on j2.jobid = d2.jobid
+          where j2.jobname = 'trade_flow_snapshots_every_minute'
+          order by coalesce(d2.end_time, d2.start_time) desc
+          limit 1
+        ) as last_status
+      from runs
+    ) t;
+    """
+    rows = psql_json(db_url, db_password, q)
+    row = (rows or [{}])[0]
+    suc60 = int(row.get("successes_60m") or 0)
+    fail60 = int(row.get("failures_60m") or 0)
+    suc15 = int(row.get("successes_15m") or 0)
+    fail15 = int(row.get("failures_15m") or 0)
+
+    status = "PASS"
+    # Hard failure: no successful run in 15m or repeated failures in 15m.
+    if suc15 == 0 or fail15 >= 3:
+        status = "FAIL"
+    elif fail60 > 0:
+        status = "WARN"
+
+    return CheckResult(
+        name="trade_flow_snapshot_cron",
+        status=status,
+        details={
+            "jobname": "trade_flow_snapshots_every_minute",
+            "successes_15m": suc15,
+            "failures_15m": fail15,
+            "successes_60m": suc60,
+            "failures_60m": fail60,
+            "last_run_at": row.get("last_run_at"),
+            "last_status": row.get("last_status"),
+        },
+    )
+
+
 def check_ohlcv_1m_gaps(db_url: str, db_password: str, window_hours: int) -> CheckResult:
     # Use generate_series for a bounded anti-join. For 24h, this is tiny.
     q = f"""
@@ -636,6 +755,33 @@ def check_indicator_pipeline(db_url: str, db_password: str) -> CheckResult:
     )
 
 
+def check_postgrest_schema_config(db_url: str, db_password: str) -> CheckResult:
+    q = """
+    select to_jsonb(coalesce(jsonb_agg(t), '[]'::jsonb))
+    from (
+      select substring(conf from '^pgrst\\.db_schemas=(.*)$') as db_schemas
+      from pg_roles r
+      cross join unnest(coalesce(r.rolconfig, array[]::text[])) conf
+      where r.rolname = 'authenticator'
+        and conf like 'pgrst.db_schemas=%'
+      limit 1
+    ) t;
+    """
+    rows = psql_json(db_url, db_password, q)
+    raw = ""
+    if rows:
+        raw = str((rows[0] or {}).get("db_schemas") or "")
+    current = [s.strip() for s in raw.split(",") if s and s.strip()]
+    required = ["public", "indicators"]
+    missing = [s for s in required if s not in set(current)]
+    status = "PASS" if not missing else "FAIL"
+    return CheckResult(
+        name="postgrest_schema_config",
+        status=status,
+        details={"required": required, "current": current, "missing": missing},
+    )
+
+
 def check_postgrest(supabase_url: str, service_key: str) -> CheckResult:
     # Lightweight sanity call: read 1 row from websocket_heartbeat.
     url = supabase_url.rstrip("/") + "/rest/v1/websocket_heartbeat?select=id&limit=1"
@@ -676,6 +822,13 @@ def summarize(results: Iterable[CheckResult]) -> str:
             elif r.name == "indicator_pipeline":
                 jq = r.details.get("job_queue_by_status", {})
                 lines.append(f"     job_queue failed={jq.get('failed', 0)} running={jq.get('running', 0)}")
+            elif r.name == "trade_flow_snapshot_cron":
+                lines.append(
+                    "     trade_flow cron "
+                    f"success15m={r.details.get('successes_15m')} "
+                    f"fail15m={r.details.get('failures_15m')} "
+                    f"last={r.details.get('last_status')}"
+                )
             elif r.name == "postgrest_http":
                 lines.append(f"     {r.details}")
     lines.append("")
@@ -697,11 +850,79 @@ def main() -> int:
 
     results: list[CheckResult] = []
     results.append(check_db_connectivity(db_url, db_password))
+    results.append(check_postgrest_schema_config(db_url, db_password))
     results.append(check_heartbeats(db_url, db_password))
     results.append(check_raw_trades_freshness(db_url, db_password, window_minutes=args.recent_minutes))
     results.append(check_market_context(db_url, db_password, window_minutes=args.recent_minutes))
     results.append(check_order_book(db_url, db_password, window_minutes=args.recent_minutes))
+    results.append(
+        check_series_freshness(
+            db_url,
+            db_password,
+            name="trade_flow_snapshots_freshness",
+            table="public.trade_flow_snapshots",
+            time_col="snapshot_time",
+            pass_s=120,
+            warn_s=300,
+        )
+    )
+    results.append(check_trade_flow_snapshot_cron(db_url, db_password))
     results.append(check_ohlcv_1m_freshness(db_url, db_password))
+    results.append(
+        check_series_freshness(
+            db_url,
+            db_password,
+            name="ohlcv_5m_freshness",
+            table="indicators.ohlcv_5m",
+            time_col="bucket_time",
+            pass_s=1800,
+            warn_s=3600,
+        )
+    )
+    results.append(
+        check_series_freshness(
+            db_url,
+            db_password,
+            name="ohlcv_15m_freshness",
+            table="indicators.ohlcv_15m",
+            time_col="bucket_time",
+            pass_s=2700,
+            warn_s=5400,
+        )
+    )
+    results.append(
+        check_series_freshness(
+            db_url,
+            db_password,
+            name="indicator_values_freshness",
+            table="indicators.indicator_values",
+            time_col="bucket_time",
+            pass_s=2700,
+            warn_s=5400,
+        )
+    )
+    results.append(
+        check_series_freshness(
+            db_url,
+            db_password,
+            name="open_interest_freshness",
+            table="indicators.open_interest",
+            time_col="bucket_time",
+            pass_s=2700,
+            warn_s=5400,
+        )
+    )
+    results.append(
+        check_series_freshness(
+            db_url,
+            db_password,
+            name="oi_features_freshness",
+            table="indicators.oi_features",
+            time_col="bucket_time",
+            pass_s=2700,
+            warn_s=5400,
+        )
+    )
     results.append(check_ohlcv_1m_gaps(db_url, db_password, window_hours=args.window_hours))
     results.append(check_rollups_alignment_and_gaps(db_url, db_password, window_hours=args.window_hours))
     results.append(check_indicator_pipeline(db_url, db_password))

@@ -1,0 +1,41 @@
+name: Ops DB Guards
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "*/15 * * * *"
+
+jobs:
+  db-guards:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Skip when DB secrets are not configured
+        if: ${{ !secrets.SUPABASE_DB_URL || !secrets.SUPABASE_DB_PASSWORD }}
+        run: |
+          echo "SUPABASE_DB_URL or SUPABASE_DB_PASSWORD is missing. Skipping DB guard checks."
+
+      - name: Run schema drift and health checks
+        if: ${{ secrets.SUPABASE_DB_URL && secrets.SUPABASE_DB_PASSWORD }}
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: |
+          cat > .env <<EOF
+          SUPABASE_DB_URL=${SUPABASE_DB_URL}
+          SUPABASE_DB_PASSWORD=${SUPABASE_DB_PASSWORD}
+          SUPABASE_URL=${SUPABASE_URL}
+          SUPABASE_SERVICE_KEY=${SUPABASE_SERVICE_KEY}
+          EOF
+
+          python3 scripts/ops/check_postgrest_required_schemas.py
+          python3 scripts/healthcheck_all.py --window-hours 6 --recent-minutes 5

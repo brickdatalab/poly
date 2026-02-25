@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Signal Launchpad</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --surface2: #1c2333;
+    --border: #30363d;
+    --text: #e6edf3;
+    --text-dim: #8b949e;
+    --accent: #58a6ff;
+    --green: #3fb950;
+    --red: #f85149;
+    --yellow: #d29922;
+    --orange: #db6d28;
+    --purple: #bc8cff;
+    --mono: 'SF Mono','Cascadia Code','Fira Code','Consolas',monospace;
+    --sans: -apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:var(--sans); background:var(--bg); color:var(--text); height:100vh; overflow:hidden; }
+
+  .app { display:grid; grid-template-rows:50px auto 1fr 34px; height:100vh; }
+
+  /* ── Header ── */
+  .header {
+    display:flex; align-items:center; justify-content:space-between;
+    padding:0 24px; background:var(--surface); border-bottom:1px solid var(--border);
+  }
+  .header-left { display:flex; align-items:center; gap:10px; }
+  .header-left h1 { font-size:15px; font-weight:600; }
+  .pulse-dot { width:8px; height:8px; border-radius:50%; background:var(--green); animation:pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
+  .header-right { font-size:12px; font-family:var(--mono); color:var(--text-dim); }
+
+  /* ── Timer Bar ── */
+  .timer-bar {
+    background:var(--surface); border-bottom:1px solid var(--border);
+    padding:14px 24px; display:flex; align-items:center; gap:28px;
+  }
+  .countdown { text-align:center; min-width:130px; }
+  .countdown-time {
+    font-size:40px; font-weight:700; font-family:var(--mono);
+    letter-spacing:2px; line-height:1;
+  }
+  .countdown-time.warn { color:var(--yellow); }
+  .countdown-time.critical { color:var(--red); animation:pulse 0.8s infinite; }
+  .countdown-label {
+    font-size:9px; color:var(--text-dim); text-transform:uppercase;
+    letter-spacing:1px; margin-top:3px;
+  }
+
+  .timer-middle { flex:1; display:flex; flex-direction:column; gap:10px; }
+  .progress-track {
+    height:4px; background:var(--surface2); border-radius:2px;
+    position:relative; overflow:visible;
+  }
+  .progress-fill {
+    height:100%; background:var(--accent); border-radius:2px;
+    transition:width 1s linear;
+  }
+  .fire-marker {
+    position:absolute; top:-4px; width:2px; height:12px;
+    background:var(--text-dim); border-radius:1px; opacity:0.5;
+  }
+  .fire-marker.fired { background:var(--green); opacity:1; }
+
+  .fire-row { display:flex; gap:16px; align-items:center; flex-wrap:wrap; }
+  .fire-badge {
+    display:flex; align-items:center; gap:5px;
+    font-size:11px; font-family:var(--mono);
+    padding:3px 10px; border-radius:5px;
+    background:var(--surface2); border:1px solid var(--border);
+  }
+  .fire-badge .dot { width:6px; height:6px; border-radius:50%; }
+  .fire-badge.waiting .dot { background:var(--text-dim); }
+  .fire-badge.pending .dot { background:var(--yellow); animation:pulse 1s infinite; }
+  .fire-badge.fired .dot { background:var(--green); }
+  .bucket-label {
+    font-size:11px; font-family:var(--mono); color:var(--text-dim);
+    margin-left:auto;
+  }
+
+  .clear-btn {
+    padding:10px 24px; border-radius:8px; border:1px solid var(--border);
+    background:var(--surface2); color:var(--text); font-size:13px;
+    font-family:var(--sans); font-weight:600; cursor:pointer;
+    transition:all 0.15s; white-space:nowrap; letter-spacing:0.5px;
+  }
+  .clear-btn:hover { border-color:var(--red); color:var(--red); background:rgba(248,81,73,0.08); }
+
+  /* ── Signal Area ── */
+  .signal-area { overflow-y:auto; padding:20px 24px; }
+  .signal-area::-webkit-scrollbar { width:6px; }
+  .signal-area::-webkit-scrollbar-track { background:transparent; }
+  .signal-area::-webkit-scrollbar-thumb { background:var(--border); border-radius:3px; }
+
+  .pair-columns {
+    display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr));
+    gap:20px; align-items:start;
+  }
+  .pair-column {
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:12px; overflow:hidden;
+  }
+  .pair-header {
+    display:flex; align-items:center; justify-content:space-between;
+    padding:12px 16px; border-bottom:1px solid var(--border); background:var(--surface2);
+  }
+  .pair-name { font-size:15px; font-weight:700; font-family:var(--mono); }
+  .pair-count {
+    font-size:11px; padding:2px 8px; border-radius:10px;
+    font-family:var(--mono); font-weight:600;
+  }
+  .pair-count.has { background:rgba(88,166,255,0.15); color:var(--accent); }
+  .pair-count.empty { background:rgba(139,148,158,0.08); color:var(--text-dim); }
+  .pair-cards { padding:10px; display:flex; flex-direction:column; gap:8px; }
+  .pair-empty { padding:20px; text-align:center; font-size:12px; color:var(--text-dim); }
+
+  /* ── Signal Cards ── */
+  .signal-card {
+    background:var(--bg); border:1px solid var(--border); border-radius:8px;
+    padding:12px; transition:border-color 0.2s; animation:cardIn 0.3s ease-out;
+  }
+  @keyframes cardIn { from{opacity:0;transform:translateY(6px);} to{opacity:1;transform:translateY(0);} }
+  .signal-card:hover { border-color:rgba(88,166,255,0.3); }
+  .signal-card.up { border-left:3px solid var(--green); }
+  .signal-card.down { border-left:3px solid var(--red); }
+
+  .card-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:4px; }
+  .card-indicator { font-size:11px; font-family:var(--mono); color:var(--text-dim); }
+  .card-badge {
+    font-size:10px; font-weight:700; padding:2px 8px; border-radius:4px;
+    text-transform:uppercase; letter-spacing:0.5px;
+  }
+  .card-badge.up { background:rgba(63,185,80,0.15); color:var(--green); }
+  .card-badge.down { background:rgba(248,81,73,0.15); color:var(--red); }
+
+  .card-v1 { font-size:22px; font-weight:700; font-family:var(--mono); margin:2px 0; }
+  .card-v1.positive { color:var(--green); }
+  .card-v1.negative { color:var(--red); }
+
+  .card-reason { font-size:10px; color:var(--text-dim); font-family:var(--mono); line-height:1.4; }
+
+  .card-meta {
+    display:flex; gap:12px; margin-top:8px; padding-top:8px;
+    border-top:1px solid var(--border); font-size:10px; flex-wrap:wrap;
+  }
+  .meta-item { display:flex; gap:4px; }
+  .meta-label { color:var(--text-dim); }
+  .meta-val { font-family:var(--mono); }
+
+  /* ── Window Sigma ── */
+  .sigma-ladder { display:flex; gap:3px; flex-wrap:wrap; margin-top:8px; }
+  .sigma-level {
+    font-family:var(--mono); font-size:10px; padding:2px 6px;
+    border-radius:3px; border:1px solid transparent;
+  }
+  .sigma-level.passed-up { background:rgba(63,185,80,0.2); color:var(--green); border-color:rgba(63,185,80,0.3); }
+  .sigma-level.passed-down { background:rgba(248,81,73,0.2); color:var(--red); border-color:rgba(248,81,73,0.3); }
+  .sigma-level.not-passed { background:rgba(139,148,158,0.05); color:var(--text-dim); opacity:0.4; }
+  .sigma-level.ineligible { background:transparent; color:var(--text-dim); opacity:0.2; text-decoration:line-through; }
+  .sigma-summary { font-size:11px; font-family:var(--mono); color:var(--text-dim); margin-top:4px; }
+
+  /* ── Empty State ── */
+  .global-empty {
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center; color:var(--text-dim); min-height:300px; padding:40px;
+  }
+  .global-empty .icon { font-size:36px; opacity:0.15; margin-bottom:12px; }
+  .global-empty h3 { font-size:16px; color:var(--text); margin-bottom:4px; font-weight:600; }
+  .global-empty p { font-size:13px; line-height:1.5; max-width:400px; }
+
+  /* ── Status Bar ── */
+  .status-bar {
+    display:flex; align-items:center; justify-content:space-between;
+    padding:0 24px; background:var(--surface); border-top:1px solid var(--border);
+    font-size:11px; color:var(--text-dim); font-family:var(--mono);
+  }
+  .status-left, .status-right { display:flex; gap:16px; align-items:center; }
+
+  /* ── Auto-clear banner ── */
+  .auto-banner {
+    position:fixed; top:56px; left:50%; transform:translateX(-50%);
+    background:var(--yellow); color:#000; padding:6px 20px; border-radius:6px;
+    font-weight:600; font-size:12px; opacity:0; transition:opacity 0.3s;
+    z-index:100; pointer-events:none;
+  }
+  .auto-banner.show { opacity:1; }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <header class="header">
+    <div class="header-left">
+      <div class="pulse-dot"></div>
+      <h1>Signal Launchpad</h1>
+    </div>
+    <div class="header-right" id="utcClock">--</div>
+  </header>
+
+  <div class="timer-bar">
+    <div class="countdown">
+      <div class="countdown-time" id="countdownTime">--:--</div>
+      <div class="countdown-label">remaining</div>
+    </div>
+    <div class="timer-middle">
+      <div class="progress-track">
+        <div class="progress-fill" id="progressFill" style="width:0%"></div>
+        <div class="fire-marker" id="marker1" style="left:10%" title="T+1m fire"></div>
+        <div class="fire-marker" id="marker2" style="left:16.67%" title="T+2m fire"></div>
+      </div>
+      <div class="fire-row" id="fireRow"></div>
+    </div>
+    <button class="clear-btn" onclick="clearSignals()" title="Press C to clear">CLEAR</button>
+  </div>
+
+  <div class="signal-area" id="signalArea"></div>
+
+  <div class="status-bar">
+    <div class="status-left">
+      <span>13 indicators</span>
+      <span id="statusBucket">bucket: —</span>
+    </div>
+    <div class="status-right">
+      <span id="statusTriggered">0 triggered</span>
+    </div>
+  </div>
+</div>
+
+<div class="auto-banner" id="autoBanner">Signals auto-cleared</div>
+
+<script>
+// ══════════════════════════════════════════════════════
+// CONFIGURATION
+// ══════════════════════════════════════════════════════
+
+const ALL_PAIRS = ['BTC-USD', 'ETH-USD', 'SOL-USD'];
+const WINDOW_PAIRS = ['BTC-USD', 'ETH-USD'];
+
+const INDICATORS = [
+  { id:'rsi_velocity_5m', phase:1, label:'rsi_velocity_5m' },
+  { id:'mtf_signed_efficiency_ratio', phase:1, label:'mtf_signed_eff_ratio' },
+  { id:'early_momentum_divergence_score', phase:2, label:'early_momentum_div' },
+  { id:'atr_normalized_reversal_pressure', phase:1, label:'atr_norm_reversal' },
+  { id:'multitimeframe_trend_confluence', phase:1, label:'mtf_trend_confluence' },
+  { id:'rsi_volatility_normalized_velocity', phase:1, label:'rsi_vol_norm_vel' },
+  { id:'cvd_price_divergence_velocity', phase:2, label:'cvd_price_div_vel' },
+  { id:'early_impulse_liquidity_alignment_2m', phase:2, label:'early_impulse_liq' },
+  { id:'oi_funding_impulse_confirmation_2m', phase:2, label:'oi_funding_impulse' },
+  { id:'order_flow_acceleration_regime', phase:2, label:'order_flow_accel' },
+  { id:'window_edge_57to01_nonrolling', phase:2, label:'window_edge_57to01' },
+];
+
+const WINDOW_SCRIPTS = [
+  { id:'window_up_signal', label:'window_up_signal', direction:'up',
+    thresholds:{
+      'ETH-USD':{ minSigma:0.75, levels:[[0.25,0.0719],[0.5,0.1399],[0.75,0.2078],[1.0,0.2758],[1.5,0.4117],[2.0,0.5476],[3.0,0.8194],[4.0,1.0912]] },
+      'BTC-USD':{ minSigma:1.5, levels:[[0.25,0.0574],[0.5,0.1115],[0.75,0.1656],[1.0,0.2196],[1.5,0.3278],[2.0,0.4359],[3.0,0.6522],[4.0,0.8685]] },
+    }
+  },
+  { id:'window_down_signal', label:'window_down_signal', direction:'down',
+    thresholds:{
+      'ETH-USD':{ minSigma:0.25, levels:[[0.25,-0.0640],[0.5,-0.1319],[0.75,-0.1999],[1.0,-0.2678],[1.5,-0.4038],[2.0,-0.5397],[3.0,-0.8115],[4.0,-1.0833]] },
+      'BTC-USD':{ minSigma:0.75, levels:[[0.25,-0.0507],[0.5,-0.1048],[0.75,-0.1588],[1.0,-0.2129],[1.5,-0.3211],[2.0,-0.4292],[3.0,-0.6455],[4.0,-0.8618]] },
+    }
+  },
+];
+
+const T1_INDICATORS = INDICATORS.filter(i => i.phase === 1);
+const T2_INDICATORS = INDICATORS.filter(i => i.phase === 2);
+
+const T1_FIRE_SEC = 100;   // 1:30 into window
+const T2_FIRE_SEC = 170;  // 2:30 into window
+const AUTO_CLEAR_SEC = 890; // 14:50 (10s before end)
+const WINDOW_SEC = 900;   // 15 minutes
+
+// ══════════════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════════════
+
+let currentBoundaryTs = -1;
+let firedT1 = false;
+let firedT2 = false;
+let firingT1 = false;  // True while fetch is in-flight
+let firingT2 = false;
+let autoCleared = false;
+let signals = [];
+let fireErrors = [];
+let renderKey = '';  // Track signal state to avoid redundant re-renders
+
+// ══════════════════════════════════════════════════════
+// TIMER / MAIN LOOP
+// ══════════════════════════════════════════════════════
+
+function getBoundaryTs(now) {
+  const min = now.getUTCMinutes();
+  const bMin = Math.floor(min / 15) * 15;
+  return Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(),
+                  now.getUTCHours(), bMin, 0);
+}
+
+function tick() {
+  const now = new Date();
+  const bTs = getBoundaryTs(now);
+  const secElapsed = Math.floor((now.getTime() - bTs) / 1000);
+  const secRemain = WINDOW_SEC - secElapsed;
+
+  // ── Window change detection ──
+  if (bTs !== currentBoundaryTs) {
+    currentBoundaryTs = bTs;
+    firedT1 = false;
+    firedT2 = false;
+    firingT1 = false;
+    firingT2 = false;
+    autoCleared = false;
+    signals = [];
+    fireErrors = [];
+  }
+
+  // ── Fire T+1m at 90s ──
+  if (secElapsed >= T1_FIRE_SEC && !firedT1 && !firingT1) {
+    firingT1 = true;
+    fireT1();
+  }
+
+  // ── Fire T+2m + Window at 150s ──
+  // Gate on T+1m completion to avoid simultaneous first-load bursts.
+  if (secElapsed >= T2_FIRE_SEC && firedT1 && !firingT1 && !firedT2 && !firingT2) {
+    firingT2 = true;
+    fireT2();
+  }
+
+  // ── Auto-clear at 890s ──
+  if (secElapsed >= AUTO_CLEAR_SEC && !autoCleared) {
+    autoCleared = true;
+    signals = [];
+    fireErrors = [];
+    showAutoBanner();
+  }
+
+  updateDisplay(now, bTs, secElapsed, secRemain);
+  renderSignals();
+}
+
+function showAutoBanner() {
+  const el = document.getElementById('autoBanner');
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 3000);
+}
+
+// ══════════════════════════════════════════════════════
+// FIRE LOGIC — real server calls
+// ══════════════════════════════════════════════════════
+
+async function fireT1() {
+  try {
+    const resp = await fetch('/api/fire/t1');
+    if (!resp.ok) throw new Error(`Server ${resp.status}`);
+    const data = await resp.json();
+    // Only keep triggered signals
+    const triggered = (data.signals || []).filter(s => s.triggered);
+    signals.push(...triggered);
+    if (data.errors?.length) {
+      for (const e of data.errors) fireErrors.push(`${e.indicator}: ${e.error}`);
+    }
+  } catch (err) {
+    fireErrors.push(`T+1m: ${err.message}`);
+  } finally {
+    firedT1 = true;
+    firingT1 = false;
+    renderKey = '';
+    renderSignals();
+  }
+}
+
+async function fireT2() {
+  try {
+    const resp = await fetch('/api/fire/t2');
+    if (!resp.ok) throw new Error(`Server ${resp.status}`);
+    const data = await resp.json();
+    const triggered = (data.signals || []).filter(s => s.triggered);
+    signals.push(...triggered);
+    if (data.errors?.length) {
+      for (const e of data.errors) fireErrors.push(`${e.indicator}: ${e.error}`);
+    }
+  } catch (err) {
+    fireErrors.push(`T+2m: ${err.message}`);
+  } finally {
+    firedT2 = true;
+    firingT2 = false;
+    renderKey = '';
+    renderSignals();
+  }
+}
+
+// ══════════════════════════════════════════════════════
+// CLEAR
+// ══════════════════════════════════════════════════════
+
+function clearSignals() {
+  signals = [];
+  fireErrors = [];
+  renderKey = '';  // Force re-render
+  renderSignals();
+}
+
+document.addEventListener('keydown', e => {
+  if ((e.key === 'c' || e.key === 'C') && !e.ctrlKey && !e.metaKey) {
+    const tag = e.target.tagName;
+    if (tag !== 'INPUT' && tag !== 'TEXTAREA') clearSignals();
+  }
+});
+
+// ══════════════════════════════════════════════════════
+// DISPLAY UPDATE
+// ══════════════════════════════════════════════════════
+
+function updateDisplay(now, bTs, secElapsed, secRemain) {
+  // UTC clock
+  document.getElementById('utcClock').textContent =
+    now.toISOString().replace('T',' ').substring(0, 19) + ' UTC';
+
+  // Countdown
+  const mm = String(Math.floor(secRemain / 60)).padStart(2,'0');
+  const ss = String(secRemain % 60).padStart(2,'0');
+  const cdEl = document.getElementById('countdownTime');
+  cdEl.textContent = mm + ':' + ss;
+  cdEl.className = 'countdown-time' +
+    (secRemain <= 10 ? ' critical' : secRemain <= 60 ? ' warn' : '');
+
+  // Progress bar
+  const pct = Math.min(100, (secElapsed / WINDOW_SEC) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+
+  // Fire markers
+  document.getElementById('marker1').className = 'fire-marker' + (firedT1 ? ' fired' : '');
+  document.getElementById('marker2').className = 'fire-marker' + (firedT2 ? ' fired' : '');
+
+  // Fire status badges
+  const boundary = new Date(bTs);
+  const t1Abs = fmtTime(new Date(bTs + T1_FIRE_SEC * 1000));
+  const t2Abs = fmtTime(new Date(bTs + T2_FIRE_SEC * 1000));
+  const bucketStr = fmtTime(boundary);
+
+  const t1Left = Math.max(0, T1_FIRE_SEC - secElapsed);
+  const t2Left = Math.max(0, T2_FIRE_SEC - secElapsed);
+
+  const t1Class = firedT1 ? 'fired' : firingT1 ? 'pending' : (t1Left <= 10 ? 'pending' : 'waiting');
+  const t2Class = firedT2 ? 'fired' : firingT2 ? 'pending' : (t2Left <= 10 ? 'pending' : 'waiting');
+
+  const t1Label = firedT1 ? '✓' : firingT1 ? '⏳' : '→';
+  const t1Suffix = firedT1 ? '' : firingT1 ? ' firing…' : ` (${t1Left}s)`;
+  const t2Label = firedT2 ? '✓' : firingT2 ? '⏳' : '→';
+  const t2Suffix = firedT2 ? '' : firingT2 ? ' firing…' : ` (${t2Left}s)`;
+
+  document.getElementById('fireRow').innerHTML = `
+    <div class="fire-badge ${t1Class}">
+      <div class="dot"></div>
+      <span>T+1m ${t1Label} ${t1Abs}${t1Suffix}</span>
+    </div>
+    <div class="fire-badge ${t2Class}">
+      <div class="dot"></div>
+      <span>T+2m+W ${t2Label} ${t2Abs}${t2Suffix}</span>
+    </div>
+    <span class="bucket-label">bucket ${bucketStr}</span>
+  `;
+
+  // Status bar
+  document.getElementById('statusBucket').textContent = 'bucket: ' + bucketStr;
+  document.getElementById('statusTriggered').textContent = signals.length + ' triggered';
+}
+
+function fmtTime(d) {
+  return String(d.getUTCHours()).padStart(2,'0') + ':' +
+         String(d.getUTCMinutes()).padStart(2,'0') + ':' +
+         String(d.getUTCSeconds()).padStart(2,'0');
+}
+
+// ══════════════════════════════════════════════════════
+// RENDERING
+// ══════════════════════════════════════════════════════
+
+function renderSignals() {
+  // Skip re-render if signals haven't changed
+  const key = signals.length + ':' + (autoCleared ? 'ac' : '') + ':' + firedT1 + ':' + firedT2 + ':' + firingT1 + ':' + firingT2 + ':' + fireErrors.length;
+  if (key === renderKey) return;
+  renderKey = key;
+
+  const area = document.getElementById('signalArea');
+
+  // Build error banner HTML if any errors
+  let errorHtml = '';
+  if (fireErrors.length > 0) {
+    errorHtml = `<div style="background:rgba(248,81,73,0.1);border:1px solid var(--red);border-radius:8px;padding:12px 16px;margin-bottom:16px;">
+      <div style="font-size:12px;font-weight:600;color:var(--red);margin-bottom:6px;">⚠ Errors</div>
+      ${fireErrors.map(e => `<div style="font-size:11px;font-family:var(--mono);color:var(--text-dim);margin-top:3px;">${e}</div>`).join('')}
+      <div style="font-size:10px;color:var(--text-dim);margin-top:8px;">Make sure server is running: <span style="font-family:var(--mono);color:var(--accent);">python3 server.py</span></div>
+    </div>`;
+  }
+
+  if (signals.length === 0) {
+    const phase = firingT1 ? 'Firing T+1m indicators…'
+                : firingT2 ? 'Firing T+2m + window scripts…'
+                : !firedT1 ? 'Waiting for T+1m fire…'
+                : !firedT2 ? 'Waiting for T+2m fire…'
+                : autoCleared ? 'Auto-cleared — next cycle imminent'
+                : 'No signals triggered this cycle';
+    const icon = (firingT1 || firingT2) ? '🔄' : '⚡';
+    area.innerHTML = errorHtml + `
+      <div class="global-empty">
+        <div class="icon">${icon}</div>
+        <h3>${phase}</h3>
+        <p>Triggered signals will appear here grouped by pair. All 13 indicators are active.</p>
+      </div>`;
+    return;
+  }
+
+  // Group by pair
+  const byPair = {};
+  for (const sig of signals) {
+    if (!byPair[sig.pair]) byPair[sig.pair] = [];
+    byPair[sig.pair].push(sig);
+  }
+
+  // Sort pairs: BTC, ETH, SOL
+  const pairOrder = ['BTC-USD', 'ETH-USD', 'SOL-USD'];
+  const sortedPairs = Object.keys(byPair).sort((a, b) =>
+    (pairOrder.indexOf(a) === -1 ? 99 : pairOrder.indexOf(a)) -
+    (pairOrder.indexOf(b) === -1 ? 99 : pairOrder.indexOf(b))
+  );
+
+  let html = errorHtml + '<div class="pair-columns">';
+  for (const pair of sortedPairs) {
+    const pairSigs = byPair[pair];
+    // Sort: engine by abs(v1) desc, then window by bestSigma desc
+    pairSigs.sort((a, b) => {
+      const aVal = a.type === 'window' ? (a.bestSigma || 0) : Math.abs(a.v1 || 0);
+      const bVal = b.type === 'window' ? (b.bestSigma || 0) : Math.abs(b.v1 || 0);
+      return bVal - aVal;
+    });
+
+    html += `
+      <div class="pair-column">
+        <div class="pair-header">
+          <span class="pair-name">${pair}</span>
+          <span class="pair-count has">${pairSigs.length} triggered</span>
+        </div>
+        <div class="pair-cards">
+          ${pairSigs.map(s => s.type === 'window' ? renderWindowCard(s) : renderEngineCard(s)).join('')}
+        </div>
+      </div>`;
+  }
+  html += '</div>';
+  area.innerHTML = html;
+}
+
+function renderEngineCard(sig) {
+  const dir = sig.signal;
+  const v1 = sig.v1 != null ? sig.v1 : 0;
+  const v1Str = v1.toFixed(4);
+  return `
+    <div class="signal-card ${dir}">
+      <div class="card-top">
+        <span class="card-indicator">${sig.label || sig.indicator}</span>
+        <span class="card-badge ${dir}">${dir === 'up' ? '▲ UP' : '▼ DOWN'}</span>
+      </div>
+      <div class="card-v1 ${dir === 'up' ? 'positive' : 'negative'}">${v1Str}</div>
+      <div class="card-reason">${sig.reason || ''}</div>
+      <div class="card-meta">
+        <div class="meta-item"><span class="meta-label">phase</span> <span class="meta-val">t+${sig.phase}m</span></div>
+        <div class="meta-item"><span class="meta-label">bucket</span> <span class="meta-val">${(sig.bucket_time || '').substring(11,19)}</span></div>
+      </div>
+    </div>`;
+}
+
+function renderWindowCard(sig) {
+  const dir = sig.direction;
+  const arrow = dir === 'up' ? '▲' : '▼';
+  const sigmaStr = `${arrow} ${sig.bestSigma.toFixed(2)}σ`;
+  const cardDir = dir === 'up' ? 'up' : 'down';
+
+  // Look up WINDOW_SCRIPTS config for threshold levels
+  const wsCfg = WINDOW_SCRIPTS.find(w => w.id === sig.indicator);
+  let ladderHtml = '';
+  let eligibleCount = 0;
+  let passCount = 0;
+  let minSigmaLabel = '';
+
+  if (wsCfg && wsCfg.thresholds[sig.pair]) {
+    const cfg = wsCfg.thresholds[sig.pair];
+    minSigmaLabel = cfg.minSigma.toFixed(2);
+    for (const [sigma, threshold] of cfg.levels) {
+      const eligible = sigma >= cfg.minSigma;
+      if (eligible) eligibleCount++;
+      // bestSigma is the highest sigma level passed — all eligible levels ≤ bestSigma are passed
+      const passed = eligible && sig.bestSigma !== null && sigma <= sig.bestSigma;
+      if (passed) passCount++;
+      const cls = !eligible ? 'ineligible' : passed ? 'passed-' + dir : 'not-passed';
+      ladderHtml += `<span class="sigma-level ${cls}">${sigma.toFixed(2)}σ</span>`;
+    }
+  }
+
+  return `
+    <div class="signal-card ${cardDir}">
+      <div class="card-top">
+        <span class="card-indicator">${sig.label}</span>
+        <span class="card-badge ${cardDir}">${sigmaStr}</span>
+      </div>
+      <div class="card-v1 ${dir === 'up' ? 'positive' : 'negative'}">${sigmaStr}</div>
+      <div class="card-reason">best σ = ${sig.bestSigma.toFixed(2)}${minSigmaLabel ? ', min σ = ' + minSigmaLabel : ''}</div>
+      <div class="sigma-ladder">${ladderHtml}</div>
+      <div class="sigma-summary">${passCount}/${eligibleCount} σ levels passed</div>
+      <div class="card-meta">
+        <div class="meta-item"><span class="meta-label">direction</span> <span class="meta-val">${dir}</span></div>
+        <div class="meta-item"><span class="meta-label">bucket</span> <span class="meta-val">${sig.bucket_time.substring(11,19)}</span></div>
+      </div>
+    </div>`;
+}
+
+// ══════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════
+
+tick();
+setInterval(tick, 1000);
+</script>
+</body>
+</html>

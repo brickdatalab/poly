@@ -8,7 +8,9 @@ gcp_credentials.json
 
 # Python
 __pycache__/
+**/__pycache__/
 *.py[cod]
+*.pyc
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
@@ -17,6 +19,7 @@ coverage.xml
 
 # macOS
 .DS_Store
+**/.DS_Store
 
 # Local output artifacts
 scripts/output/
@@ -24,9 +27,17 @@ syn/output/
 syn-final/output/
 .benchmarks/
 supabase/.temp/
+runtime/**/output/
+runtime/**/.pytest_cache/
+runtime/**/.mypy_cache/
+runtime/**/.ruff_cache/
 
 # Node
 node_modules/
 
 # Logs
 *.log
+
+# Local scratch files
+convo.md
+data.json
